@@ -20,9 +20,4 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void bind(MainViewModel viewModel) {
         Zipper.bind(viewModel, this);
     }
-
-    @Override
-    public void bind(MainViewModel2 viewModel) {
-        Zipper.bind(viewModel, this);
-    }
 }
