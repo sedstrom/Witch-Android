@@ -1,0 +1,1 @@
+include ':app', ':zipper', ':zipper-annotations', ':zipper-processor', ':zipper-commons'
