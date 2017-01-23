@@ -23,32 +23,7 @@
             android:layout_height="wrap_content"/>
 
     <ImageView
-            android:id="@+id/main_activity_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    <CheckBox
-            android:id="@+id/main_activity_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    <RadioGroup
-            android:id="@+id/main_activity_radio_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-    </RadioGroup>
-
-    <Switch
-            android:id="@+id/main_activity_switch"
+            android:id="@+id/main_activity_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

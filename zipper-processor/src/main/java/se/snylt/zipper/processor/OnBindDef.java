@@ -1,15 +1,17 @@
 package se.snylt.zipper.processor;
 
+import com.squareup.javapoet.TypeName;
+
 public class OnBindDef extends BindActionDef {
 
-    private final String onBindClass;
+    private final TypeName onBindClass;
 
-    public OnBindDef(String onBindClass) {
+    public OnBindDef(TypeName onBindClass) {
         this.onBindClass = onBindClass;
     }
 
     @Override
     public String getNewInstanceJava() {
-        return "new " + onBindClass +"()";
+        return "new " + onBindClass + "()";
     }
 }

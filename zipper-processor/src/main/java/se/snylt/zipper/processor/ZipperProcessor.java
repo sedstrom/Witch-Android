@@ -4,9 +4,11 @@ import com.google.auto.service.AutoService;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,19 +30,28 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.tools.Diagnostic;
 
 import se.snylt.zipper.ClassUtils;
-import se.snylt.zipper.annotations.BindProperty;
 import se.snylt.zipper.annotations.BindTo;
+import se.snylt.zipper.annotations.BindToImageView;
+import se.snylt.zipper.annotations.BindToTextView;
 import se.snylt.zipper.annotations.OnBind;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
         "se.snylt.zipper.annotations.BindTo",
+        "se.snylt.zipper.annotations.BindToTextView",
         "se.snylt.zipper.annotations.OnBind",
         "se.snylt.zipper.annotations.BindProperty"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ZipperProcessor extends AbstractProcessor {
+
+    private final static Class<? extends Annotation>[] BIND_VIEW_ANNOTATION = new Class[]{
+            BindTo.class,
+            BindToTextView.class,
+            BindToImageView.class
+    };
 
     private Types typeUtils;
 
@@ -59,59 +70,84 @@ public class ZipperProcessor extends AbstractProcessor {
         messager = processingEnv.getMessager();
     }
 
+    private void log(String message){
+        messager.printMessage(Diagnostic.Kind.NOTE, message);
+    }
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         HashMap<Element, List<BindToView>> targets = new HashMap<>();
-        addTargets(targets, roundEnv);
+        addTarget(targets, roundEnv, BIND_VIEW_ANNOTATION);
         addBindActions(targets, roundEnv);
         buildJava(targets);
         return true;
     }
 
-    private void addTargets(Map<Element, List<BindToView>> targets, RoundEnvironment roundEnv) {
-        // Find all targets (parents to fields with @BindTo)
-        for (Element value : roundEnv.getElementsAnnotatedWith(BindTo.class)) {
-            Element target = value.getEnclosingElement();
+    private void addTarget(Map<Element, List<BindToView>> targets, RoundEnvironment roundEnv, Class<? extends Annotation> ...annotations) {
+        for(Class<? extends Annotation> annotation: annotations) {
+            for (Element value : roundEnv.getElementsAnnotatedWith(annotation)) {
+                Element target = value.getEnclosingElement();
 
-            // Prepare target bindings
-            if (!targets.containsKey(target)) {
-                targets.put(target, new LinkedList<>());
-            }
+                // Prepare target bindings
+                if (!targets.containsKey(target)) {
+                    targets.put(target, new LinkedList<>());
+                }
 
-            // Add view id and field to be bound
-            List<BindToView> bindToViews = targets.get(target);
-            if (!bindToViews.contains(value)) {
-                bindToViews.add(new BindToView(getBindToViewId(value), value));
+                // Add view id and field to be bound
+                List<BindToView> bindToViews = targets.get(target);
+                if (!bindToViews.contains(value)) {
+                    bindToViews.add(new BindToView(getViewId(value, annotation), value));
+                }
             }
         }
+    }
+
+    private Integer getViewId(Element element, Class<? extends Annotation> annotation) {
+        if(annotation == BindTo.class) {
+            return element.getAnnotation(BindTo.class).value();
+        } else if(annotation == BindToTextView.class) {
+            return element.getAnnotation(BindToTextView.class).id();
+        } else if(annotation == BindToImageView.class) {
+            return element.getAnnotation(BindToImageView.class).id();
+        }
+        return null;
     }
 
     private void addBindActions(HashMap<Element, List<BindToView>> binders, RoundEnvironment roundEnv) {
         // OnBind
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(OnBind.class)) {
-            Element target = bindAction.getEnclosingElement();
-            List<BindToView> bindToViews = binders.get(target);
-
-            // Add bind actions to view binding
-            for (BindToView bindToView : bindToViews) {
-                if (bindToView.equals(bindAction)) {
-                    String onBindClass = getOnBindClass(bindAction);
-                    bindToView.addBindAction(new OnBindDef(onBindClass));
-                }
-            }
+            TypeName onBindClass = getOnBindClass(bindAction);
+            BindActionDef actionDef = new OnBindDef(onBindClass);
+            addBindAction(bindAction, actionDef, binders);
         }
 
-        // BindProperty
-        for (Element bindAction : roundEnv.getElementsAnnotatedWith(BindProperty.class)) {
-            Element target = bindAction.getEnclosingElement();
-            List<BindToView> bindToViews = binders.get(target);
+        // BindToTextView
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(BindToTextView.class)) {
+            String property = bindAction.getAnnotation(BindToTextView.class).set();
+            TypeName viewType  = ClassName.get("android.widget", "TextView");
+            TypeName valueType  = ClassName.get(bindAction.asType());
+            BindActionDef actionDef = new OnBindViewDef(property, viewType, valueType);
+            addBindAction(bindAction, actionDef, binders);
+        }
 
-            // Add bind actions to view binding
-            for (BindToView bindToView : bindToViews) {
-                if (bindToView.equals(bindAction)) {
-                    String bindProperty = getBindProperty(bindAction);
-                    bindToView.addBindAction(new BindPropertyDef(bindProperty));
-                }
+        // BindToImageView
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(BindToImageView.class)) {
+            String property = bindAction.getAnnotation(BindToImageView.class).set();
+            TypeName viewType  = ClassName.get("android.widget", "ImageView");
+            TypeName valueType  = ClassName.get(bindAction.asType());
+            BindActionDef actionDef = new OnBindViewDef(property, viewType, valueType);
+            addBindAction(bindAction, actionDef, binders);
+        }
+    }
+
+    private void addBindAction(Element bindAction, BindActionDef bindActionDef, HashMap<Element, List<BindToView>> binders) {
+        Element target = bindAction.getEnclosingElement();
+        List<BindToView> bindToViews = binders.get(target);
+
+        // Add bind actions to view binding
+        for (BindToView bindToView : bindToViews) {
+            if (bindToView.equals(bindAction)) {
+                bindToView.addBindAction(bindActionDef);
             }
         }
     }
@@ -135,21 +171,13 @@ public class ZipperProcessor extends AbstractProcessor {
         return ClassName.get(packageName, className);
     }
 
-    private String getOnBindClass(Element action){
+    private TypeName getOnBindClass(Element action){
         TypeMirror bindClass = null;
         try {
             action.getAnnotation(OnBind.class).value();
         } catch (MirroredTypeException mte) {
             bindClass = mte.getTypeMirror();
         }
-        return bindClass.toString();
-    }
-
-    private String getBindProperty(Element target) {
-        return target.getAnnotation(BindProperty.class).value();
-    }
-
-    private Integer getBindToViewId(Element element) {
-        return element.getAnnotation(BindTo.class).value();
+        return TypeName.get(bindClass);
     }
 }

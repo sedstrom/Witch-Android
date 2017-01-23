@@ -48,7 +48,7 @@ public class BinderFactory {
             // All actions for each view
             methodBuilder.addStatement("bindActions = new $T<>()", ARRAY_LIST);
             for (BindActionDef bindAction : bindToView.bindActions) {
-                methodBuilder.addStatement(String.format("bindActions.add(%s)", bindAction.getNewInstanceJava()));
+                methodBuilder.addStatement("bindActions.add($L)", bindAction.getNewInstanceJava());
             }
 
             // Add complete binding spec

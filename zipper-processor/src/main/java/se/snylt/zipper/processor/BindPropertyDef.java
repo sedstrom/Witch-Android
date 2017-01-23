@@ -12,6 +12,6 @@ public class BindPropertyDef extends BindActionDef {
 
     @Override
     public String getNewInstanceJava() {
-        return String.format("new %s(\"%s\")", className, bindProperty);
+        return null; // String.format("new %s(\"%s\")", className, bindProperty);
     }
 }
