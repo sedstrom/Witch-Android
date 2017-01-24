@@ -34,4 +34,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+    <Switch
+            android:id="@+id/main_activity_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
 </LinearLayout>

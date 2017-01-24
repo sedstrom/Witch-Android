@@ -1,10 +1,13 @@
 package com.example.zipper;
 
+import android.widget.Switch;
+
 import se.snylt.zipper.annotations.BindTo;
 import se.snylt.zipper.annotations.BindToCompoundButton;
 import se.snylt.zipper.annotations.BindToEditText;
 import se.snylt.zipper.annotations.BindToImageView;
 import se.snylt.zipper.annotations.BindToTextView;
+import se.snylt.zipper.annotations.BindToView;
 import se.snylt.zipper.annotations.OnBind;
 import se.snylt.zipper.viewbinder.onbind.ToastLongOnBind;
 
@@ -24,15 +27,19 @@ public class MainViewModel {
     @BindToCompoundButton(id = R.id.main_activity_check_box)
     final public boolean checked;
 
+    @BindToView(view = Switch.class, id = R.id.main_activity_switch, set = "checked")
+    final public boolean switched;
+
     @BindTo(R.id.activity_main) // view
     @OnBind(ToastLongOnBind.class) // bind action
     final public String welcomeMessage;
 
-    public MainViewModel(String text, String hint, int image, boolean checked, String welcomeMessage) {
+    public MainViewModel(String text, String hint, int image, boolean checked, boolean switched, String welcomeMessage) {
         this.text = text;
         this.hint = hint;
         this.image = image;
         this.checked = checked;
+        this.switched = switched;
         this.welcomeMessage = welcomeMessage;
     }
 }

@@ -38,11 +38,13 @@ import se.snylt.zipper.annotations.BindToCompoundButton;
 import se.snylt.zipper.annotations.BindToEditText;
 import se.snylt.zipper.annotations.BindToImageView;
 import se.snylt.zipper.annotations.BindToTextView;
+import se.snylt.zipper.annotations.BindToView;
 import se.snylt.zipper.annotations.OnBind;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
         "se.snylt.zipper.annotations.BindTo",
+        "se.snylt.zipper.annotations.BindToView",
         "se.snylt.zipper.annotations.BindToTextView",
         "se.snylt.zipper.annotations.BindToEditText",
         "se.snylt.zipper.annotations.BindToImageView",
@@ -54,6 +56,7 @@ public class ZipperProcessor extends AbstractProcessor {
 
     private final static Class<? extends Annotation>[] BIND_VIEW_ANNOTATION = new Class[]{
             BindTo.class,
+            BindToView.class,
             BindToTextView.class,
             BindToEditText.class,
             BindToImageView.class,
@@ -83,14 +86,14 @@ public class ZipperProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        HashMap<Element, List<BindToView>> targets = new HashMap<>();
+        HashMap<Element, List<BindToViewActions>> targets = new HashMap<>();
         addTarget(targets, roundEnv, BIND_VIEW_ANNOTATION);
         addBindActions(targets, roundEnv);
         buildJava(targets);
         return true;
     }
 
-    private void addTarget(Map<Element, List<BindToView>> targets, RoundEnvironment roundEnv, Class<? extends Annotation> ...annotations) {
+    private void addTarget(Map<Element, List<BindToViewActions>> targets, RoundEnvironment roundEnv, Class<? extends Annotation> ...annotations) {
         for(Class<? extends Annotation> annotation: annotations) {
             for (Element value : roundEnv.getElementsAnnotatedWith(annotation)) {
                 Element target = value.getEnclosingElement();
@@ -101,9 +104,9 @@ public class ZipperProcessor extends AbstractProcessor {
                 }
 
                 // Add view id and field to be bound
-                List<BindToView> bindToViews = targets.get(target);
-                if (!bindToViews.contains(value)) {
-                    bindToViews.add(new BindToView(getViewId(value, annotation), value));
+                List<BindToViewActions> bindToViewActionses = targets.get(target);
+                if (!bindToViewActionses.contains(value)) {
+                    bindToViewActionses.add(new BindToViewActions(getViewId(value, annotation), value));
                 }
             }
         }
@@ -112,6 +115,8 @@ public class ZipperProcessor extends AbstractProcessor {
     private Integer getViewId(Element element, Class<? extends Annotation> annotation) {
         if(annotation == BindTo.class) {
             return element.getAnnotation(BindTo.class).value();
+        } else if(annotation == BindToView.class) {
+            return element.getAnnotation(BindToView.class).id();
         } else if(annotation == BindToTextView.class) {
             return element.getAnnotation(BindToTextView.class).id();
         } else if(annotation == BindToImageView.class) {
@@ -124,12 +129,19 @@ public class ZipperProcessor extends AbstractProcessor {
         return null;
     }
 
-    private void addBindActions(HashMap<Element, List<BindToView>> binders, RoundEnvironment roundEnv) {
+    private void addBindActions(HashMap<Element, List<BindToViewActions>> binders, RoundEnvironment roundEnv) {
         // OnBind
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(OnBind.class)) {
             TypeName onBindClass = getOnBindClass(bindAction);
             BindActionDef actionDef = new OnBindDef(onBindClass);
             addBindAction(bindAction, actionDef, binders);
+        }
+
+        // BindToView
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(BindToView.class)) {
+            String property = bindAction.getAnnotation(BindToView.class).set();
+            TypeName viewType = getOnBindToViewClass(bindAction);
+            addOnBindViewDef(binders, property, viewType, bindAction);
         }
 
         // BindToTextView
@@ -161,25 +173,25 @@ public class ZipperProcessor extends AbstractProcessor {
         }
     }
 
-    private void addOnBindViewDef(HashMap<Element, List<BindToView>> binders, String property, TypeName viewType, Element bindAction) {
+    private void addOnBindViewDef(HashMap<Element, List<BindToViewActions>> binders, String property, TypeName viewType, Element bindAction) {
         TypeName valueType  = ClassName.get(bindAction.asType());
         BindActionDef actionDef = new OnBindViewDef(property, viewType, valueType);
         addBindAction(bindAction, actionDef, binders);
     }
 
-    private void addBindAction(Element bindAction, BindActionDef bindActionDef, HashMap<Element, List<BindToView>> binders) {
+    private void addBindAction(Element bindAction, BindActionDef bindActionDef, HashMap<Element, List<BindToViewActions>> binders) {
         Element target = bindAction.getEnclosingElement();
-        List<BindToView> bindToViews = binders.get(target);
+        List<BindToViewActions> bindToViewActionses = binders.get(target);
 
         // Add bind actions to view binding
-        for (BindToView bindToView : bindToViews) {
-            if (bindToView.equals(bindAction)) {
-                bindToView.addBindAction(bindActionDef);
+        for (BindToViewActions bindToViewActions : bindToViewActionses) {
+            if (bindToViewActions.equals(bindAction)) {
+                bindToViewActions.addBindAction(bindActionDef);
             }
         }
     }
 
-    private void buildJava(HashMap<Element, List<BindToView>> binders) {
+    private void buildJava(HashMap<Element, List<BindToViewActions>> binders) {
         for (Element target : binders.keySet()) {
             ClassName bindingClassName = getBindingClassName(target);
             TypeSpec typeSpec = BinderFactory.toJava(binders.get(target), bindingClassName);
@@ -202,6 +214,16 @@ public class ZipperProcessor extends AbstractProcessor {
         TypeMirror bindClass = null;
         try {
             action.getAnnotation(OnBind.class).value();
+        } catch (MirroredTypeException mte) {
+            bindClass = mte.getTypeMirror();
+        }
+        return TypeName.get(bindClass);
+    }
+
+    private TypeName getOnBindToViewClass(Element action) {
+        TypeMirror bindClass = null;
+        try {
+            action.getAnnotation(BindToView.class).view();
         } catch (MirroredTypeException mte) {
             bindClass = mte.getTypeMirror();
         }

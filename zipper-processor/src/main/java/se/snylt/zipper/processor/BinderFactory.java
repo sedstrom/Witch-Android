@@ -22,7 +22,7 @@ public class BinderFactory {
 
     private static final TypeName BINDING_SPEC = TypeName.get(BindingSpec.class);
 
-    public static TypeSpec toJava(List<BindToView> bindToViews, ClassName className) {
+    public static TypeSpec toJava(List<BindToViewActions> bindToViewActionses, ClassName className) {
 
         // Class
         TypeSpec.Builder builder =
@@ -42,20 +42,20 @@ public class BinderFactory {
                 .addStatement("$T bindActions", LIST);
 
         // All views
-        for (BindToView bindToView : bindToViews) {
-            methodBuilder.addComment("Bind " + bindToView.value.getSimpleName());
+        for (BindToViewActions bindToViewActions : bindToViewActionses) {
+            methodBuilder.addComment("Bind " + bindToViewActions.value.getSimpleName());
 
             // All actions for each view
             methodBuilder.addStatement("bindActions = new $T<>()", ARRAY_LIST);
-            for (BindActionDef bindAction : bindToView.bindActions) {
+            for (BindActionDef bindAction : bindToViewActions.bindActions) {
                 methodBuilder.addStatement("bindActions.add($L)", bindAction.getNewInstanceJava());
             }
 
             // Add complete binding spec
             methodBuilder.addStatement("bindingSpecs.add(new $T($L, $S, bindActions))",
                     BINDING_SPEC,
-                    bindToView.viewId,
-                    bindToView.value.getSimpleName());
+                    bindToViewActions.viewId,
+                    bindToViewActions.value.getSimpleName());
         }
 
         // Return
