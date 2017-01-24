@@ -7,11 +7,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static se.snylt.zipper.ViewProperties.ImageView.IMG_RESOURCE;
+
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
 public @interface BindToImageView {
 
     @IdRes int id();
 
-    String set() default "imageResource";
+    String set() default IMG_RESOURCE;
 }

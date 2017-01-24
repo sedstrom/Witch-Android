@@ -6,6 +6,6 @@ public class MainPresenter {
 
     public void takeView(MainView view) {
         this.view = view;
-        this.view.bind(new MainViewModel("Simon Edström", R.string.app_name, R.mipmap.ic_launcher , "Welcome!"));
+        this.view.bind(new MainViewModel("Text", "Hint", R.mipmap.ic_launcher , true, "Welcome!"));
     }
 }

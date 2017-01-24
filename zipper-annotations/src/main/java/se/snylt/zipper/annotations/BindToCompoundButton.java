@@ -7,13 +7,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static se.snylt.zipper.ViewProperties.TextView.TEXT;
+import static se.snylt.zipper.ViewProperties.CompoundButton.CHECKED;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface BindToTextView {
+public @interface BindToCompoundButton {
 
     @IdRes int id();
 
-    String set() default TEXT;
+    String set() default CHECKED;
 }

@@ -34,6 +34,8 @@ import javax.tools.Diagnostic;
 
 import se.snylt.zipper.ClassUtils;
 import se.snylt.zipper.annotations.BindTo;
+import se.snylt.zipper.annotations.BindToCompoundButton;
+import se.snylt.zipper.annotations.BindToEditText;
 import se.snylt.zipper.annotations.BindToImageView;
 import se.snylt.zipper.annotations.BindToTextView;
 import se.snylt.zipper.annotations.OnBind;
@@ -42,6 +44,9 @@ import se.snylt.zipper.annotations.OnBind;
 @SupportedAnnotationTypes({
         "se.snylt.zipper.annotations.BindTo",
         "se.snylt.zipper.annotations.BindToTextView",
+        "se.snylt.zipper.annotations.BindToEditText",
+        "se.snylt.zipper.annotations.BindToImageView",
+        "se.snylt.zipper.annotations.BindToCompoundButton",
         "se.snylt.zipper.annotations.OnBind",
         "se.snylt.zipper.annotations.BindProperty"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
@@ -50,7 +55,9 @@ public class ZipperProcessor extends AbstractProcessor {
     private final static Class<? extends Annotation>[] BIND_VIEW_ANNOTATION = new Class[]{
             BindTo.class,
             BindToTextView.class,
-            BindToImageView.class
+            BindToEditText.class,
+            BindToImageView.class,
+            BindToCompoundButton.class
     };
 
     private Types typeUtils;
@@ -109,6 +116,10 @@ public class ZipperProcessor extends AbstractProcessor {
             return element.getAnnotation(BindToTextView.class).id();
         } else if(annotation == BindToImageView.class) {
             return element.getAnnotation(BindToImageView.class).id();
+        } else if(annotation == BindToEditText.class) {
+            return element.getAnnotation(BindToEditText.class).id();
+        } else if(annotation == BindToCompoundButton.class) {
+            return element.getAnnotation(BindToCompoundButton.class).id();
         }
         return null;
     }
@@ -125,19 +136,35 @@ public class ZipperProcessor extends AbstractProcessor {
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(BindToTextView.class)) {
             String property = bindAction.getAnnotation(BindToTextView.class).set();
             TypeName viewType  = ClassName.get("android.widget", "TextView");
-            TypeName valueType  = ClassName.get(bindAction.asType());
-            BindActionDef actionDef = new OnBindViewDef(property, viewType, valueType);
-            addBindAction(bindAction, actionDef, binders);
+            addOnBindViewDef(binders, property, viewType, bindAction);
         }
 
         // BindToImageView
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(BindToImageView.class)) {
             String property = bindAction.getAnnotation(BindToImageView.class).set();
             TypeName viewType  = ClassName.get("android.widget", "ImageView");
-            TypeName valueType  = ClassName.get(bindAction.asType());
-            BindActionDef actionDef = new OnBindViewDef(property, viewType, valueType);
-            addBindAction(bindAction, actionDef, binders);
+            addOnBindViewDef(binders, property, viewType, bindAction);
         }
+
+        // BindToEditText
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(BindToEditText.class)) {
+            String property = bindAction.getAnnotation(BindToEditText.class).set();
+            TypeName viewType  = ClassName.get("android.widget", "EditText");
+            addOnBindViewDef(binders, property, viewType, bindAction);
+        }
+
+        // BindToEditText
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(BindToCompoundButton.class)) {
+            String property = bindAction.getAnnotation(BindToCompoundButton.class).set();
+            TypeName viewType  = ClassName.get("android.widget", "CompoundButton");
+            addOnBindViewDef(binders, property, viewType, bindAction);
+        }
+    }
+
+    private void addOnBindViewDef(HashMap<Element, List<BindToView>> binders, String property, TypeName viewType, Element bindAction) {
+        TypeName valueType  = ClassName.get(bindAction.asType());
+        BindActionDef actionDef = new OnBindViewDef(property, viewType, valueType);
+        addBindAction(bindAction, actionDef, binders);
     }
 
     private void addBindAction(Element bindAction, BindActionDef bindActionDef, HashMap<Element, List<BindToView>> binders) {
