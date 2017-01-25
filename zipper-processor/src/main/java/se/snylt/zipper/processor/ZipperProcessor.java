@@ -37,6 +37,7 @@ import se.snylt.zipper.annotations.BindTo;
 import se.snylt.zipper.annotations.BindToCompoundButton;
 import se.snylt.zipper.annotations.BindToEditText;
 import se.snylt.zipper.annotations.BindToImageView;
+import se.snylt.zipper.annotations.BindToRecyclerView;
 import se.snylt.zipper.annotations.BindToTextView;
 import se.snylt.zipper.annotations.BindToView;
 import se.snylt.zipper.annotations.OnBind;
@@ -49,8 +50,8 @@ import se.snylt.zipper.annotations.OnBind;
         "se.snylt.zipper.annotations.BindToEditText",
         "se.snylt.zipper.annotations.BindToImageView",
         "se.snylt.zipper.annotations.BindToCompoundButton",
-        "se.snylt.zipper.annotations.OnBind",
-        "se.snylt.zipper.annotations.BindProperty"})
+        "se.snylt.zipper.annotations.BindToRecyclerView",
+        "se.snylt.zipper.annotations.OnBind"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ZipperProcessor extends AbstractProcessor {
 
@@ -60,7 +61,8 @@ public class ZipperProcessor extends AbstractProcessor {
             BindToTextView.class,
             BindToEditText.class,
             BindToImageView.class,
-            BindToCompoundButton.class
+            BindToCompoundButton.class,
+            BindToRecyclerView.class
     };
 
     private Types typeUtils;
@@ -125,6 +127,8 @@ public class ZipperProcessor extends AbstractProcessor {
             return element.getAnnotation(BindToEditText.class).id();
         } else if(annotation == BindToCompoundButton.class) {
             return element.getAnnotation(BindToCompoundButton.class).id();
+        } else if(annotation == BindToRecyclerView.class) {
+            return element.getAnnotation(BindToRecyclerView.class).id();
         }
         return null;
     }
@@ -165,12 +169,31 @@ public class ZipperProcessor extends AbstractProcessor {
             addOnBindViewDef(binders, property, viewType, bindAction);
         }
 
-        // BindToEditText
+        // BindToCompoundButton
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(BindToCompoundButton.class)) {
             String property = bindAction.getAnnotation(BindToCompoundButton.class).set();
             TypeName viewType  = ClassName.get("android.widget", "CompoundButton");
             addOnBindViewDef(binders, property, viewType, bindAction);
         }
+
+        // BindToRecyclerView
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(BindToRecyclerView.class)) {
+            String property = bindAction.getAnnotation(BindToRecyclerView.class).set();
+            TypeName viewType  = ClassName.get("android.support.v7.widget", "RecyclerView");
+            TypeName valueType  = ClassName.get(bindAction.asType());
+            TypeName adapterType = getOnBindToRecyclerViewAdapterClass(bindAction);
+            BindActionDef actionDef = new OnBindRecyclerViewDef(property, viewType, adapterType, valueType);
+            addBindAction(bindAction, actionDef, binders);
+        }
+
+        // TODO
+        // BindToProgressBar
+        // BindToAdapterView
+        // BindToToggleButton
+        // BindToCheckedTextView
+        // BindToRatingBar
+        // BindToTextSwitcher
+        // BindToToolBar
     }
 
     private void addOnBindViewDef(HashMap<Element, List<BindToViewActions>> binders, String property, TypeName viewType, Element bindAction) {
@@ -208,6 +231,16 @@ public class ZipperProcessor extends AbstractProcessor {
         String className = ClassUtils.getBindingName(target);
         String packageName = ClassUtils.getBindingPackage(target);
         return ClassName.get(packageName, className);
+    }
+
+    private TypeName getOnBindToRecyclerViewAdapterClass(Element bindAction) {
+        TypeMirror bindClass = null;
+        try {
+            bindAction.getAnnotation(BindToRecyclerView.class).adapter();
+        } catch (MirroredTypeException mte) {
+            bindClass = mte.getTypeMirror();
+        }
+        return TypeName.get(bindClass);
     }
 
     private TypeName getOnBindClass(Element action){

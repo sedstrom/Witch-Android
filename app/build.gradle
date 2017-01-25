@@ -26,4 +26,7 @@ dependencies {
     // zipper
     compile project(path: ':zipper')
     annotationProcessor project(':zipper-processor')
+
+    // other
+    compile 'com.android.support:recyclerview-v7:25.0.0'
 }
