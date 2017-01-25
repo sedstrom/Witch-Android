@@ -5,16 +5,12 @@ import android.util.Log;
 import android.view.View;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
 
 import se.snylt.zipper.BindAction;
 import se.snylt.zipper.Binding;
 import se.snylt.zipper.BindingSpec;
 import se.snylt.zipper.ClassUtils;
 import se.snylt.zipper.viewbinder.onbind.OnBind;
-import se.snylt.zipper.viewbinder.onbind.WildCardOnBind;
-import se.snylt.zipper.viewbinder.utils.BindingNotFoundException;
 
 public class Zipper {
 
@@ -36,23 +32,9 @@ public class Zipper {
 
     private static void bind(BindingSpec bindingSpec, View view, Object target) {
         Object value = getValue(target, bindingSpec);
-        for (BindAction bindAction : getBindActions(bindingSpec, view, value)) {
+        for (BindAction bindAction : bindingSpec.getBindActions()) {
             doBind(bindAction, view, value);
         }
-    }
-
-    private static List<BindAction> getBindActions(BindingSpec bindingSpec, View view, Object value) {
-        if(bindingSpec.getBindActions().isEmpty()) {
-            BindAction bindAction = WildCardOnBind.findOnBind(view, value);
-            if(bindAction != null) {
-                return Arrays.asList(bindAction);
-            }
-
-            throw new RuntimeException("Could not find binder for "+
-                    "View: " + view.getClass().getSimpleName() +
-                    "Value: " + value.getClass().getSimpleName());
-        }
-        return bindingSpec.getBindActions();
     }
 
     private static void doBind(BindAction bindAction, View view, Object value) {

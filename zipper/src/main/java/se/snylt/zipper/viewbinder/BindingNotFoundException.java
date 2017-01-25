@@ -1,4 +1,4 @@
-package se.snylt.zipper.viewbinder.utils;
+package se.snylt.zipper.viewbinder;
 
 public class BindingNotFoundException extends RuntimeException {
 

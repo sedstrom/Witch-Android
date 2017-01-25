@@ -2,15 +2,12 @@ package com.example.zipper;
 
 import android.widget.Switch;
 
-import se.snylt.zipper.annotations.BindTo;
 import se.snylt.zipper.annotations.BindToCompoundButton;
 import se.snylt.zipper.annotations.BindToEditText;
 import se.snylt.zipper.annotations.BindToImageView;
 import se.snylt.zipper.annotations.BindToRecyclerView;
 import se.snylt.zipper.annotations.BindToTextView;
 import se.snylt.zipper.annotations.BindToView;
-import se.snylt.zipper.annotations.OnBind;
-import se.snylt.zipper.viewbinder.onbind.ToastLongOnBind;
 
 import static se.snylt.zipper.ViewProperties.CompoundButton.CHECKED;
 import static se.snylt.zipper.ViewProperties.EditText.HINT;
@@ -36,22 +33,19 @@ public class MainViewModel {
     @BindToView(view = Switch.class, id = R.id.main_activity_switch, set = TEXT)
     final public String switchText;
 
-    @BindTo(R.id.activity_main) // view
-    @OnBind(ToastLongOnBind.class) // bind action
-    final public String welcomeMessage;
-
-    @BindToRecyclerView(id = R.id.main_activity_recycler_view, adapter = MyRecyclerViewAdapter.class, set = "items")
+    @BindToRecyclerView(
+            id = R.id.main_activity_recycler_view,
+            adapter = MyRecyclerViewAdapter.class,
+            set = "items")
     public final MyRecyclerViewAdapter.MyItem[] items;
 
-    public MainViewModel(String text, String hint, int image, boolean checked, String switchText, boolean switched,
-            String welcomeMessage, MyRecyclerViewAdapter.MyItem[] items) {
+    public MainViewModel(String text, String hint, int image, boolean checked, String switchText, boolean switched, MyRecyclerViewAdapter.MyItem[] items) {
         this.text = text;
         this.hint = hint;
         this.image = image;
         this.checked = checked;
         this.switchText = switchText;
         this.switched = switched;
-        this.welcomeMessage = welcomeMessage;
         this.items = items;
     }
 }

@@ -12,7 +12,7 @@ public class MainPresenter {
                 R.mipmap.ic_launcher,
                 true,
                 "Switch text", true,
-                "Welcome!", generateItems(1000)));
+                generateItems(1000)));
     }
 
     private MyRecyclerViewAdapter.MyItem[] generateItems(int count) {

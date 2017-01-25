@@ -2,7 +2,6 @@ package com.example.zipper;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import se.snylt.zipper.annotations.BindToTextView;
@@ -14,7 +13,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.my_item, parent, false));
+        return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.my_item, parent, false));
     }
 
     @Override
@@ -25,7 +24,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
-        // TODO unbind
     }
 
     @Override
@@ -35,13 +33,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     public void setItems(MyItem[] items) {
         this.items = items;
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-        }
     }
 
     public static class MyItem {
