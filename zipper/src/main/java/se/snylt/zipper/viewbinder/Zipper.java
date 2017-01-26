@@ -7,7 +7,7 @@ import android.view.View;
 import java.lang.reflect.Field;
 
 import se.snylt.zipper.BindAction;
-import se.snylt.zipper.Binding;
+import se.snylt.zipper.BindingSpecFactory;
 import se.snylt.zipper.BindingSpec;
 import se.snylt.zipper.ClassUtils;
 import se.snylt.zipper.viewbinder.onbind.OnBind;
@@ -17,7 +17,7 @@ public class Zipper {
     public static void bind(Object target, Activity viewFinder) {
         long start = System.currentTimeMillis();
         for (BindingSpec bindingSpec : getBinding(target).getBindingSpecs()) {
-            View view = viewFinder.findViewById(bindingSpec.viewId);
+            View view = findView(target, bindingSpec, viewFinder);
             bind(bindingSpec, view, target);
         }
         Log.d("bind", target.getClass().getSimpleName() + " took: " + (System.currentTimeMillis() - start) + "ms");
@@ -25,9 +25,21 @@ public class Zipper {
 
     public static void bind(Object target, View viewFinder) {
         for (BindingSpec bindingSpec : getBinding(target).getBindingSpecs()) {
-            View view = viewFinder.findViewById(bindingSpec.viewId);
+            View view = findView(target, bindingSpec, viewFinder);
             bind(bindingSpec, view, target);
         }
+    }
+
+    private static View findView(Object target, BindingSpec bindingSpec, View viewFinder) {
+        Object viewHolder = getViewHolder(target);
+        bindingSpec.setView(viewHolder, viewFinder.findViewById(bindingSpec.viewId));
+        return (View) bindingSpec.getView(viewHolder);
+    }
+
+    private static View findView(Object target, BindingSpec bindingSpec, Activity viewFinder) {
+        Object viewHolder = getViewHolder(target);
+        bindingSpec.setView(viewHolder, viewFinder.findViewById(bindingSpec.viewId));
+        return (View) bindingSpec.getView(viewHolder);
     }
 
     private static void bind(BindingSpec bindingSpec, View view, Object target) {
@@ -49,10 +61,19 @@ public class Zipper {
         }
     }
 
-    private static Binding getBinding(Object target) {
+    private static BindingSpecFactory getBinding(Object target) {
         try {
             Class clazz = ClassUtils.findBinding(target);
-            return (Binding) clazz.newInstance();
+            return (BindingSpecFactory) clazz.newInstance();
+        } catch (Exception e) {
+            throw new BindingNotFoundException("Could not find binding for " + target.getClass().getName());
+        }
+    }
+
+    private static Object getViewHolder(Object target) {
+        try {
+            Class clazz = ClassUtils.findViewHolder(target);
+            return clazz.newInstance();
         } catch (Exception e) {
             throw new BindingNotFoundException("Could not find binding for " + target.getClass().getName());
         }

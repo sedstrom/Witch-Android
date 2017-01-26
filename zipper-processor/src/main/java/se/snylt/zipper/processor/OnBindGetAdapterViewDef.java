@@ -8,7 +8,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
-public class OnBindRecyclerViewDef extends BindActionDef {
+public class OnBindGetAdapterViewDef extends BindActionDef {
 
     private final String property;
 
@@ -18,7 +18,7 @@ public class OnBindRecyclerViewDef extends BindActionDef {
 
     private final TypeName valueType;
 
-    public OnBindRecyclerViewDef(String property, TypeName viewType, TypeName adapterType,  TypeName valueType) {
+    public OnBindGetAdapterViewDef(String property, TypeName viewType, TypeName adapterType,  TypeName valueType) {
         this.property = property;
         this.viewType = viewType;
         this.adapterType = adapterType;

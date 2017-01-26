@@ -2,13 +2,11 @@ package se.snylt.zipper;
 
 import java.util.List;
 
-import se.snylt.zipper.BindAction;
-
-public class BindingSpec {
+public abstract class BindingSpec {
 
     public final int viewId;
 
-    public final String key;
+    public final String key; // Key for property value
 
     private final List<BindAction> bindActions;
 
@@ -21,4 +19,8 @@ public class BindingSpec {
     public List<BindAction> getBindActions() {
         return bindActions;
     }
+
+    public abstract void setView(Object viewHolder, Object view);
+
+    public abstract Object getView(Object viewHolder);
 }

@@ -15,10 +15,12 @@ import static se.snylt.zipper.ViewProperties.TextView.TEXT;
 
 public class MainViewModel {
 
-    @BindToTextView(id = R.id.main_activity_text_view) // view + bind action
+    // View and default bind property
+    @BindToTextView(id = R.id.main_activity_text_view)
     final public String text;
 
-    @BindToEditText(id = R.id.main_activity_edit_text, set = HINT) // override default
+    // Override default bind property
+    @BindToEditText(id = R.id.main_activity_edit_text, set = HINT)
     final public String hint;
 
     @BindToImageView(id = R.id.main_activity_image_view)
@@ -27,16 +29,15 @@ public class MainViewModel {
     @BindToCompoundButton(id = R.id.main_activity_check_box)
     final public boolean checked;
 
-    @BindToView(view = Switch.class, id = R.id.main_activity_switch, set = CHECKED) // Bind to view not supported by annotation
+    // Bind to view type not supported by annotation
+    @BindToView(view = Switch.class, id = R.id.main_activity_switch, set = CHECKED)
     final public boolean switched;
 
     @BindToView(view = Switch.class, id = R.id.main_activity_switch, set = TEXT)
     final public String switchText;
 
-    @BindToRecyclerView(
-            id = R.id.main_activity_recycler_view,
-            adapter = MyRecyclerViewAdapter.class,
-            set = "items")
+    // RecyclerView
+    @BindToRecyclerView(id = R.id.main_activity_recycler_view, adapter = MyRecyclerViewAdapter.class, set = "items")
     public final MyRecyclerViewAdapter.MyItem[] items;
 
     public MainViewModel(String text, String hint, int image, boolean checked, String switchText, boolean switched, MyRecyclerViewAdapter.MyItem[] items) {

@@ -182,13 +182,13 @@ public class ZipperProcessor extends AbstractProcessor {
             TypeName viewType  = ClassName.get("android.support.v7.widget", "RecyclerView");
             TypeName valueType  = ClassName.get(bindAction.asType());
             TypeName adapterType = getOnBindToRecyclerViewAdapterClass(bindAction);
-            BindActionDef actionDef = new OnBindRecyclerViewDef(property, viewType, adapterType, valueType);
+            BindActionDef actionDef = new OnBindGetAdapterViewDef(property, viewType, adapterType, valueType);
             addBindAction(bindAction, actionDef, binders);
         }
 
         // TODO
-        // BindToProgressBar
         // BindToAdapterView
+        // BindToProgressBar
         // BindToToggleButton
         // BindToCheckedTextView
         // BindToRatingBar
@@ -216,15 +216,33 @@ public class ZipperProcessor extends AbstractProcessor {
 
     private void buildJava(HashMap<Element, List<BindToViewActions>> binders) {
         for (Element target : binders.keySet()) {
-            ClassName bindingClassName = getBindingClassName(target);
-            TypeSpec typeSpec = BinderFactory.toJava(binders.get(target), bindingClassName);
-            JavaFile javaFile = JavaFile.builder(bindingClassName.packageName(), typeSpec).build();
+
+            // View holder
+            ClassName viewHolderClassName = getBindingViewHolderName(target);
+            TypeSpec viewHolderTypeSpec = ViewHolderFactory.toJava(binders.get(target), viewHolderClassName);
+            JavaFile viewHolderJavaFile = JavaFile.builder(viewHolderClassName.packageName(), viewHolderTypeSpec).build();
             try {
-                javaFile.writeTo(filer);
+                viewHolderJavaFile.writeTo(filer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // View binder
+            ClassName bindingClassName = getBindingClassName(target);
+            TypeSpec bindingTypeSpec = BinderFactory.toJava(binders.get(target), bindingClassName, viewHolderClassName);
+            JavaFile bindingJavaFile = JavaFile.builder(bindingClassName.packageName(), bindingTypeSpec).build();
+            try {
+                bindingJavaFile.writeTo(filer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private ClassName getBindingViewHolderName(Element target) {
+        String className = ClassUtils.getViewHolderName(target);
+        String packageName = ClassUtils.getBindingPackage(target);
+        return ClassName.get(packageName, className);
     }
 
     private ClassName getBindingClassName(Element target) {
