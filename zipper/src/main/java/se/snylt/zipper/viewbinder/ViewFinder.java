@@ -2,12 +2,14 @@ package se.snylt.zipper.viewbinder;
 
 import android.view.View;
 
+import se.snylt.zipper.BindingViewHolder;
+
 public interface ViewFinder {
 
     View findViewById(int id);
 
-    Object getViewHolder();
+    BindingViewHolder getViewHolder();
 
-    void setViewHolder(Object viewHolder);
+    void setViewHolder(BindingViewHolder viewHolder);
 
 }

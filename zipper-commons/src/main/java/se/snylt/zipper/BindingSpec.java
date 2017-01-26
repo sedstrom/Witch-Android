@@ -20,7 +20,7 @@ public abstract class BindingSpec {
         return bindActions;
     }
 
-    public abstract void setView(Object viewHolder, Object view);
+    public abstract void setView(BindingViewHolder viewHolder, Object view);
 
-    public abstract Object getView(Object viewHolder);
+    public abstract Object getView(BindingViewHolder viewHolder);
 }

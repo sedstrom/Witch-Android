@@ -13,6 +13,7 @@ import javax.lang.model.element.Modifier;
 
 import se.snylt.zipper.BindingSpecFactory;
 import se.snylt.zipper.BindingSpec;
+import se.snylt.zipper.BindingViewHolder;
 
 public class BinderFactory {
 
@@ -73,14 +74,14 @@ public class BinderFactory {
 
         MethodSpec getView = MethodSpec.methodBuilder("getView")
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(Object.class, "viewHolder")
+                .addParameter(BindingViewHolder.class, "viewHolder")
                 .returns(viewClassName)
                 .addStatement("return (($T)viewHolder).$N", viewHolderClassName, keyParam)
                 .build();
 
         MethodSpec setView = MethodSpec.methodBuilder("setView")
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(Object.class, "viewHolder")
+                .addParameter(BindingViewHolder.class, "viewHolder")
                 .addParameter(Object.class, "view")
                 .returns(void.class)
                 .addStatement("(($T)viewHolder).$N = ($T)$N", viewHolderClassName, keyParam, viewClassName, "view")

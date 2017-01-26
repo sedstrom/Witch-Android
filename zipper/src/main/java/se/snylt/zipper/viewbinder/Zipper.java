@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.view.View;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import se.snylt.zipper.BindAction;
 import se.snylt.zipper.BindingSpec;
 import se.snylt.zipper.BindingSpecFactory;
+import se.snylt.zipper.BindingViewHolder;
 import se.snylt.zipper.ClassUtils;
 import se.snylt.zipper.viewbinder.onbind.OnBind;
 
@@ -24,14 +26,21 @@ public class Zipper {
     }
 
     private static void bind(Object target, ViewFinder viewFinder) {
+        BindingViewHolder viewHolder = getOrCreateViewHolder(target, viewFinder);
         for (BindingSpec bindingSpec : createBinding(target).getBindingSpecs()) {
-            View view = findView(target, bindingSpec, viewFinder);
-            bind(bindingSpec, view, target);
+            String key = bindingSpec.key;
+            View view = findView(bindingSpec, viewHolder, viewFinder);
+            List<BindAction> actions;
+            if((actions = viewHolder.getActions(key)) == null) {
+                actions = bindingSpec.getBindActions();
+                viewHolder.putActions(key, actions);
+            }
+            bind(actions, view, getValue(target, bindingSpec.key));
         }
     }
 
-    private static Object getOrCreateViewHolder(Object target, ViewFinder viewFinder) {
-        Object viewHolder = viewFinder.getViewHolder();
+    private static BindingViewHolder getOrCreateViewHolder(Object target, ViewFinder viewFinder) {
+        BindingViewHolder viewHolder = viewFinder.getViewHolder();
         if(viewHolder == null) {
             viewHolder = createViewHolder(target);
             viewFinder.setViewHolder(viewHolder);
@@ -39,19 +48,20 @@ public class Zipper {
         return viewHolder;
     }
 
-    private static View findView(Object target, BindingSpec bindingSpec, ViewFinder viewFinder) {
-        Object viewHolder = getOrCreateViewHolder(target, viewFinder);
-        bindingSpec.setView(viewHolder, viewFinder.findViewById(bindingSpec.viewId));
+    private static View findView(BindingSpec bindingSpec, BindingViewHolder viewHolder, ViewFinder viewFinder) {
+        if(bindingSpec.getView(viewHolder) == null) {
+            bindingSpec.setView(viewHolder, viewFinder.findViewById(bindingSpec.viewId));
+        }
         return (View) bindingSpec.getView(viewHolder);
     }
 
-    private static void bind(BindingSpec bindingSpec, View view, Object target) {
-        Object value = getValue(target, bindingSpec);
-        for (BindAction bindAction : bindingSpec.getBindActions()) {
+    private static void bind(List<BindAction> bindActions, View view, Object value) {
+        for (BindAction bindAction : bindActions) {
             doBind(bindAction, view, value);
         }
     }
 
+    // TODO FIX
     private static void doBind(BindAction bindAction, View view, Object value) {
         if (bindAction instanceof OnPreBind) {
             ((OnPreBind) bindAction).onPreBind(view, value);
@@ -73,18 +83,18 @@ public class Zipper {
         }
     }
 
-    private static Object createViewHolder(Object target) {
+    private static BindingViewHolder createViewHolder(Object target) {
         try {
             Class clazz = ClassUtils.findViewHolder(target);
-            return clazz.newInstance();
+            return (BindingViewHolder)clazz.newInstance();
         } catch (Exception e) {
             throw new BindingNotFoundException("Could not find binding for " + target.getClass().getName());
         }
     }
 
-    private static Object getValue(Object target, BindingSpec bindingSpec) {
+    private static Object getValue(Object target, String value) {
         try {
-            Field f = target.getClass().getDeclaredField(bindingSpec.key);
+            Field f = target.getClass().getDeclaredField(value);
             return f.get(target);
         } catch (Exception e) {
             throw new BindingNotFoundException("Could not read value from " + target.getClass().getName());
