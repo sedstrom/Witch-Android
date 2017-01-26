@@ -1,43 +1,46 @@
 package se.snylt.zipper.viewbinder;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 
 import java.lang.reflect.Field;
 
 import se.snylt.zipper.BindAction;
-import se.snylt.zipper.BindingSpecFactory;
 import se.snylt.zipper.BindingSpec;
+import se.snylt.zipper.BindingSpecFactory;
 import se.snylt.zipper.ClassUtils;
 import se.snylt.zipper.viewbinder.onbind.OnBind;
 
 public class Zipper {
 
-    public static void bind(Object target, Activity viewFinder) {
-        long start = System.currentTimeMillis();
-        for (BindingSpec bindingSpec : getBinding(target).getBindingSpecs()) {
+    public final static int VIEW_HOLDER_TAG = Integer.MIN_VALUE;
+
+    public static void bind(Object target, Activity activity) {
+        bind(target, new ActivityViewFinder(activity));
+    }
+
+    public static void bind(Object target, View view) {
+        bind(target, new ViewViewFinder(view));
+    }
+
+    private static void bind(Object target, ViewFinder viewFinder) {
+        for (BindingSpec bindingSpec : createBinding(target).getBindingSpecs()) {
             View view = findView(target, bindingSpec, viewFinder);
             bind(bindingSpec, view, target);
         }
-        Log.d("bind", target.getClass().getSimpleName() + " took: " + (System.currentTimeMillis() - start) + "ms");
     }
 
-    public static void bind(Object target, View viewFinder) {
-        for (BindingSpec bindingSpec : getBinding(target).getBindingSpecs()) {
-            View view = findView(target, bindingSpec, viewFinder);
-            bind(bindingSpec, view, target);
+    private static Object getOrCreateViewHolder(Object target, ViewFinder viewFinder) {
+        Object viewHolder = viewFinder.getViewHolder();
+        if(viewHolder == null) {
+            viewHolder = createViewHolder(target);
+            viewFinder.setViewHolder(viewHolder);
         }
+        return viewHolder;
     }
 
-    private static View findView(Object target, BindingSpec bindingSpec, View viewFinder) {
-        Object viewHolder = getViewHolder(target);
-        bindingSpec.setView(viewHolder, viewFinder.findViewById(bindingSpec.viewId));
-        return (View) bindingSpec.getView(viewHolder);
-    }
-
-    private static View findView(Object target, BindingSpec bindingSpec, Activity viewFinder) {
-        Object viewHolder = getViewHolder(target);
+    private static View findView(Object target, BindingSpec bindingSpec, ViewFinder viewFinder) {
+        Object viewHolder = getOrCreateViewHolder(target, viewFinder);
         bindingSpec.setView(viewHolder, viewFinder.findViewById(bindingSpec.viewId));
         return (View) bindingSpec.getView(viewHolder);
     }
@@ -61,7 +64,7 @@ public class Zipper {
         }
     }
 
-    private static BindingSpecFactory getBinding(Object target) {
+    private static BindingSpecFactory createBinding(Object target) {
         try {
             Class clazz = ClassUtils.findBinding(target);
             return (BindingSpecFactory) clazz.newInstance();
@@ -70,7 +73,7 @@ public class Zipper {
         }
     }
 
-    private static Object getViewHolder(Object target) {
+    private static Object createViewHolder(Object target) {
         try {
             Class clazz = ClassUtils.findViewHolder(target);
             return clazz.newInstance();
