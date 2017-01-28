@@ -3,7 +3,6 @@ package se.snylt.zipper.viewbinder;
 import android.app.Activity;
 import android.view.View;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import se.snylt.zipper.BindAction;
@@ -30,12 +29,13 @@ public class Zipper {
         for (BindingSpec bindingSpec : createBinding(target).getBindingSpecs()) {
             String key = bindingSpec.key;
             View view = findView(bindingSpec, viewHolder, viewFinder);
+            Object value = bindingSpec.getValue(target);
             List<BindAction> actions;
             if((actions = viewHolder.getActions(key)) == null) {
                 actions = bindingSpec.getBindActions();
                 viewHolder.putActions(key, actions);
             }
-            bind(actions, view, getValue(target, bindingSpec.key));
+            bind(actions, view, value);
         }
     }
 
@@ -89,15 +89,6 @@ public class Zipper {
             return (BindingViewHolder)clazz.newInstance();
         } catch (Exception e) {
             throw new BindingNotFoundException("Could not find binding for " + target.getClass().getName());
-        }
-    }
-
-    private static Object getValue(Object target, String value) {
-        try {
-            Field f = target.getClass().getDeclaredField(value);
-            return f.get(target);
-        } catch (Exception e) {
-            throw new BindingNotFoundException("Could not read value from " + target.getClass().getName());
         }
     }
 

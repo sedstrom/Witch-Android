@@ -11,8 +11,8 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import se.snylt.zipper.BindingSpecFactory;
 import se.snylt.zipper.BindingSpec;
+import se.snylt.zipper.BindingSpecFactory;
 import se.snylt.zipper.BindingViewHolder;
 
 public class BinderFactory {
@@ -24,6 +24,7 @@ public class BinderFactory {
     private static final TypeName BINDING_SPEC = TypeName.get(BindingSpec.class);
 
     public static TypeSpec toJava(
+            ClassName target,
             List<BindToViewActions> bindToViewActionses,
             ClassName binderClassName,
             ClassName viewHolderClassName) {
@@ -57,6 +58,7 @@ public class BinderFactory {
             // Add complete binding spec
             getBindingSpecs.addStatement("bindingSpecs.add($L)",
                     newBindSpecInstance(
+                            target,
                             bindToViewActions.viewId,
                             bindToViewActions.value.getSimpleName().toString(),
                             viewHolderClassName));
@@ -69,7 +71,7 @@ public class BinderFactory {
         return builder.build();
     }
 
-    private static TypeSpec newBindSpecInstance(int viewIdParam, String keyParam, ClassName viewHolderClassName) {
+    private static TypeSpec newBindSpecInstance(ClassName targetTypeName, int viewIdParam, String keyParam, ClassName viewHolderClassName) {
         ClassName viewClassName = ClassName.get("android.view", "View");
 
         MethodSpec getView = MethodSpec.methodBuilder("getView")
@@ -87,10 +89,18 @@ public class BinderFactory {
                 .addStatement("(($T)viewHolder).$N = ($T)$N", viewHolderClassName, keyParam, viewClassName, "view")
                 .build();
 
+        MethodSpec getValue = MethodSpec.methodBuilder("getValue")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(Object.class, "target")
+                .returns(Object.class)
+                .addStatement("return (($T)target).$N", targetTypeName, keyParam)
+                .build();
+
         TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, $N", viewIdParam, keyParam, "bindActions")
                 .addSuperinterface(BINDING_SPEC)
                 .addMethod(setView)
                 .addMethod(getView)
+                .addMethod(getValue)
                 .build();
 
         return anonymous;

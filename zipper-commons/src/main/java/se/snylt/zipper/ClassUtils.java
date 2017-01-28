@@ -42,6 +42,12 @@ public class ClassUtils {
         return className + CLASS_SUFFIX;
     }
 
+    public static String getTargetName(Element element) {
+        String packageName = getBindingPackage(element);
+        String className = ((TypeElement) element).getQualifiedName().toString();
+        return className;
+    }
+
     public static String getBindingPackage(Element element) {
         while (element.getKind() != PACKAGE) {
             element = element.getEnclosingElement();

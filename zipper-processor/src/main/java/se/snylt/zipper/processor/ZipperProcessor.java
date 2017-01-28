@@ -217,6 +217,7 @@ public class ZipperProcessor extends AbstractProcessor {
     private void buildJava(HashMap<Element, List<BindToViewActions>> binders) {
         for (Element target : binders.keySet()) {
 
+            // TODO refactor
             // View holder
             ClassName viewHolderClassName = getBindingViewHolderName(target);
             TypeSpec viewHolderTypeSpec = ViewHolderFactory.toJava(binders.get(target), viewHolderClassName);
@@ -229,7 +230,8 @@ public class ZipperProcessor extends AbstractProcessor {
 
             // View binder
             ClassName bindingClassName = getBindingClassName(target);
-            TypeSpec bindingTypeSpec = BinderFactory.toJava(binders.get(target), bindingClassName, viewHolderClassName);
+            ClassName targetClassName = getTargetClassName(target);
+            TypeSpec bindingTypeSpec = BinderFactory.toJava(targetClassName, binders.get(target), bindingClassName, viewHolderClassName);
             JavaFile bindingJavaFile = JavaFile.builder(bindingClassName.packageName(), bindingTypeSpec).build();
             try {
                 bindingJavaFile.writeTo(filer);
@@ -247,6 +249,12 @@ public class ZipperProcessor extends AbstractProcessor {
 
     private ClassName getBindingClassName(Element target) {
         String className = ClassUtils.getBindingName(target);
+        String packageName = ClassUtils.getBindingPackage(target);
+        return ClassName.get(packageName, className);
+    }
+
+    private ClassName getTargetClassName(Element target) {
+        String className = ClassUtils.getTargetName(target);
         String packageName = ClassUtils.getBindingPackage(target);
         return ClassName.get(packageName, className);
     }
