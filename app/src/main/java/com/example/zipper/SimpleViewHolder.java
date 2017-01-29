@@ -3,9 +3,9 @@ package com.example.zipper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-class EmptyViewHolder extends RecyclerView.ViewHolder {
+class SimpleViewHolder extends RecyclerView.ViewHolder {
 
-    public EmptyViewHolder(View itemView) {
+    public SimpleViewHolder(View itemView) {
         super(itemView);
     }
 }

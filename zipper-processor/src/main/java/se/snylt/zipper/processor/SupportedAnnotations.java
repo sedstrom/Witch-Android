@@ -6,13 +6,13 @@ import javax.lang.model.element.Element;
 
 public class SupportedAnnotations {
 
-
-    public abstract static class ViewId {
+    public abstract static class HasViewId {
         abstract Integer getViewId(Element element);
         abstract Class<? extends Annotation> getClazz();
     }
 
-    public final static class BindTo extends ViewId {
+    // BindTo
+    public final static class BindTo extends HasViewId {
         public final static String name = "se.snylt.zipper.annotations.BindTo";
 
         @Override
@@ -26,7 +26,8 @@ public class SupportedAnnotations {
         }
     }
 
-    public final static class BindToView extends ViewId{
+    // BindToView
+    public final static class BindToView extends HasViewId {
         public final static String name = "se.snylt.zipper.annotations.BindToView";
 
         @Override
@@ -40,7 +41,8 @@ public class SupportedAnnotations {
         }
     }
 
-    public final static class BindToEditText extends ViewId{
+    // BindToEditText
+    public final static class BindToEditText extends HasViewId {
         public final static String name = "se.snylt.zipper.annotations.BindToEditText";
 
         @Override
@@ -54,7 +56,8 @@ public class SupportedAnnotations {
         }
     }
 
-    public final static class BindToTextView extends ViewId{
+    // BindToTextView
+    public final static class BindToTextView extends HasViewId {
         public final static String name = "se.snylt.zipper.annotations.BindToTextView";
 
         @Override
@@ -68,7 +71,8 @@ public class SupportedAnnotations {
         }
     }
 
-    public final static class BindToImageView extends ViewId {
+    // BindToImageView
+    public final static class BindToImageView extends HasViewId {
         public final static String name = "se.snylt.zipper.annotations.BindToImageView";
 
         @Override
@@ -82,7 +86,8 @@ public class SupportedAnnotations {
         }
     }
 
-    public final static class BindToCompoundButton extends ViewId {
+    // BindToCompoundButton
+    public final static class BindToCompoundButton extends HasViewId {
         public final static String name = "se.snylt.zipper.annotations.BindToCompoundButton";
 
         @Override
@@ -97,7 +102,8 @@ public class SupportedAnnotations {
 
     }
 
-    public final static class BindToRecyclerView extends ViewId {
+    // BindToRecyclerView
+    public final static class BindToRecyclerView extends HasViewId {
         public final static String name = "se.snylt.zipper.annotations.BindToRecyclerView";
 
         @Override
@@ -115,21 +121,8 @@ public class SupportedAnnotations {
         public final static String name = "se.snylt.zipper.annotations.OnBind";
     }
 
-
-    // All supported annotations as string
-    public final static String[] ALL_BINDINGS_STRINGS = new String[]{
-            BindTo.name,
-            BindToView.name,
-            BindToRecyclerView.name,
-            BindToCompoundButton.name,
-            BindToTextView.name,
-            BindToEditText.name,
-            BindToImageView.name,
-            OnBind.name
-    };
-
     // All annotations that bind to a view id
-    public final static ViewId[] ALL_BIND_VIEW = new ViewId[] {
+    public final static HasViewId[] ALL_BIND_VIEW = new HasViewId[] {
             new BindTo(),
             new BindToView(),
             new BindToRecyclerView(),

@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static se.snylt.zipper.ViewProperties.CompoundButton.CHECKED;
+import static se.snylt.zipper.annotations.ViewProperties.CompoundButton.CHECKED;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)

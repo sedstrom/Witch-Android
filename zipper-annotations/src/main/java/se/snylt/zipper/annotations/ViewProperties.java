@@ -1,4 +1,4 @@
-package se.snylt.zipper;
+package se.snylt.zipper.annotations;
 
 public class ViewProperties {
 

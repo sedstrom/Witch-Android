@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static se.snylt.zipper.ViewProperties.EditText.TEXT;
+import static se.snylt.zipper.annotations.ViewProperties.EditText.TEXT;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)

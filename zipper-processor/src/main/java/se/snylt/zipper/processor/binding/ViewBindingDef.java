@@ -1,19 +1,22 @@
-package se.snylt.zipper.processor;
+package se.snylt.zipper.processor.binding;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.lang.model.element.Element;
 
-public class BindToViewActions {
+public class ViewBindingDef {
 
+    // View
     public final Integer viewId;
 
+    // Value
     public final Element value;
 
+    // Bind actions
     public final List<BindActionDef> bindActions;
 
-    public BindToViewActions(Integer viewId, Element value) {
+    public ViewBindingDef(Integer viewId, Element value) {
         this.viewId = viewId;
         this.value = value;
         this.bindActions = new LinkedList<>();
@@ -25,8 +28,8 @@ public class BindToViewActions {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof BindToViewActions) {
-            return ((BindToViewActions) obj).value.equals(value);
+        if(obj instanceof ViewBindingDef) {
+            return ((ViewBindingDef) obj).value.equals(value);
         }
         if(obj instanceof Element) {
             return obj.equals(value);

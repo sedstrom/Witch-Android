@@ -5,16 +5,8 @@ import android.util.Log;
 import android.view.View;
 
 import java.util.HashMap;
-import java.util.List;
 
-import se.snylt.zipper.BindAction;
-import se.snylt.zipper.BindingSpec;
-import se.snylt.zipper.BindingSpecFactory;
-import se.snylt.zipper.BindingViewHolder;
 import se.snylt.zipper.ClassUtils;
-import se.snylt.zipper.viewbinder.bindaction.OnBind;
-import se.snylt.zipper.viewbinder.bindaction.OnPostBind;
-import se.snylt.zipper.viewbinder.bindaction.OnPreBind;
 import se.snylt.zipper.viewbinder.viewfinder.ActivityViewFinder;
 import se.snylt.zipper.viewbinder.viewfinder.ViewFinder;
 import se.snylt.zipper.viewbinder.viewfinder.ViewViewFinder;
@@ -37,11 +29,11 @@ public class Zipper {
 
     private static Binding bind(Object target, ViewFinder viewFinder) {
         Binding binding = getOrCreateBinding(target);
-        BindingViewHolder viewHolder = getOrCreateViewHolder(target, viewFinder);
-        for (BindingSpec bindingSpec : binding.getBindingSpecs()) {
-            View view = findView(bindingSpec, viewHolder, viewFinder);
-            Object value = bindingSpec.getValue(target);
-            bind(bindingSpec.getBindActions(), view, value);
+        Object viewHolder = getOrCreateViewHolder(target, viewFinder);
+        for (ViewBinder viewBinder : binding.getViewBinders()) {
+            View view = findView(viewBinder, viewHolder, viewFinder);
+            Object value = viewBinder.getValue(target);
+            viewBinder.doBind(view, value);
         }
         return binding;
     }
@@ -50,13 +42,14 @@ public class Zipper {
         final Class key = target.getClass();
         Binding binding;
         if(!bindings.containsKey(target.getClass())) {
-            bindings.put(key, new Binding(createBindingSpecs(target), new OnUnbindListener() {
+            binding = createBinding(target, new OnUnbindListener() {
                 @Override
                 public void onUnbind() {
                     doUnbind(key);
                 }
-            }));
-            Log.d(TAG, "put binding: " +key.getSimpleName());
+            });
+            bindings.put(key, binding);
+
         }
         binding = bindings.get(key);
         return binding;
@@ -67,8 +60,8 @@ public class Zipper {
         bindings.remove(targetClass);
     }
 
-    private static BindingViewHolder getOrCreateViewHolder(Object target, ViewFinder viewFinder) {
-        BindingViewHolder viewHolder = viewFinder.getViewHolder();
+    private static Object getOrCreateViewHolder(Object target, ViewFinder viewFinder) {
+        Object viewHolder = viewFinder.getViewHolder();
         if(viewHolder == null) {
             viewHolder = createViewHolder(target);
             viewFinder.setViewHolder(viewHolder);
@@ -76,45 +69,29 @@ public class Zipper {
         return viewHolder;
     }
 
-    private static View findView(BindingSpec bindingSpec, BindingViewHolder viewHolder, ViewFinder viewFinder) {
-        if(bindingSpec.getView(viewHolder) == null) {
-            bindingSpec.setView(viewHolder, viewFinder.findViewById(bindingSpec.viewId));
+    private static View findView(ViewBinder viewBinder, Object viewHolder, ViewFinder viewFinder) {
+        if(viewBinder.getView(viewHolder) == null) {
+            Log.d(TAG, "looking up view with id: " + viewBinder.viewId);
+            viewBinder.setView(viewHolder, viewFinder.findViewById(viewBinder.viewId));
         }
-        return (View) bindingSpec.getView(viewHolder);
+        return (View) viewBinder.getView(viewHolder);
     }
 
-    private static void bind(List<BindAction> bindActions, View view, Object value) {
-        for (BindAction bindAction : bindActions) {
-            doBind(bindAction, view, value);
-        }
-    }
-
-    // TODO Sort
-    private static void doBind(BindAction bindAction, View view, Object value) {
-        if (bindAction instanceof OnPreBind) {
-            ((OnPreBind) bindAction).onPreBind(view, value);
-        }
-        if (bindAction instanceof OnBind) {
-            ((OnBind) bindAction).onBind(view, value);
-        }
-        if (bindAction instanceof OnPostBind) {
-            ((OnPostBind) bindAction).onPostBind(view, value);
-        }
-    }
-
-    private static List<BindingSpec> createBindingSpecs(Object target) {
+    private static Binding createBinding(Object target, OnUnbindListener listener) {
+        Log.d(TAG, "created binding for: " + target.getClass().getSimpleName());
         try {
             Class clazz = ClassUtils.findBinding(target);
-            return ((BindingSpecFactory) clazz.newInstance()).getBindingSpecs();
+            return ((BindingCreator) clazz.newInstance()).createBinding(listener);
         } catch (Exception e) {
             throw new BindingNotFoundException(target);
         }
     }
 
-    private static BindingViewHolder createViewHolder(Object target) {
+    private static Object createViewHolder(Object target) {
+        Log.d(TAG, "created binding for: " + target.getClass().getSimpleName());
         try {
             Class clazz = ClassUtils.findViewHolder(target);
-            return (BindingViewHolder)clazz.newInstance();
+            return clazz.newInstance();
         } catch (Exception e) {
             throw new BindingNotFoundException("Could not find binding for " + target.getClass().getName());
         }

@@ -1,4 +1,4 @@
-package se.snylt.zipper.processor;
+package se.snylt.zipper.processor.binding;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;

@@ -2,21 +2,19 @@ package se.snylt.zipper.viewbinder;
 
 import java.util.List;
 
-import se.snylt.zipper.BindingSpec;
-
 public class Binding {
 
-    private final List<BindingSpec> bindingSpecs;
+    private final List<ViewBinder> viewBinders;
 
     private final OnUnbindListener onUnbindListener;
 
-    public Binding(List<BindingSpec> bindingSpecs, OnUnbindListener onUnbindListener) {
-        this.bindingSpecs = bindingSpecs;
+    public Binding(List<ViewBinder> viewBinders, OnUnbindListener onUnbindListener) {
+        this.viewBinders = viewBinders;
         this.onUnbindListener = onUnbindListener;
     }
 
-    public List<BindingSpec> getBindingSpecs() {
-        return bindingSpecs;
+    public List<ViewBinder> getViewBinders() {
+        return viewBinders;
     }
 
     public void unBind() {

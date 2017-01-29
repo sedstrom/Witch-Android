@@ -8,9 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
-public class MainActivity extends AppCompatActivity implements MainView {
-
-    MainPresenter presenter = new MainPresenter();
+public class MainActivity extends AppCompatActivity {
 
     private Binding binding;
 
@@ -23,12 +21,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new MyRecyclerViewAdapter());
 
-        presenter.takeView(this);
+        binding = Zipper.bind(new MainViewModel("My title", "My hint", R.mipmap.ic_launcher, generateItems(100)), this);
     }
 
-    @Override
-    public void bind(MainViewModel viewModel) {
-        binding = Zipper.bind(viewModel, this);
+    private MyRecyclerViewAdapter.MyItem[] generateItems(int count) {
+        MyRecyclerViewAdapter.MyItem[] items = new MyRecyclerViewAdapter.MyItem[count];
+        for(int i = 0; i < count; i++) {
+            items[i] = new MyRecyclerViewAdapter.MyItem("John " + i, "Doe");
+        }
+        return items;
     }
 
     @Override

@@ -32,6 +32,13 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
 import se.snylt.zipper.ClassUtils;
+import se.snylt.zipper.processor.binding.BindActionDef;
+import se.snylt.zipper.processor.binding.OnBindDef;
+import se.snylt.zipper.processor.binding.OnBindGetAdapterViewDef;
+import se.snylt.zipper.processor.binding.OnBindViewDef;
+import se.snylt.zipper.processor.binding.ViewBindingDef;
+import se.snylt.zipper.processor.java.BinderCreatorJavaHelper;
+import se.snylt.zipper.processor.java.ViewHolderJavaHelper;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
@@ -71,16 +78,16 @@ public class ZipperProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        HashMap<Element, List<BindToViewActions>> targets = new HashMap<>();
+        HashMap<Element, List<ViewBindingDef>> targets = new HashMap<>();
         addTarget(targets, roundEnv, SupportedAnnotations.ALL_BIND_VIEW);
         addBindActions(targets, roundEnv);
         buildJava(targets);
         return true;
     }
 
-    private void addTarget(Map<Element, List<BindToViewActions>> targets, RoundEnvironment roundEnv, SupportedAnnotations.ViewId...annotations) {
-        for(SupportedAnnotations.ViewId viewIdAnnotation: annotations) {
-            for (Element value : roundEnv.getElementsAnnotatedWith(viewIdAnnotation.getClazz())) {
+    private void addTarget(Map<Element, List<ViewBindingDef>> targets, RoundEnvironment roundEnv, SupportedAnnotations.HasViewId...annotations) {
+        for(SupportedAnnotations.HasViewId hasViewIdAnnotation : annotations) {
+            for (Element value : roundEnv.getElementsAnnotatedWith(hasViewIdAnnotation.getClazz())) {
                 Element target = value.getEnclosingElement();
 
                 // Prepare target bindings
@@ -89,16 +96,16 @@ public class ZipperProcessor extends AbstractProcessor {
                 }
 
                 // Add view id and field to be bound
-                List<BindToViewActions> bindToViewActionses = targets.get(target);
-                if (!bindToViewActionses.contains(value)) {
-                    int viewId = viewIdAnnotation.getViewId(value);
-                    bindToViewActionses.add(new BindToViewActions(viewId, value));
+                List<ViewBindingDef> viewActionses = targets.get(target);
+                if (!viewActionses.contains(value)) {
+                    int viewId = hasViewIdAnnotation.getViewId(value);
+                    viewActionses.add(new ViewBindingDef(viewId, value));
                 }
             }
         }
     }
 
-    private void addBindActions(HashMap<Element, List<BindToViewActions>> binders, RoundEnvironment roundEnv) {
+    private void addBindActions(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
         // OnBind
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.zipper.annotations.OnBind.class)) {
             TypeName onBindClass = getOnBindClass(bindAction);
@@ -161,48 +168,53 @@ public class ZipperProcessor extends AbstractProcessor {
         // BindToToolBar
     }
 
-    private void addOnBindViewDef(HashMap<Element, List<BindToViewActions>> binders, String property, TypeName viewType, Element bindAction) {
+    private void addOnBindViewDef(HashMap<Element, List<ViewBindingDef>> binders, String property, TypeName viewType, Element bindAction) {
         TypeName valueType  = ClassName.get(bindAction.asType());
         BindActionDef actionDef = new OnBindViewDef(property, viewType, valueType);
         addBindAction(bindAction, actionDef, binders);
     }
 
-    private void addBindAction(Element bindAction, BindActionDef bindActionDef, HashMap<Element, List<BindToViewActions>> binders) {
+    private void addBindAction(Element bindAction, BindActionDef bindActionDef, HashMap<Element, List<ViewBindingDef>> binders) {
         Element target = bindAction.getEnclosingElement();
-        List<BindToViewActions> bindToViewActionses = binders.get(target);
+        List<ViewBindingDef> viewActionses = binders.get(target);
 
         // Add bind actions to view binding
-        for (BindToViewActions bindToViewActions : bindToViewActionses) {
-            if (bindToViewActions.equals(bindAction)) {
-                bindToViewActions.addBindAction(bindActionDef);
+        for (ViewBindingDef viewBindingDef : viewActionses) {
+            if (viewBindingDef.equals(bindAction)) {
+                viewBindingDef.addBindAction(bindActionDef);
             }
         }
     }
 
-    private void buildJava(HashMap<Element, List<BindToViewActions>> binders) {
+    private void buildJava(HashMap<Element, List<ViewBindingDef>> binders) {
         for (Element target : binders.keySet()) {
+            createViewHolder(target, binders);
+            createBindingSpec(target, binders);
+        }
+    }
 
-            // TODO refactor
-            // View holder
-            ClassName viewHolderClassName = getBindingViewHolderName(target);
-            TypeSpec viewHolderTypeSpec = ViewHolderFactory.toJava(binders.get(target), viewHolderClassName);
-            JavaFile viewHolderJavaFile = JavaFile.builder(viewHolderClassName.packageName(), viewHolderTypeSpec).build();
-            try {
-                viewHolderJavaFile.writeTo(filer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private void createBindingSpec(Element target, HashMap<Element, List<ViewBindingDef>> binders) {
+        ClassName viewHolderClassName = getBindingViewHolderName(target);
+        ClassName bindingClassName = getBindingClassName(target);
+        ClassName targetClassName = getTargetClassName(target);
+        TypeSpec bindingTypeSpec = BinderCreatorJavaHelper
+                .toJava(targetClassName, binders.get(target), bindingClassName, viewHolderClassName);
+        JavaFile bindingJavaFile = JavaFile.builder(bindingClassName.packageName(), bindingTypeSpec).build();
+        try {
+            bindingJavaFile.writeTo(filer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            // View binder
-            ClassName bindingClassName = getBindingClassName(target);
-            ClassName targetClassName = getTargetClassName(target);
-            TypeSpec bindingTypeSpec = BinderFactory.toJava(targetClassName, binders.get(target), bindingClassName, viewHolderClassName);
-            JavaFile bindingJavaFile = JavaFile.builder(bindingClassName.packageName(), bindingTypeSpec).build();
-            try {
-                bindingJavaFile.writeTo(filer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private void createViewHolder(Element target, HashMap<Element, List<ViewBindingDef>> binders) {
+        ClassName viewHolderClassName = getBindingViewHolderName(target);
+        TypeSpec viewHolderTypeSpec = ViewHolderJavaHelper.toJava(binders.get(target), viewHolderClassName);
+        JavaFile viewHolderJavaFile = JavaFile.builder(viewHolderClassName.packageName(), viewHolderTypeSpec).build();
+        try {
+            viewHolderJavaFile.writeTo(filer);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

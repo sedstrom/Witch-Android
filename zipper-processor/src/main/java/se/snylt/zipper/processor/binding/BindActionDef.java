@@ -1,4 +1,4 @@
-package se.snylt.zipper.processor;
+package se.snylt.zipper.processor.binding;
 
 public abstract class BindActionDef {
 
