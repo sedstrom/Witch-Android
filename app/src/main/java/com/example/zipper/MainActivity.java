@@ -5,11 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
     MainPresenter presenter = new MainPresenter();
+
+    private Binding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void bind(MainViewModel viewModel) {
-        Zipper.bind(viewModel, this);
+        binding = Zipper.bind(viewModel, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(binding != null) {
+            binding.unBind();
+        }
     }
 }

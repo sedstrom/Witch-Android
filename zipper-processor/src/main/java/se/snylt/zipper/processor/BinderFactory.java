@@ -42,15 +42,16 @@ public class BinderFactory {
                 .returns(listOfBindingSpecs);
 
         getBindingSpecs
-                .addStatement("$T bindingSpecs = new $T<>()", listOfBindingSpecs, ARRAY_LIST)
-                .addStatement("$T bindActions", LIST);
+                .addStatement("$T bindingSpecs = new $T<>()", listOfBindingSpecs, ARRAY_LIST);
+
+        getBindingSpecs.addStatement("$T bindActions", LIST);
 
         // All views
         for (BindToViewActions bindToViewActions : bindToViewActionses) {
             getBindingSpecs.addComment("Bind " + bindToViewActions.value.getSimpleName());
 
-            // All actions for each view
-            getBindingSpecs.addStatement("bindActions = new $T<>()", ARRAY_LIST);
+            // Add all binding actions
+            getBindingSpecs.addStatement("bindActions = new $T()", ARRAY_LIST);
             for (BindActionDef bindAction : bindToViewActions.bindActions) {
                 getBindingSpecs.addStatement("bindActions.add($L)", bindAction.getNewInstanceJava());
             }
@@ -59,8 +60,7 @@ public class BinderFactory {
             getBindingSpecs.addStatement("bindingSpecs.add($L)",
                     newBindSpecInstance(
                             target,
-                            bindToViewActions.viewId,
-                            bindToViewActions.value.getSimpleName().toString(),
+                            bindToViewActions,
                             viewHolderClassName));
         }
 
@@ -71,32 +71,37 @@ public class BinderFactory {
         return builder.build();
     }
 
-    private static TypeSpec newBindSpecInstance(ClassName targetTypeName, int viewIdParam, String keyParam, ClassName viewHolderClassName) {
+    private static TypeSpec newBindSpecInstance(ClassName targetTypeName, BindToViewActions bindToViewActions, ClassName viewHolderClassName) {
         ClassName viewClassName = ClassName.get("android.view", "View");
+        String valueKey =  bindToViewActions.value.getSimpleName().toString();
+        int viewId = bindToViewActions.viewId;
 
+        // Get view
         MethodSpec getView = MethodSpec.methodBuilder("getView")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(BindingViewHolder.class, "viewHolder")
                 .returns(viewClassName)
-                .addStatement("return (($T)viewHolder).$N", viewHolderClassName, keyParam)
+                .addStatement("return (($T)viewHolder).$N", viewHolderClassName, valueKey)
                 .build();
 
+        // Set view
         MethodSpec setView = MethodSpec.methodBuilder("setView")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(BindingViewHolder.class, "viewHolder")
                 .addParameter(Object.class, "view")
                 .returns(void.class)
-                .addStatement("(($T)viewHolder).$N = ($T)$N", viewHolderClassName, keyParam, viewClassName, "view")
+                .addStatement("(($T)viewHolder).$N = ($T)$N", viewHolderClassName, valueKey, viewClassName, "view")
                 .build();
 
+        // Value
         MethodSpec getValue = MethodSpec.methodBuilder("getValue")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "target")
                 .returns(Object.class)
-                .addStatement("return (($T)target).$N", targetTypeName, keyParam)
+                .addStatement("return (($T)target).$N", targetTypeName, valueKey)
                 .build();
 
-        TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, $N", viewIdParam, keyParam, "bindActions")
+        TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, $N", viewId, valueKey, "bindActions")
                 .addSuperinterface(BINDING_SPEC)
                 .addMethod(setView)
                 .addMethod(getView)

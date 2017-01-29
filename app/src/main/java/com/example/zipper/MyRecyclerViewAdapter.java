@@ -5,11 +5,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import se.snylt.zipper.annotations.BindToTextView;
+import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private MyItem[] items = new MyItem[0];
+
+    private Binding binding;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -18,12 +21,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Zipper.bind(items[position], holder.itemView);
+        binding = Zipper.bind(items[position], holder.itemView);
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
+        if(binding != null) {
+            binding.unBind();
+        }
     }
 
     @Override
