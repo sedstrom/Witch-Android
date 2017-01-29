@@ -37,7 +37,7 @@ public class OnBindGetAdapterViewDef extends BindActionDef {
 
         TypeSpec anonymous = TypeSpec.anonymousClassBuilder("")
                 .addSuperinterface(ParameterizedTypeName
-                        .get(ClassName.get("se.snylt.zipper.viewbinder.onbind", "OnBind"), viewType))
+                        .get(ClassName.get("se.snylt.zipper.viewbinder.bindaction", "OnBind"), viewType))
                 .addMethod(method)
                 .build();
 

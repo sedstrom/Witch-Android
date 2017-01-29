@@ -1,4 +1,4 @@
-package se.snylt.zipper.viewbinder;
+package se.snylt.zipper.viewbinder.bindaction;
 
 import android.view.View;
 

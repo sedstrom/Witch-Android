@@ -12,7 +12,12 @@ import se.snylt.zipper.BindingSpec;
 import se.snylt.zipper.BindingSpecFactory;
 import se.snylt.zipper.BindingViewHolder;
 import se.snylt.zipper.ClassUtils;
-import se.snylt.zipper.viewbinder.onbind.OnBind;
+import se.snylt.zipper.viewbinder.bindaction.OnBind;
+import se.snylt.zipper.viewbinder.bindaction.OnPostBind;
+import se.snylt.zipper.viewbinder.bindaction.OnPreBind;
+import se.snylt.zipper.viewbinder.viewfinder.ActivityViewFinder;
+import se.snylt.zipper.viewbinder.viewfinder.ViewFinder;
+import se.snylt.zipper.viewbinder.viewfinder.ViewViewFinder;
 
 public class Zipper {
 
@@ -102,7 +107,7 @@ public class Zipper {
             Class clazz = ClassUtils.findBinding(target);
             return ((BindingSpecFactory) clazz.newInstance()).getBindingSpecs();
         } catch (Exception e) {
-            throw new BindingNotFoundException("Could not find binding for " + target.getClass().getName());
+            throw new BindingNotFoundException(target);
         }
     }
 
