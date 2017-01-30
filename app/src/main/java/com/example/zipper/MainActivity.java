@@ -1,5 +1,6 @@
 package com.example.zipper;
 
+import com.example.zipper.customview.CustomViewFragment;
 import com.example.zipper.recyclerview.RecyclerViewFragment;
 import com.example.zipper.textview.TextViewFragment;
 
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         List<MyViewPagerAdapter.Page> pages = new ArrayList<>();
         pages.add(newPage(RecyclerViewFragment.class.getName(), "RecyclerView"));
         pages.add(newPage(TextViewFragment.class.getName(), "TextView"));
+        pages.add(newPage(CustomViewFragment.class.getName(), "CustomView"));
         MainViewModel model = new MainViewModel(pages);
 
         binding = Zipper.bind(model, this);
