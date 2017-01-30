@@ -7,10 +7,10 @@
 
     <com.example.zipper.customview.CustomView
             android:id="@+id/custom_view_fragment_custom_view"
-            android:gravity="center"
-            android:textSize="16sp"
+            android:gravity="center|left"
+            android:textSize="14sp"
             android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
+            android:layout_width="wrap_content"/>
 
 
 </LinearLayout>

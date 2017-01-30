@@ -26,9 +26,8 @@ public class CustomViewFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding = Zipper.bind(new CustomViewModel("A custom view that has no dedicated @Bind-annotation can be bound anyways!"
-                + " Just use @BindView and define:\n\n"
-                + "[id], [view] & [set] "), view);
+        binding = Zipper.bind(new CustomViewModel("@BindView\nid = R.id.123, view = CustomView.class, set = \"property\""), view);
+
     }
 
     @Override
