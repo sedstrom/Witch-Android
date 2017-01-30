@@ -117,6 +117,21 @@ public class SupportedAnnotations {
         }
     }
 
+    // BindToViewPager
+    public final static class BindToViewPager extends HasViewId {
+        public final static String name = "se.snylt.zipper.annotations.BindToViewPager";
+
+        @Override
+        Integer getViewId(Element element) {
+            return element.getAnnotation(se.snylt.zipper.annotations.BindToViewPager.class).id();
+        }
+
+        @Override
+        Class getClazz() {
+            return se.snylt.zipper.annotations.BindToViewPager.class;
+        }
+    }
+
     public final static class OnBind {
         public final static String name = "se.snylt.zipper.annotations.OnBind";
     }
@@ -129,7 +144,8 @@ public class SupportedAnnotations {
             new BindToCompoundButton(),
             new BindToEditText(),
             new BindToTextView(),
-            new BindToImageView()
+            new BindToImageView(),
+            new BindToViewPager()
     };
 
 }

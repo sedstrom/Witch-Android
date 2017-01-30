@@ -49,7 +49,6 @@ public class Zipper {
                 }
             });
             bindings.put(key, binding);
-
         }
         binding = bindings.get(key);
         return binding;

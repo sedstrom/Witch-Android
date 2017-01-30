@@ -1,4 +1,4 @@
-package com.example.zipper;
+package com.example.zipper.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

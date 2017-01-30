@@ -49,7 +49,8 @@ import se.snylt.zipper.processor.java.ViewHolderJavaHelper;
         SupportedAnnotations.BindToCompoundButton.name,
         SupportedAnnotations.BindToImageView.name,
         SupportedAnnotations.BindToRecyclerView.name,
-        SupportedAnnotations.OnBind.name
+        SupportedAnnotations.BindToViewPager.name,
+        SupportedAnnotations.OnBind.name,
 
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
@@ -158,6 +159,16 @@ public class ZipperProcessor extends AbstractProcessor {
             addBindAction(bindAction, actionDef, binders);
         }
 
+        // BindToRecyclerView
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.zipper.annotations.BindToViewPager.class)) {
+            String property = bindAction.getAnnotation(se.snylt.zipper.annotations.BindToViewPager.class).set();
+            TypeName viewType  = ClassName.get("android.support.v4.view", "ViewPager");
+            TypeName valueType  = ClassName.get(bindAction.asType());
+            TypeName adapterType = getOnBindToViewPagerAdapterClass(bindAction);
+            BindActionDef actionDef = new OnBindGetAdapterViewDef(property, viewType, adapterType, valueType);
+            addBindAction(bindAction, actionDef, binders);
+        }
+
         // TODO
         // BindToAdapterView
         // BindToProgressBar
@@ -166,6 +177,7 @@ public class ZipperProcessor extends AbstractProcessor {
         // BindToRatingBar
         // BindToTextSwitcher
         // BindToToolBar
+        // BindGridLayout
     }
 
     private void addOnBindViewDef(HashMap<Element, List<ViewBindingDef>> binders, String property, TypeName viewType, Element bindAction) {
@@ -240,6 +252,16 @@ public class ZipperProcessor extends AbstractProcessor {
         TypeMirror bindClass = null;
         try {
             bindAction.getAnnotation(se.snylt.zipper.annotations.BindToRecyclerView.class).adapter();
+        } catch (MirroredTypeException mte) {
+            bindClass = mte.getTypeMirror();
+        }
+        return TypeName.get(bindClass);
+    }
+
+    private TypeName getOnBindToViewPagerAdapterClass(Element bindAction) {
+        TypeMirror bindClass = null;
+        try {
+            bindAction.getAnnotation(se.snylt.zipper.annotations.BindToViewPager.class).adapter();
         } catch (MirroredTypeException mte) {
             bindClass = mte.getTypeMirror();
         }

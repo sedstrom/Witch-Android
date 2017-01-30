@@ -1,8 +1,12 @@
-package com.example.zipper;
+package com.example.zipper.recyclerview;
+
+import com.example.zipper.R;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import java.util.List;
 
 import se.snylt.zipper.annotations.BindToTextView;
 import se.snylt.zipper.viewbinder.Binding;
@@ -10,18 +14,18 @@ import se.snylt.zipper.viewbinder.Zipper;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
-    private MyItem[] items = new MyItem[0];
+    private List<MyItem> items;
 
     private Binding binding;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SimpleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.my_item, parent, false));
+        return new SimpleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        binding = Zipper.bind(items[position], holder.itemView);
+        binding = Zipper.bind(items.get(position), holder.itemView);
     }
 
     @Override
@@ -34,10 +38,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return items.length;
+        return items == null ? 0 : items.size();
     }
 
-    public void setItems(MyItem[] items) {
+    public void setItems(List<MyItem> items) {
         this.items = items;
     }
 
