@@ -6,7 +6,7 @@ An attempt at making an easy to use view-model-binding framework for Android. (Y
 Represent a views state with a view model. 
 
 ### How to use:
-Define view model.
+Define view model
 ```java
 public class MyViewModel {
 
@@ -20,10 +20,26 @@ public class MyViewModel {
 
 }
 ```
-Bind to view.
+Bind view model to view
 ```java
 MyViewModel model = new MyViewModel("The title", "The sub-title"));
 Zipper.bind(model, activity); // Binds to anything that contains the views defined in view model.
+```
+### ViewHolders built in
+A view model will have its own view holder which eliminates the need for defining view holders in adapters:
+
+```java
+   @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        // An empty view holder just containing the root view.
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        return new SimpleViewHolder(inflater.inflate(R.layout.recycler_view_item, parent, false));
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        binding = Zipper.bind(items.get(position), holder.itemView);
+    }
 ```
 
 ### Supported annotations
