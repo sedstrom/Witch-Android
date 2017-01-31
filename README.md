@@ -52,6 +52,7 @@ Direct view binding
 @BindToImageView
 @BindToRecyclerView
 @BindToViewPager
+// More to come!
 ```
 
 Bind to not yet supported views
