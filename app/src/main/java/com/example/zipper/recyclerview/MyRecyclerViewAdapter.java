@@ -4,11 +4,13 @@ import com.example.zipper.R;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
 
 import se.snylt.zipper.annotations.BindToTextView;
+import se.snylt.zipper.annotations.BindToView;
 import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
@@ -53,9 +55,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
         @BindToTextView(id = R.id.my_item_subtitle)
         public final String subtitle;
 
-        public MyItem(String title, String subtitle) {
+        @BindToView(id = R.id.my_item_container, view = View.class, set = "onClickListener")
+        public final View.OnClickListener listener;
+
+        public MyItem(String title, String subtitle, View.OnClickListener listener) {
             this.title = title;
             this.subtitle = subtitle;
+            this.listener = listener;
         }
     }
 }

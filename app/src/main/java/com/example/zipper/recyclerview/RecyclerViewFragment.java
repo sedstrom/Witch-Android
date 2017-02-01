@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
-public class RecyclerViewFragment extends Fragment {
+public class RecyclerViewFragment extends Fragment implements View.OnClickListener {
 
     private Binding binding;
 
@@ -52,8 +53,18 @@ public class RecyclerViewFragment extends Fragment {
     private RecyclerViewViewModel createModel() {
         List<MyRecyclerViewAdapter.MyItem> items = new ArrayList<>();
         for(int i = 0; i < 100; i++) {
-            items.add(new MyRecyclerViewAdapter.MyItem("Jane Doe", "User id: " + i));
+            MyRecyclerViewAdapter.MyItem item = createItem("Jane Doe", "User id: " + i, this);
+            items.add(item);
         }
         return new RecyclerViewViewModel(items);
+    }
+
+    private MyRecyclerViewAdapter.MyItem createItem(String title, String subtitle, View.OnClickListener listener) {
+        return new MyRecyclerViewAdapter.MyItem(title, subtitle, listener);
+    }
+
+    @Override
+    public void onClick(View view) {
+        Toast.makeText(getContext(), "Click!", Toast.LENGTH_SHORT).show();
     }
 }

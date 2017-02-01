@@ -23,5 +23,4 @@ public class ViewProperties {
         public final static String CHECKED = "checked";
     }
 
-
 }

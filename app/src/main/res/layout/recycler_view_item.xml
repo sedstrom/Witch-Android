@@ -3,6 +3,7 @@
               android:orientation="vertical"
               android:paddingLeft="@dimen/activity_horizontal_margin"
               android:paddingRight="@dimen/activity_horizontal_margin"
+              android:id="@+id/my_item_container"
               android:paddingTop="8dp"
               android:paddingBottom="8dp"
               android:layout_width="match_parent"

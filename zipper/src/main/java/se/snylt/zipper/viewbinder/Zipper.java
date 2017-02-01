@@ -1,7 +1,6 @@
 package se.snylt.zipper.viewbinder;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public class Zipper {
     private static Binding getOrCreateBinding(Object target) {
         final Class key = target.getClass();
         Binding binding;
-        if(!bindings.containsKey(target.getClass())) {
+        if (!bindings.containsKey(target.getClass())) {
             binding = createBinding(target, new OnUnbindListener() {
                 @Override
                 public void onUnbind() {
@@ -55,13 +54,12 @@ public class Zipper {
     }
 
     private static void doUnbind(Class<?> targetClass) {
-        Log.d(TAG, "remove binding: " + targetClass.getSimpleName());
         bindings.remove(targetClass);
     }
 
     private static Object getOrCreateViewHolder(Object target, ViewFinder viewFinder) {
         Object viewHolder = viewFinder.getViewHolder();
-        if(viewHolder == null) {
+        if (viewHolder == null) {
             viewHolder = createViewHolder(target);
             viewFinder.setViewHolder(viewHolder);
         }
@@ -69,15 +67,13 @@ public class Zipper {
     }
 
     private static View findView(ViewBinder viewBinder, Object viewHolder, ViewFinder viewFinder) {
-        if(viewBinder.getView(viewHolder) == null) {
-            Log.d(TAG, "looking up view with id: " + viewBinder.viewId);
+        if (viewBinder.getView(viewHolder) == null) {
             viewBinder.setView(viewHolder, viewFinder.findViewById(viewBinder.viewId));
         }
         return (View) viewBinder.getView(viewHolder);
     }
 
     private static Binding createBinding(Object target, OnUnbindListener listener) {
-        Log.d(TAG, "created binding for: " + target.getClass().getSimpleName());
         try {
             Class clazz = ClassUtils.findBinding(target);
             return ((BindingCreator) clazz.newInstance()).createBinding(listener);
@@ -87,7 +83,6 @@ public class Zipper {
     }
 
     private static Object createViewHolder(Object target) {
-        Log.d(TAG, "created binding for: " + target.getClass().getSimpleName());
         try {
             Class clazz = ClassUtils.findViewHolder(target);
             return clazz.newInstance();
