@@ -9,7 +9,7 @@ import javax.lang.model.element.Modifier;
 
 import se.snylt.zipper.processor.binding.ViewBindingDef;
 
-import static se.snylt.zipper.processor.java.Types.ANDROID_VIEW;
+import static se.snylt.zipper.processor.TypeUtils.ANDROID_VIEW;
 
 public class ViewHolderJavaHelper {
 

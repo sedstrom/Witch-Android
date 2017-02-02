@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface OnBind {
+public @interface OnBindEach {
 
-    Class value();
+    Class[] value();
 }

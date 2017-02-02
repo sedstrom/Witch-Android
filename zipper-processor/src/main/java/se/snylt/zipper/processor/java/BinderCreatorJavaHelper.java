@@ -12,12 +12,12 @@ import javax.lang.model.element.Modifier;
 import se.snylt.zipper.processor.binding.BindActionDef;
 import se.snylt.zipper.processor.binding.ViewBindingDef;
 
-import static se.snylt.zipper.processor.java.Types.ARRAY_LIST;
-import static se.snylt.zipper.processor.java.Types.BINDING;
-import static se.snylt.zipper.processor.java.Types.BINDING_CREATOR;
-import static se.snylt.zipper.processor.java.Types.LIST;
-import static se.snylt.zipper.processor.java.Types.ON_UNBIND_LISTENER;
-import static se.snylt.zipper.processor.java.Types.VIEW_BINDER;
+import static se.snylt.zipper.processor.TypeUtils.ARRAY_LIST;
+import static se.snylt.zipper.processor.TypeUtils.BINDING;
+import static se.snylt.zipper.processor.TypeUtils.BINDING_CREATOR;
+import static se.snylt.zipper.processor.TypeUtils.LIST;
+import static se.snylt.zipper.processor.TypeUtils.ON_UNBIND_LISTENER;
+import static se.snylt.zipper.processor.TypeUtils.VIEW_BINDER;
 
 public class BinderCreatorJavaHelper {
 
@@ -51,7 +51,7 @@ public class BinderCreatorJavaHelper {
 
             // Add all binding actions
             createBinding.addStatement("bindActions = new $T()", ARRAY_LIST);
-            for (BindActionDef bindAction : viewBindingDef.bindActions) {
+            for (BindActionDef bindAction : viewBindingDef.getBindActions()) {
                 createBinding.addStatement("bindActions.add($L)", bindAction.getNewInstanceJava());
             }
 

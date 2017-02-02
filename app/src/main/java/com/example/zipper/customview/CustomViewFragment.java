@@ -27,7 +27,6 @@ public class CustomViewFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding = Zipper.bind(new CustomViewModel("@BindView\nid = R.id.123, view = CustomView.class, set = \"property\""), view);
-
     }
 
     @Override

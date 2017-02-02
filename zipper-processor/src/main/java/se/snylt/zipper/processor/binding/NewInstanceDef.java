@@ -2,11 +2,11 @@ package se.snylt.zipper.processor.binding;
 
 import com.squareup.javapoet.TypeName;
 
-public class OnBindDef extends BindActionDef {
+public class NewInstanceDef extends BindActionDef {
 
     private final TypeName onBindClass;
 
-    public OnBindDef(TypeName onBindClass) {
+    public NewInstanceDef(TypeName onBindClass) {
         this.onBindClass = onBindClass;
     }
 

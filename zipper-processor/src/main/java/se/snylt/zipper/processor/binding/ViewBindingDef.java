@@ -1,5 +1,6 @@
 package se.snylt.zipper.processor.binding;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,17 +15,38 @@ public class ViewBindingDef {
     public final Element value;
 
     // Bind actions
-    public final List<BindActionDef> bindActions;
+    private final List<BindActionDef> onPreBindActions;
+    private final List<BindActionDef> onBindActions;
+    private final List<BindActionDef> onPostBindActions;
 
     public ViewBindingDef(Integer viewId, Element value) {
         this.viewId = viewId;
         this.value = value;
-        this.bindActions = new LinkedList<>();
+        this.onPreBindActions = new LinkedList<>();
+        this.onBindActions = new LinkedList<>();
+        this.onPostBindActions = new LinkedList<>();
     }
 
-    public void addBindAction(BindActionDef actionClassName){
-        bindActions.add(actionClassName);
+    public void addOnPreBindAction(BindActionDef onPostBindAction) {
+        onPreBindActions.add(onPostBindAction);
     }
+
+    public void addOnBindAction(BindActionDef onBindAction){
+        onBindActions.add(onBindAction);
+    }
+
+    public void addOnPostBindAction(BindActionDef onPostBindAction) {
+        onPostBindActions.add(onPostBindAction);
+    }
+
+    public List<BindActionDef> getBindActions(){
+        List<BindActionDef> allActions = new ArrayList();
+        allActions.addAll(onPreBindActions);
+        allActions.addAll(onBindActions);
+        allActions.addAll(onPostBindActions);
+        return allActions;
+    }
+
 
     @Override
     public boolean equals(Object obj) {

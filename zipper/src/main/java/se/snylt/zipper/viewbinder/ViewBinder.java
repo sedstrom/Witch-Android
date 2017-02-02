@@ -4,7 +4,7 @@ import android.view.View;
 
 import java.util.List;
 
-import se.snylt.zipper.BindAction;
+import se.snylt.zipper.viewbinder.bindaction.BindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnBind;
 import se.snylt.zipper.viewbinder.bindaction.OnPostBind;
 import se.snylt.zipper.viewbinder.bindaction.OnPreBind;
