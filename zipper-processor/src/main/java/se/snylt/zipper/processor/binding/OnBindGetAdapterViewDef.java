@@ -1,12 +1,13 @@
 package se.snylt.zipper.processor.binding;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
+
+import se.snylt.zipper.processor.TypeUtils;
 
 public class OnBindGetAdapterViewDef extends BindActionDef {
 
@@ -37,7 +38,7 @@ public class OnBindGetAdapterViewDef extends BindActionDef {
 
         TypeSpec anonymous = TypeSpec.anonymousClassBuilder("")
                 .addSuperinterface(ParameterizedTypeName
-                        .get(ClassName.get("se.snylt.zipper.viewbinder.bindaction", "OnBind"), viewType))
+                        .get(TypeUtils.ON_BIND_ACTION, viewType))
                 .addMethod(method)
                 .build();
 

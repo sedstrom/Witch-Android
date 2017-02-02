@@ -5,9 +5,9 @@ import android.view.View;
 import java.util.List;
 
 import se.snylt.zipper.viewbinder.bindaction.BindAction;
-import se.snylt.zipper.viewbinder.bindaction.OnBind;
-import se.snylt.zipper.viewbinder.bindaction.OnPostBind;
-import se.snylt.zipper.viewbinder.bindaction.OnPreBind;
+import se.snylt.zipper.viewbinder.bindaction.OnBindAction;
+import se.snylt.zipper.viewbinder.bindaction.OnPostBindAction;
+import se.snylt.zipper.viewbinder.bindaction.OnPreBindAction;
 
 public abstract class ViewBinder {
 
@@ -25,14 +25,14 @@ public abstract class ViewBinder {
 
     public void doBind(View view, Object value) {
         for(BindAction action: bindActions) {
-            if (action instanceof OnPreBind) {
-                ((OnPreBind) action).onPreBind(view, value);
+            if (action instanceof OnPreBindAction) {
+                ((OnPreBindAction) action).onPreBind(view, value);
             }
-            if (action instanceof OnBind) {
-                ((OnBind) action).onBind(view, value);
+            if (action instanceof OnBindAction) {
+                ((OnBindAction) action).onBind(view, value);
             }
-            if (action instanceof OnPostBind) {
-                ((OnPostBind) action).onPostBind(view, value);
+            if (action instanceof OnPostBindAction) {
+                ((OnPostBindAction) action).onPostBind(view, value);
             }
         }
     }

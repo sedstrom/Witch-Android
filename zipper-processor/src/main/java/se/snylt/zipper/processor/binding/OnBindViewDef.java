@@ -1,12 +1,13 @@
 package se.snylt.zipper.processor.binding;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
+
+import se.snylt.zipper.processor.TypeUtils;
 
 public class OnBindViewDef extends BindActionDef {
 
@@ -34,12 +35,13 @@ public class OnBindViewDef extends BindActionDef {
 
         TypeSpec anonymous = TypeSpec.anonymousClassBuilder("")
                 .addSuperinterface(ParameterizedTypeName
-                        .get(ClassName.get("se.snylt.zipper.viewbinder.bindaction", "OnBind"), viewType))
+                        .get(TypeUtils.ON_BIND_ACTION, viewType))
                 .addMethod(method)
                 .build();
 
         return anonymous.toString();
     }
+
     private static String getPropertySetter(String property) {
         String firstUpperCase = property.toUpperCase().charAt(0) + ((property.length() > 0) ? property.substring(1) : "");
         return "set" + firstUpperCase;

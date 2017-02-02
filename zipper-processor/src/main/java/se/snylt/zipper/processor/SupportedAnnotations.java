@@ -24,6 +24,11 @@ public class SupportedAnnotations {
         public Class getClazz() {
             return se.snylt.zipper.annotations.BindTo.class;
         }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     // BindToView
@@ -38,6 +43,11 @@ public class SupportedAnnotations {
         @Override
         public Class getClazz() {
             return  se.snylt.zipper.annotations.BindToView.class;
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
 
@@ -54,6 +64,11 @@ public class SupportedAnnotations {
         public Class getClazz() {
             return se.snylt.zipper.annotations.BindToEditText.class;
         }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     // BindToTextView
@@ -69,6 +84,11 @@ public class SupportedAnnotations {
         public Class getClazz() {
             return se.snylt.zipper.annotations.BindToTextView.class;
         }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     // BindToImageView
@@ -83,6 +103,11 @@ public class SupportedAnnotations {
         @Override
         public Class getClazz() {
             return se.snylt.zipper.annotations.BindToImageView.class;
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
 
@@ -100,6 +125,11 @@ public class SupportedAnnotations {
             return se.snylt.zipper.annotations.BindToCompoundButton.class;
         }
 
+        @Override
+        public String toString() {
+            return name;
+        }
+
     }
 
     // BindToRecyclerView
@@ -114,6 +144,11 @@ public class SupportedAnnotations {
         @Override
         public Class getClazz() {
             return se.snylt.zipper.annotations.BindToRecyclerView.class;
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
 
@@ -130,6 +165,11 @@ public class SupportedAnnotations {
         public Class getClazz() {
             return se.snylt.zipper.annotations.BindToViewPager.class;
         }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     // OnBind
@@ -137,10 +177,10 @@ public class SupportedAnnotations {
         public final static String name = "se.snylt.zipper.annotations.OnBind";
     }
 
-    // OnPostBind
-    public final static class OnPostBind {
-        public final static String name = "se.snylt.zipper.annotations.OnPostBind";
+    public final static class OnBindEach {
+        public final static String name = "se.snylt.zipper.annotations.OnBindEach";
     }
+
 
     // All annotations that bind to a view id
     public final static HasViewId[] ALL_BIND_VIEW = new HasViewId[] {
