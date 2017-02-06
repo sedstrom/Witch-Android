@@ -8,6 +8,7 @@ import se.snylt.zipper.viewbinder.bindaction.BindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnBindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnPostBindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnPreBindAction;
+import se.snylt.zipper.viewbinder.viewfinder.ViewFinder;
 
 public abstract class ViewBinder {
 
@@ -23,6 +24,13 @@ public abstract class ViewBinder {
         this.bindActions = bindActions;
     }
 
+    public abstract Object getValue(Object target);
+
+    public abstract void setView(Object viewHolder, Object view);
+
+    public abstract Object getView(Object viewHolder);
+
+
     public void doBind(View view, Object value) {
         for(BindAction action: bindActions) {
             if (action instanceof OnPreBindAction) {
@@ -37,9 +45,16 @@ public abstract class ViewBinder {
         }
     }
 
-    public abstract Object getValue(Object target);
+    public void bind(Object viewHolder, ViewFinder viewFinder, Object target) {
+        View view = findView(viewHolder, viewFinder);
+        Object value = getValue(target);
+        doBind(view, value);
+    }
 
-    public abstract void setView(Object viewHolder, Object view);
-
-    public abstract Object getView(Object viewHolder);
+    private View findView(Object viewHolder, ViewFinder viewFinder) {
+        if (getView(viewHolder) == null) {
+            setView(viewHolder, viewFinder.findViewById(viewId));
+        }
+        return (View) getView(viewHolder);
+    }
 }
