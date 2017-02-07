@@ -16,12 +16,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.snylt.zipper.viewbinder.NewBinding;
+import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class RecyclerViewFragment extends Fragment implements View.OnClickListener {
 
-    private NewBinding binding;
+    private Binding binding;
 
     private MyRecyclerViewAdapter adapter;
 

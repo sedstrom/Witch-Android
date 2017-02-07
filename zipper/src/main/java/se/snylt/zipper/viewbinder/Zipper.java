@@ -20,19 +20,19 @@ public class Zipper {
         return INSTANCE;
     }
 
-    public static NewBinding bind(Object target, Activity activity) {
+    public static Binding bind(Object target, Activity activity) {
         return bind(target, viewFinder(activity, activity));
     }
 
-    public static NewBinding bind(Object target, Activity activity, Object user) {
+    public static Binding bind(Object target, Activity activity, Object user) {
         return bind(target, viewFinder(activity, user));
     }
 
-    public static NewBinding bind(Object target, View view) {
+    public static Binding bind(Object target, View view) {
         return bind(target, viewFinder(view, view));
     }
 
-    public static NewBinding bind(Object target, View view, Object user) {
+    public static Binding bind(Object target, View view, Object user) {
         return bind(target, viewFinder(view, user));
     }
 
@@ -44,7 +44,7 @@ public class Zipper {
         return new ViewViewFinder(view, user, VIEW_HOLDER_TAG_DEFAULT);
     }
 
-    private static NewBinding bind(Object target, ViewFinder viewFinder) {
+    private static Binding bind(Object target, ViewFinder viewFinder) {
         return zipper().doBind(target, viewFinder);
     }
 

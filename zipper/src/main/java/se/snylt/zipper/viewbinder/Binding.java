@@ -1,6 +1,6 @@
 package se.snylt.zipper.viewbinder;
 
-public class NewBinding {
+public class Binding {
 
     protected Object user;
 
@@ -8,7 +8,7 @@ public class NewBinding {
 
     private Object target;
 
-    protected NewBinding(Object user, Binder binder) {
+    protected Binding(Object user, Binder binder) {
         this.user = user;
         this.binder = binder;
     }

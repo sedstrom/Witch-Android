@@ -10,7 +10,7 @@ public class Binder {
 
     private final List<ViewBinder> viewBinders;
 
-    private final Map<Object, NewBinding> users = new HashMap<>();
+    private final Map<Object, Binding> users = new HashMap<>();
 
     private BindingAbandonedListener bindingAbandonedListener;
 
@@ -18,10 +18,10 @@ public class Binder {
         this.viewBinders = viewBinders;
     }
 
-    private NewBinding getBinding(Object user) {
-        NewBinding binding;
+    private Binding getBinding(Object user) {
+        Binding binding;
         if(!users.containsKey(user)) {
-            binding = new NewBinding(user, this);
+            binding = new Binding(user, this);
             users.put(user, binding);
         } else {
             binding = users.get(user);
@@ -40,8 +40,8 @@ public class Binder {
         this.bindingAbandonedListener = bindingAbandonedListener;
     }
 
-    public NewBinding bind(Object viewHolder, ViewFinder viewFinder, Object target) {
-        NewBinding binding = getBinding(viewFinder.getUser());
+    public Binding bind(Object viewHolder, ViewFinder viewFinder, Object target) {
+        Binding binding = getBinding(viewFinder.getUser());
         for (ViewBinder viewBinder : viewBinders) {
             viewBinder.bind(viewHolder, viewFinder, target, binding.getTarget());
         }

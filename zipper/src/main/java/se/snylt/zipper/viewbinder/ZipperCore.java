@@ -22,7 +22,7 @@ class ZipperCore {
         this.binderFactory = binderFactory;
     }
 
-    NewBinding doBind(Object target, ViewFinder viewFinder) {
+    Binding doBind(Object target, ViewFinder viewFinder) {
         Object viewHolder = getOrCreateViewHolder(target, viewFinder);
         Binder binder = getOrCreateBinder(target);
         return binder.bind(viewHolder, viewFinder, target);

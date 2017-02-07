@@ -11,14 +11,14 @@ import java.util.List;
 
 import se.snylt.zipper.annotations.BindToTextView;
 import se.snylt.zipper.annotations.BindToView;
-import se.snylt.zipper.viewbinder.NewBinding;
+import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<MyItem> items;
 
-    private NewBinding binding;
+    private Binding binding;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
