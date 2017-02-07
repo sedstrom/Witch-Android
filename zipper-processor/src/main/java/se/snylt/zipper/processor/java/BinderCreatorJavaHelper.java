@@ -13,7 +13,7 @@ import se.snylt.zipper.processor.binding.BindActionDef;
 import se.snylt.zipper.processor.binding.ViewBindingDef;
 
 import static se.snylt.zipper.processor.TypeUtils.ARRAY_LIST;
-import static se.snylt.zipper.processor.TypeUtils.BINDING;
+import static se.snylt.zipper.processor.TypeUtils.BINDER;
 import static se.snylt.zipper.processor.TypeUtils.BINDING_CREATOR;
 import static se.snylt.zipper.processor.TypeUtils.LIST;
 import static se.snylt.zipper.processor.TypeUtils.VIEW_BINDER;
@@ -33,10 +33,10 @@ public class BinderCreatorJavaHelper {
                         .addSuperinterface(BINDING_CREATOR);
 
         // createBinding
-        MethodSpec.Builder createBinding = MethodSpec.methodBuilder("createBinding")
+        MethodSpec.Builder createBinding = MethodSpec.methodBuilder("createBinder")
                 // .addParameter(ON_UNBIND_LISTENER, "listener")
                 .addModifiers(Modifier.PUBLIC)
-                .returns(BINDING);
+                .returns(BINDER);
 
         createBinding.addStatement("$T bindingSpecs = new $T<>()", ParameterizedTypeName.get(LIST, VIEW_BINDER), ARRAY_LIST);
 
@@ -63,7 +63,7 @@ public class BinderCreatorJavaHelper {
         }
 
         // Return
-        createBinding.addStatement("return new Binding($N)", "bindingSpecs"); // , "listener");
+        createBinding.addStatement("return new Binder($N)", "bindingSpecs"); // , "listener");
         builder.addMethod(createBinding.build());
 
         return builder.build();

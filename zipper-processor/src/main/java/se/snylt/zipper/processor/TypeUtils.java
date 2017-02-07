@@ -20,12 +20,9 @@ public class TypeUtils {
 
     public final static TypeName BINDING_CREATOR = ClassName.get(LIBRARY_PACKAGE, "BindingCreator");
 
-    public final static TypeName BINDING = ClassName.get(LIBRARY_PACKAGE, "Binding");
-
-    public final static TypeName ON_UNBIND_LISTENER = ClassName.get(LIBRARY_PACKAGE, "OnUnbindListener");
+    public final static TypeName BINDER = ClassName.get(LIBRARY_PACKAGE, "Binder");
 
     public static final TypeName ANDROID_VIEW = ClassName.get("android.view", "View");
-
 
     public static final ClassName ON_PRE_BIND_ACTION = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "OnPreBindAction");
 

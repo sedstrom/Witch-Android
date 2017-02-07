@@ -1,5 +1,6 @@
 package se.snylt.zipper.viewbinder;
 
+import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -9,6 +10,8 @@ import se.snylt.zipper.viewbinder.bindaction.OnBindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnPostBindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnPreBindAction;
 import se.snylt.zipper.viewbinder.viewfinder.ViewFinder;
+
+import static se.snylt.zipper.viewbinder.ZipperCore.TAG;
 
 public abstract class ViewBinder {
 
@@ -30,7 +33,6 @@ public abstract class ViewBinder {
 
     public abstract Object getView(Object viewHolder);
 
-
     public void doBind(View view, Object value) {
         for(BindAction action: bindActions) {
             if (action instanceof OnPreBindAction) {
@@ -45,10 +47,37 @@ public abstract class ViewBinder {
         }
     }
 
-    public void bind(Object viewHolder, ViewFinder viewFinder, Object target) {
-        View view = findView(viewHolder, viewFinder);
-        Object value = getValue(target);
-        doBind(view, value);
+    public void bind(Object viewHolder, ViewFinder viewFinder, Object target, Object history) {
+        Object newValue = getValueIfNotNull(target);
+        Object oldValue = getValueIfNotNull(history);
+        boolean isSameTarget = isSameTarget(target, history);
+        if((isSameTarget && isNewValue(newValue, oldValue)) || !isSameTarget) {
+            View view = findView(viewHolder, viewFinder);
+            doBind(view, newValue);
+        } else {
+            Log.d(TAG, "Skip bind because of no change");
+        }
+    }
+
+    private boolean isSameTarget(Object target, Object history) {
+        return target == null && history == null ? false : target == history;
+    }
+
+    private Object getValueIfNotNull(Object target) {
+        return (target == null) ? null : getValue(target);
+    }
+
+    private boolean isNewValue(Object newValue, Object oldValue) {
+
+        if(newValue == null && oldValue != null) {
+            return true;
+        } else if(newValue != null && oldValue == null) {
+           return true;
+        } else if(newValue == null && oldValue == null) {
+            return false;
+        } else {
+            return !newValue.equals(oldValue);
+        }
     }
 
     private View findView(Object viewHolder, ViewFinder viewFinder) {

@@ -7,11 +7,11 @@ import java.util.HashMap;
 
 import se.snylt.zipper.viewbinder.viewfinder.ViewFinder;
 
-public class ZipperCore {
+class ZipperCore {
 
     final static String TAG = "Zipper";
 
-    private final static HashMap<Object, WeakReference<Binding>> bindings = new HashMap<>();
+    private final static HashMap<Object, WeakReference<Binder>> binders = new HashMap<>();
 
     private final ViewHolderFactory viewHolderFactory;
 
@@ -22,32 +22,27 @@ public class ZipperCore {
         this.binderFactory = binderFactory;
     }
 
-    UnBinder doBind(Object target, ViewFinder viewFinder) {
+    NewBinding doBind(Object target, ViewFinder viewFinder) {
         Object viewHolder = getOrCreateViewHolder(target, viewFinder);
-        Binding binding = getOrCreateBinding(target);
-        return binding.bind(viewHolder, viewFinder, target);
+        Binder binder = getOrCreateBinder(target);
+        return binder.bind(viewHolder, viewFinder, target);
     }
 
-    /**
-     * Get binding for provided target view model. Creates new binding if not already existing.
-     * @param target annotated view model
-     * @return binding for target
-     */
-    private Binding getOrCreateBinding(Object target) {
+    private Binder getOrCreateBinder(Object target) {
         final Object key = getKeyForTarget(target);
-        Binding binding;
-        if (!bindingExists(key)) {
-            binding = binderFactory.createBinding(target);
-            binding.setOnBindingAbandonedListener(createBindingAbandonedListener(key));
-            bindings.put(key, new WeakReference(binding));
+        Binder binder;
+        if (!isBinderCreated(key)) {
+            binder = binderFactory.createBinder(target);
+            binder.setOnBindingAbandonedListener(createBinderAbandonedListener(key));
+            binders.put(key, new WeakReference(binder));
         } else {
-            binding = bindings.get(key).get();
+            binder = binders.get(key).get();
         }
-        return binding;
+        return binder;
     }
 
-    private boolean bindingExists(Object key) {
-        return bindings.containsKey(key) && bindings.get(key).get() != null;
+    private boolean isBinderCreated(Object key) {
+        return binders.containsKey(key) && binders.get(key).get() != null;
     }
 
     private Object getKeyForTarget(Object target) {
@@ -55,23 +50,17 @@ public class ZipperCore {
     }
 
     // Remove binding when not used
-    private static BindingAbandonedListener createBindingAbandonedListener(final Object key) {
+    private static BindingAbandonedListener createBinderAbandonedListener(final Object key) {
         return new BindingAbandonedListener() {
             @Override
             public void onBindingAbandoned() {
-                bindings.remove(key);
-                Log.d(TAG, "Removed binding for: " + key.toString());
-                Log.d(TAG, "Bindings size: " + bindings.size());
+                binders.remove(key);
+                Log.d(TAG, "Removed binder for: " + key.toString());
+                Log.d(TAG, "Binders size: " + binders.size());
             }
         };
     }
 
-    /**
-     * Get view holder for provided target. Will be created if not created already.
-     * @param target annotated view model
-     * @param viewFinder view finder handling the view holder
-     * @return view holder for target
-     */
     private Object getOrCreateViewHolder(Object target, ViewFinder viewFinder) {
         Object viewHolder = viewFinder.getViewHolder();
         if (viewHolder == null) {

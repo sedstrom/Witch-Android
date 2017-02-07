@@ -11,12 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.snylt.zipper.viewbinder.UnBinder;
+import se.snylt.zipper.viewbinder.NewBinding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class MainActivity extends AppCompatActivity {
 
-    private UnBinder binding;
+    private NewBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

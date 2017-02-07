@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import se.snylt.zipper.annotations.BindToView;
-import se.snylt.zipper.viewbinder.UnBinder;
+import se.snylt.zipper.viewbinder.NewBinding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class CustomViewFragment extends Fragment {
 
-    private UnBinder binding;
+    private NewBinding binding;
 
     @Nullable
     @Override
@@ -26,7 +26,9 @@ public class CustomViewFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding = Zipper.bind(new CustomViewModel("@BindView\nid = R.id.123, view = CustomView.class, set = \"property\""), view);
+        CustomViewModel model = new CustomViewModel("@BindView\nid = R.id.123, view = CustomView.class, set = \"property\"");
+        binding = Zipper.bind(model, view);
+        binding = Zipper.bind(model, view);
     }
 
     @Override

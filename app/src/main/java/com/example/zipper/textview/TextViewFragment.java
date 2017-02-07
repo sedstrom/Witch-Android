@@ -9,12 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import se.snylt.zipper.viewbinder.UnBinder;
+import se.snylt.zipper.viewbinder.NewBinding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class TextViewFragment extends Fragment {
 
-    private UnBinder binding;
+    private NewBinding binding;
 
     @Nullable
     @Override

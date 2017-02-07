@@ -23,7 +23,7 @@ public class ViewViewFinder implements ViewFinder {
 
     @Override
     public Object getViewHolder() {
-        return  view.getTag(tag);
+        return view.getTag(tag);
     }
 
     @Override

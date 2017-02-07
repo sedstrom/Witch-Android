@@ -9,10 +9,10 @@ public class BinderFactory {
      * @param target the view model
      * @return binding
      */
-    public Binding createBinding(Object target) {
+    public Binder createBinder(Object target) {
         try {
             Class clazz = ClassUtils.findBinding(target);
-            return ((BindingCreator) clazz.newInstance()).createBinding();
+            return ((BindingCreator) clazz.newInstance()).createBinder();
         } catch (Exception e) {
             throw new BindingNotFoundException(target);
         }
