@@ -1,6 +1,7 @@
 package se.snylt.zipper.viewbinder;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
@@ -44,10 +45,7 @@ public class Zipper {
     private static UnBinder bind(Object target, ViewFinder viewFinder) {
         Object viewHolder = getOrCreateViewHolder(target, viewFinder);
         Binding binding = getOrCreateBinding(target);
-        for (ViewBinder viewBinder : binding.getViewBinders()) {
-            viewBinder.bind(viewHolder, viewFinder, target);
-        }
-        return binding.registersUser(viewFinder.getUser());
+        return binding.bind(viewHolder, viewFinder, target);
     }
 
     /**
@@ -56,18 +54,36 @@ public class Zipper {
      * @return binding for target
      */
     private static Binding getOrCreateBinding(Object target) {
-        final Class key = target.getClass();
+        final Object key = getKeyForTarget(target);
         Binding binding;
-        if (!isBindingCreated(key)) {
-            bindings.put(key, new WeakReference((binding = createBinding(target))));
+        if (!bindingExists(key)) {
+            binding = createBinding(target);
+            binding.setOnBindingAbandonedListener(createBindingAbandonedListener(key));
+            bindings.put(key, new WeakReference(binding));
         } else {
             binding = bindings.get(key).get();
         }
         return binding;
     }
 
-    private static boolean isBindingCreated(Class key) {
+    private static boolean bindingExists(Object key) {
         return bindings.containsKey(key) && bindings.get(key).get() != null;
+    }
+
+    private static Object getKeyForTarget(Object target) {
+        return target.getClass();
+    }
+
+    // Remove binding when not used
+    private static BindingAbandonedListener createBindingAbandonedListener(final Object key) {
+        return new BindingAbandonedListener() {
+            @Override
+            public void onBindingAbandoned() {
+                bindings.remove(key);
+                Log.d(TAG, "Removed binding for: " + key.toString());
+                Log.d(TAG, "Bindings size: " + bindings.size());
+            }
+        };
     }
 
     /**
