@@ -2,17 +2,18 @@ package se.snylt.zipper.viewbinder.viewfinder;
 
 import android.view.View;
 
-import static se.snylt.zipper.viewbinder.Zipper.VIEW_HOLDER_TAG;
-
 public class ViewViewFinder implements ViewFinder {
 
     private final View view;
 
     private final Object user;
 
-    public ViewViewFinder(View view, Object user) {
+    private final int tag;
+
+    public ViewViewFinder(View view, Object user, int tag) {
         this.view = view;
         this.user = user;
+        this.tag = tag;
     }
 
     @Override
@@ -22,12 +23,12 @@ public class ViewViewFinder implements ViewFinder {
 
     @Override
     public Object getViewHolder() {
-        return  view.getTag(VIEW_HOLDER_TAG);
+        return  view.getTag(tag);
     }
 
     @Override
     public void setViewHolder(Object viewHolder) {
-        view.setTag(VIEW_HOLDER_TAG, viewHolder);
+        view.setTag(tag, viewHolder);
     }
 
     @Override
