@@ -9,8 +9,11 @@ public class ActivityViewFinder implements ViewFinder {
 
     private final Activity activity;
 
-    public ActivityViewFinder(Activity activity) {
+    private final Object user;
+
+    public ActivityViewFinder(Activity activity, Object user) {
         this.activity = activity;
+        this.user = user;
     }
 
     @Override
@@ -26,5 +29,10 @@ public class ActivityViewFinder implements ViewFinder {
     @Override
     public void setViewHolder(Object viewHolder) {
         activity.getWindow().getDecorView().setTag(VIEW_HOLDER_TAG, viewHolder);
+    }
+
+    @Override
+    public Object getUser() {
+        return user;
     }
 }

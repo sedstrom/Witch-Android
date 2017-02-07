@@ -11,14 +11,14 @@ import java.util.List;
 
 import se.snylt.zipper.annotations.BindToTextView;
 import se.snylt.zipper.annotations.BindToView;
-import se.snylt.zipper.viewbinder.Binding;
+import se.snylt.zipper.viewbinder.UnBinder;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<MyItem> items;
 
-    private Binding binding;
+    private UnBinder binding;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -27,15 +27,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        binding = Zipper.bind(items.get(position), holder.itemView);
+        // Provide this as binding user for better performance
+        binding = Zipper.bind(items.get(position), holder.itemView, this);
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
-        if(binding != null) {
-            binding.unBind();
-        }
     }
 
     @Override
@@ -45,6 +43,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     public void setItems(List<MyItem> items) {
         this.items = items;
+    }
+
+    public void unBind() {
+        if(binding != null) {
+            binding.unBind();
+        }
     }
 
     public static class MyItem {

@@ -10,4 +10,5 @@ public interface ViewFinder {
 
     void setViewHolder(Object viewHolder);
 
+    Object getUser();
 }

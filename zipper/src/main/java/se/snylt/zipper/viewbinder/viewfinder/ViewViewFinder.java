@@ -8,8 +8,11 @@ public class ViewViewFinder implements ViewFinder {
 
     private final View view;
 
-    public ViewViewFinder(View view) {
+    private final Object user;
+
+    public ViewViewFinder(View view, Object user) {
         this.view = view;
+        this.user = user;
     }
 
     @Override
@@ -25,5 +28,10 @@ public class ViewViewFinder implements ViewFinder {
     @Override
     public void setViewHolder(Object viewHolder) {
         view.setTag(VIEW_HOLDER_TAG, viewHolder);
+    }
+
+    @Override
+    public Object getUser() {
+        return user;
     }
 }

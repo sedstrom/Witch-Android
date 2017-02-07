@@ -13,18 +13,26 @@ import se.snylt.zipper.viewbinder.viewfinder.ViewViewFinder;
 
 public class Zipper {
 
-    private final static String TAG = "Zipper";
+    final static String TAG = "Zipper";
 
     public final static int VIEW_HOLDER_TAG = Integer.MIN_VALUE;
 
     private final static HashMap<Object, WeakReference<Binding>> bindings = new HashMap<>();
 
-    public static Binding bind(Object target, Activity activity) {
-        return bind(target, new ActivityViewFinder(activity));
+    public static UnBinder bind(Object target, Activity activity) {
+        return bind(target, new ActivityViewFinder(activity, activity));
     }
 
-    public static Binding bind(Object target, View view) {
-        return bind(target, new ViewViewFinder(view));
+    public static UnBinder bind(Object target, Activity view, Object user) {
+        return bind(target, new ActivityViewFinder(view, user));
+    }
+
+    public static UnBinder bind(Object target, View view) {
+        return bind(target, new ViewViewFinder(view, view));
+    }
+
+    public static UnBinder bind(Object target, View view, Object user) {
+        return bind(target, new ViewViewFinder(view, user));
     }
 
     /**
@@ -33,13 +41,13 @@ public class Zipper {
      * @param viewFinder view finder containing views defined in target.
      * @return complete binding
      */
-    private static Binding bind(Object target, ViewFinder viewFinder) {
-        Binding binding = getOrCreateBinding(target);
+    private static UnBinder bind(Object target, ViewFinder viewFinder) {
         Object viewHolder = getOrCreateViewHolder(target, viewFinder);
+        Binding binding = getOrCreateBinding(target);
         for (ViewBinder viewBinder : binding.getViewBinders()) {
             viewBinder.bind(viewHolder, viewFinder, target);
         }
-        return binding;
+        return binding.registersUser(viewFinder.getUser());
     }
 
     /**
@@ -51,31 +59,15 @@ public class Zipper {
         final Class key = target.getClass();
         Binding binding;
         if (!isBindingCreated(key)) {
-            binding = createBinding(target);
-            bindings.put(key, new WeakReference(binding));
+            bindings.put(key, new WeakReference((binding = createBinding(target))));
+        } else {
+            binding = bindings.get(key).get();
         }
-        return bindings.get(key).get();
+        return binding;
     }
 
     private static boolean isBindingCreated(Class key) {
         return bindings.containsKey(key) && bindings.get(key).get() != null;
-    }
-
-    private static OnUnbindListener createUnbindCallback(final Class key) {
-        return new OnUnbindListener() {
-            @Override
-            public void onUnbind() {
-                doUnbind(key);
-            }
-        };
-    }
-
-    /**
-     * Unbind any resources bound to targetClass
-     * @param targetClass target class
-     */
-    private static void doUnbind(Class<?> targetClass) {
-        // TODO
     }
 
     /**
@@ -101,7 +93,7 @@ public class Zipper {
     private static Binding createBinding(Object target) {
         try {
             Class clazz = ClassUtils.findBinding(target);
-            return ((BindingCreator) clazz.newInstance()).createBinding(createUnbindCallback(target.getClass()));
+            return ((BindingCreator) clazz.newInstance()).createBinding();
         } catch (Exception e) {
             throw new BindingNotFoundException(target);
         }

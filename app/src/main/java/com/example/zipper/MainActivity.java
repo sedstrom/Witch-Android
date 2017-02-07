@@ -11,12 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.snylt.zipper.viewbinder.Binding;
+import se.snylt.zipper.viewbinder.UnBinder;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Binding binding;
+    private UnBinder binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(binding != null) {
-            binding.unBind();
-        }
+        binding.unBind();
     }
 }

@@ -16,7 +16,6 @@ import static se.snylt.zipper.processor.TypeUtils.ARRAY_LIST;
 import static se.snylt.zipper.processor.TypeUtils.BINDING;
 import static se.snylt.zipper.processor.TypeUtils.BINDING_CREATOR;
 import static se.snylt.zipper.processor.TypeUtils.LIST;
-import static se.snylt.zipper.processor.TypeUtils.ON_UNBIND_LISTENER;
 import static se.snylt.zipper.processor.TypeUtils.VIEW_BINDER;
 
 public class BinderCreatorJavaHelper {
@@ -35,7 +34,7 @@ public class BinderCreatorJavaHelper {
 
         // createBinding
         MethodSpec.Builder createBinding = MethodSpec.methodBuilder("createBinding")
-                .addParameter(ON_UNBIND_LISTENER, "listener")
+                // .addParameter(ON_UNBIND_LISTENER, "listener")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(BINDING);
 
@@ -64,7 +63,7 @@ public class BinderCreatorJavaHelper {
         }
 
         // Return
-        createBinding.addStatement("return new Binding($N, $N)", "bindingSpecs", "listener");
+        createBinding.addStatement("return new Binding($N)", "bindingSpecs"); // , "listener");
         builder.addMethod(createBinding.build());
 
         return builder.build();

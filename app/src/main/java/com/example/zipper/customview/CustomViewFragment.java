@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import se.snylt.zipper.annotations.BindToView;
-import se.snylt.zipper.viewbinder.Binding;
+import se.snylt.zipper.viewbinder.UnBinder;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class CustomViewFragment extends Fragment {
 
-    private Binding binding;
+    private UnBinder binding;
 
     @Nullable
     @Override
