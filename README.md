@@ -77,9 +77,9 @@ public class MyViewModel {
   public String text;
 }
 ```
-### Mod
+### Mods
 
-Add additional actions to view model with @Mod
+Add additional actions to view model binding with @Mod
 ```java
 @Mod(ViewModel.class)
 public class ViewModelMod {
