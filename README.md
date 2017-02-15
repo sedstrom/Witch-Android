@@ -108,6 +108,7 @@ public class ViewModel {
 Use in .bind() call
 ```java
 Zipper.bind(model, activity, mod);
+Zipper.bind(model, activity, mod1, mod2, mod3); // Use several mods
 ```
 ## Goals
 TODO
