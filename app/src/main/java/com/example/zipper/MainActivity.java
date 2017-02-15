@@ -1,6 +1,7 @@
 package com.example.zipper;
 
 import com.example.zipper.customview.CustomViewFragment;
+import com.example.zipper.mod.ModsFragment;
 import com.example.zipper.recyclerview.RecyclerViewFragment;
 import com.example.zipper.textview.TextViewFragment;
 
@@ -27,12 +28,12 @@ public class MainActivity extends AppCompatActivity {
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_activity_view_pager);
         viewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(), this));
 
-
         // Pages in main view
         List<MyViewPagerAdapter.Page> pages = new ArrayList<>();
         pages.add(newPage(RecyclerViewFragment.class.getName(), "RecyclerView"));
         pages.add(newPage(TextViewFragment.class.getName(), "TextView"));
         pages.add(newPage(CustomViewFragment.class.getName(), "CustomView"));
+        pages.add(newPage(ModsFragment.class.getName(), "Mods"));
         MainViewModel model = new MainViewModel(pages);
 
         binding = Zipper.bind(model, this);

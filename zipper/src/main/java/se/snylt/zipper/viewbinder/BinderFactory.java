@@ -17,5 +17,4 @@ public class BinderFactory {
             throw new BindingNotFoundException(target);
         }
     }
-
 }

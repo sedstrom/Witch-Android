@@ -6,8 +6,6 @@ public class Binding {
 
     protected Binder binder;
 
-    private Object target;
-
     protected Binding(Object user, Binder binder) {
         this.user = user;
         this.binder = binder;
@@ -17,14 +15,5 @@ public class Binding {
         binder.unRegisterUser(user);
         user = null;
         binder = null;
-        target = null;
-    }
-
-    public void setTarget(Object target) {
-        this.target = target;
-    }
-
-    public Object getTarget() {
-        return target;
     }
 }

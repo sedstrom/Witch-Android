@@ -40,13 +40,11 @@ public class Binder {
         this.bindingAbandonedListener = bindingAbandonedListener;
     }
 
-    public Binding bind(Object viewHolder, ViewFinder viewFinder, Object target) {
+    public Binding bind(Object viewHolder, ViewFinder viewFinder, Object target, Object ...mods) {
         Binding binding = getBinding(viewFinder.getUser());
         for (ViewBinder viewBinder : viewBinders) {
-            viewBinder.bind(viewHolder, viewFinder, target, binding.getTarget());
+            viewBinder.bind(viewHolder, viewFinder, target, mods);
         }
-        binding.setTarget(target);
         return binding;
     }
 }
-;

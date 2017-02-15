@@ -1,7 +1,5 @@
 package se.snylt.zipper.viewbinder;
 
-import android.util.Log;
-
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
@@ -22,10 +20,10 @@ class ZipperCore {
         this.binderFactory = binderFactory;
     }
 
-    Binding doBind(Object target, ViewFinder viewFinder) {
+    Binding doBind(Object target, ViewFinder viewFinder, Object ...mods) {
         Object viewHolder = getOrCreateViewHolder(target, viewFinder);
         Binder binder = getOrCreateBinder(target);
-        return binder.bind(viewHolder, viewFinder, target);
+        return binder.bind(viewHolder, viewFinder, target, mods);
     }
 
     private Binder getOrCreateBinder(Object target) {
@@ -49,14 +47,11 @@ class ZipperCore {
         return target.getClass();
     }
 
-    // Remove binding when not used
     private static BindingAbandonedListener createBinderAbandonedListener(final Object key) {
         return new BindingAbandonedListener() {
             @Override
             public void onBindingAbandoned() {
                 binders.remove(key);
-                Log.d(TAG, "Removed binder for: " + key.toString());
-                Log.d(TAG, "Binders size: " + binders.size());
             }
         };
     }

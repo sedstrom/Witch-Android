@@ -28,7 +28,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         // Provide this as binding user for better performance
-        binding = Zipper.bind(items.get(position), holder.itemView, this);
+        binding = Zipper.bind(items.get(position), this, holder.itemView);
     }
 
     @Override

@@ -3,10 +3,12 @@ package se.snylt.zipper.processor.java;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.util.List;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 
 import se.snylt.zipper.processor.binding.BindActionDef;
@@ -15,6 +17,7 @@ import se.snylt.zipper.processor.binding.ViewBindingDef;
 import static se.snylt.zipper.processor.TypeUtils.ARRAY_LIST;
 import static se.snylt.zipper.processor.TypeUtils.BINDER;
 import static se.snylt.zipper.processor.TypeUtils.BINDING_CREATOR;
+import static se.snylt.zipper.processor.TypeUtils.BIND_ACTION;
 import static se.snylt.zipper.processor.TypeUtils.LIST;
 import static se.snylt.zipper.processor.TypeUtils.VIEW_BINDER;
 
@@ -34,7 +37,6 @@ public class BinderCreatorJavaHelper {
 
         // createBinding
         MethodSpec.Builder createBinding = MethodSpec.methodBuilder("createBinder")
-                // .addParameter(ON_UNBIND_LISTENER, "listener")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(BINDER);
 
@@ -63,7 +65,7 @@ public class BinderCreatorJavaHelper {
         }
 
         // Return
-        createBinding.addStatement("return new Binder($N)", "bindingSpecs"); // , "listener");
+        createBinding.addStatement("return new Binder($N)", "bindingSpecs");
         builder.addMethod(createBinding.build());
 
         return builder.build();
@@ -99,11 +101,27 @@ public class BinderCreatorJavaHelper {
                 .addStatement("return (($T)target).$N", targetTypeName, valueKey)
                 .build();
 
+        // Mods
+        TypeName listOfMods = ParameterizedTypeName.get(LIST, BIND_ACTION);
+        MethodSpec.Builder getModActions = MethodSpec.methodBuilder("getModActions")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(Object.class, "mod")
+                .returns(listOfMods);
+
+        for(Element e: viewBindingDef.getMods()){
+            getModActions.addCode("if(mod instanceof $T) {\n", e.asType());
+            getModActions.addStatement("return (($T)mod).$N", e.asType(), valueKey);
+            getModActions.addCode("}\n");
+        }
+
+        getModActions.addStatement("return null");
+
         TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, $N", viewId, valueKey, "bindActions")
                 .addSuperinterface(VIEW_BINDER)
                 .addMethod(setView)
                 .addMethod(getView)
                 .addMethod(getValue)
+                .addMethod(getModActions.build())
                 .build();
 
         return anonymous;

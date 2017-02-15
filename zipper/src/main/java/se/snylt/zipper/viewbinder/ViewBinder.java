@@ -19,13 +19,21 @@ public abstract class ViewBinder {
 
     public final String key;
 
-    public final List<BindAction> bindActions;
+    public final BindActions bindActions;
+
+    private BindActions bindActionsAndMods;
+
+    private Object historyValue;
+
+    private Object historyTarget;
 
     public ViewBinder(int viewId, String key, List<BindAction> bindActions) {
         this.viewId = viewId;
         this.key = key;
-        this.bindActions = bindActions;
+        this.bindActions = new BindActions(bindActions);
     }
+
+    public abstract List<BindAction> getModActions(Object mod);
 
     public abstract Object getValue(Object target);
 
@@ -33,27 +41,59 @@ public abstract class ViewBinder {
 
     public abstract Object getView(Object viewHolder);
 
-    public void doBind(View view, Object value) {
-        for(BindAction action: bindActions) {
-            if (action instanceof OnPreBindAction) {
-                ((OnPreBindAction) action).onPreBind(view, value);
-            }
-            if (action instanceof OnBindAction) {
-                ((OnBindAction) action).onBind(view, value);
-            }
-            if (action instanceof OnPostBindAction) {
-                ((OnPostBindAction) action).onPostBind(view, value);
-            }
+    public void doBind(View view, Object value, Object ...mods) {
+        BindActions bindActions = prepareBindActions(mods);
+
+        for(OnPreBindAction action: bindActions.preBindActions) {
+            action.onPreBind(view, value);
+        }
+
+        for(OnBindAction action: bindActions.onBindActions) {
+            action.onBind(view, value);
+        }
+
+        for(OnPostBindAction action: bindActions.postBindActions) {
+            action.onPostBind(view, value);
+        }
+
+        destroyBindActions();
+    }
+
+    private void destroyBindActions() {
+        if(bindActionsAndMods != null) {
+            bindActionsAndMods.clear();
         }
     }
 
-    public void bind(Object viewHolder, ViewFinder viewFinder, Object target, Object history) {
-        Object newValue = getValueIfNotNull(target);
-        Object oldValue = getValueIfNotNull(history);
-        boolean isSameTarget = isSameTarget(target, history);
-        if((isSameTarget && isNewValue(newValue, oldValue)) || !isSameTarget) {
+    private BindActions prepareBindActions(Object[] mods) {
+        if(mods != null && mods.length > 0) {
+            if(bindActionsAndMods == null) {
+                bindActionsAndMods = new BindActions();
+            }
+            bindActionsAndMods.clear();
+            bindActionsAndMods.addAll(this.bindActions);
+            for(Object mod : mods) {
+                List<BindAction> modActions = getModActions(mod);
+                if(modActions != null) {
+                    bindActionsAndMods.addAll(modActions);
+                }
+            }
+            return bindActionsAndMods;
+        } else {
+            return this.bindActions;
+        }
+    }
+
+    public void bind(Object viewHolder, ViewFinder viewFinder, Object target, Object ...mods) {
+        Object value = getValue(target);
+        boolean isSameTarget = isSameTarget(target, historyTarget);
+        if((isSameTarget && isNewValue(value, historyValue)) || !isSameTarget) {
             View view = findView(viewHolder, viewFinder);
-            doBind(view, newValue);
+            doBind(view, value, mods);
+
+            // For later
+            historyTarget = target;
+            historyValue = value;
         } else {
             Log.d(TAG, "Skip bind because of no change");
         }
@@ -61,10 +101,6 @@ public abstract class ViewBinder {
 
     private boolean isSameTarget(Object target, Object history) {
         return target == null && history == null ? false : target == history;
-    }
-
-    private Object getValueIfNotNull(Object target) {
-        return (target == null) ? null : getValue(target);
     }
 
     private boolean isNewValue(Object newValue, Object oldValue) {

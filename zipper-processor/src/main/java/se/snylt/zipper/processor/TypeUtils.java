@@ -18,7 +18,11 @@ public class TypeUtils {
 
     public static final TypeName VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "ViewBinder");
 
+    public static final TypeName VIEW_BINDER_MOD = ClassName.get(LIBRARY_PACKAGE, "ViewBinderMod");
+
     public final static TypeName BINDING_CREATOR = ClassName.get(LIBRARY_PACKAGE, "BindingCreator");
+
+    public final static TypeName MODS_CREATOR = ClassName.get(LIBRARY_PACKAGE, "ModsCreator");
 
     public final static TypeName BINDER = ClassName.get(LIBRARY_PACKAGE, "Binder");
 
@@ -29,6 +33,8 @@ public class TypeUtils {
     public static final ClassName ON_BIND_ACTION =  ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "OnBindAction");
 
     public static final ClassName ON_POST_BIND_ACTION =  ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "OnPostBindAction");
+
+    public static final ClassName BIND_ACTION =  ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "BindAction");
 
     public static String asString(ClassName className) {
         return className.packageName() + "." + className.simpleName();

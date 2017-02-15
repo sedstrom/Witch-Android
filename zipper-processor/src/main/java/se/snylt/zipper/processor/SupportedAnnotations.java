@@ -172,6 +172,11 @@ public class SupportedAnnotations {
         }
     }
 
+    // Mod
+    public final static class Mod {
+        public final static String name = "se.snylt.zipper.annotations.Mod";
+    }
+
     // OnBind
     public final static class OnBind {
         public final static String name = "se.snylt.zipper.annotations.OnBind";

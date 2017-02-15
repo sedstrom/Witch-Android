@@ -8,8 +8,10 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,7 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
 import se.snylt.zipper.ClassUtils;
+import se.snylt.zipper.annotations.Mod;
 import se.snylt.zipper.processor.binding.BindActionDef;
 import se.snylt.zipper.processor.binding.NewInstanceDef;
 import se.snylt.zipper.processor.binding.OnBindGetAdapterViewDef;
@@ -54,7 +57,7 @@ import se.snylt.zipper.processor.java.ViewHolderJavaHelper;
         SupportedAnnotations.BindToViewPager.name,
         SupportedAnnotations.OnBind.name,
         SupportedAnnotations.OnBindEach.name,
-
+        SupportedAnnotations.Mod.name,
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ZipperProcessor extends AbstractProcessor {
@@ -96,15 +99,60 @@ public class ZipperProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        HashMap<Element, List<ViewBindingDef>> targets = new HashMap<>();
-        addTarget(targets, roundEnv, SupportedAnnotations.ALL_BIND_VIEW);
-        addOnBindActions(targets, roundEnv);
-        buildJava(targets);
+        HashMap<Element, List<ViewBindingDef>> binders = new HashMap<>();
+
+        addBindingTargets(binders, roundEnv, SupportedAnnotations.ALL_BIND_VIEW);
+        addBindingsOnBindActions(binders, roundEnv);
+        addMods(binders, roundEnv);
+
+        // Generate java
+        buildJava(binders);
+
         return true;
     }
 
+    private void addMods(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
+        // Map mods to existing view binding
+        for (Element mod : roundEnv.getElementsAnnotatedWith(Mod.class)) {
+            TypeName targetClass = getModTargetViewClass(mod);
+            List<? extends Element> mods = getEnclosedMods(mod);
+            for(Element e: mods) {
+                boolean viewBindingFound = false;
+                for(ViewBindingDef viewBindingDef: getBindersForTargetClass(binders, targetClass)) {
+                    if (e.getSimpleName().equals(viewBindingDef.value.getSimpleName())) {
+                        viewBindingDef.addMod(mod);
+                        viewBindingFound = true;
+                    }
+                }
+                if(!viewBindingFound) {
+                    logError("Could not find matching view binding in " + targetClass + " for mod \""
+                            + e.getSimpleName() + "\" defined in " + mod.getSimpleName());
+                }
+            }
+        }
+    }
 
-    private void addTarget(Map<Element, List<ViewBindingDef>> targets, RoundEnvironment roundEnv,
+    private List<? extends Element> getEnclosedMods(Element mod) {
+        List<? extends Element> mods = new ArrayList<>(mod.getEnclosedElements());
+        Iterator<? extends Element> iterator = mods.iterator();
+        while (iterator.hasNext()) {
+            if(!iterator.next().getKind().isField()) {
+                iterator.remove();
+            }
+        }
+        return mods;
+    }
+
+    private List<ViewBindingDef> getBindersForTargetClass(HashMap<Element, List<ViewBindingDef>> binders, TypeName targetClass) {
+        for(Element target: binders.keySet()) {
+            if(target.asType().toString().equals(targetClass.toString())) {
+                return binders.get(target);
+            }
+        }
+        throw new IllegalStateException("Could not find target for mod with: " + targetClass.toString());
+    }
+
+    private void addBindingTargets(Map<Element, List<ViewBindingDef>> targets, RoundEnvironment roundEnv,
             SupportedAnnotations.HasViewId... annotations) {
         for (SupportedAnnotations.HasViewId hasViewIdAnnotation : annotations) {
             for (Element value : roundEnv.getElementsAnnotatedWith(hasViewIdAnnotation.getClazz())) {
@@ -125,7 +173,7 @@ public class ZipperProcessor extends AbstractProcessor {
         }
     }
 
-    private void addOnBindActions(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
+    private void addBindingsOnBindActions(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
 
         // OnBind
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.zipper.annotations.OnBind.class)) {
@@ -218,7 +266,6 @@ public class ZipperProcessor extends AbstractProcessor {
         TypeName typeName = TypeName.get(bindTypeMirror);
         BindActionDef actionDef = new NewInstanceDef(typeName);
 
-
         // Implements OnPreBind
         String name = TypeUtils.asString(TypeUtils.ON_PRE_BIND_ACTION);
         TypeMirror onPreBind = elementUtils.getTypeElement(name).asType();
@@ -243,7 +290,7 @@ public class ZipperProcessor extends AbstractProcessor {
             noMatch = false;
         }
 
-        if(noMatch) {
+        if (noMatch) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder
                     .append(typeName + " does not implement required interface. Make sure classes provided in: ")
@@ -267,36 +314,37 @@ public class ZipperProcessor extends AbstractProcessor {
 
     private void addOnBindAction(Element bindAction, BindActionDef bindActionDef,
             HashMap<Element, List<ViewBindingDef>> binders) {
-        ViewBindingDef viewBindingDef = getViewBindingDef(bindAction, binders);
-        viewBindingDef.addOnBindAction(bindActionDef);
+        ViewBindingDef viewViewBindingDef = getViewViewBindingDef(bindAction, binders);
+        viewViewBindingDef.addOnBindAction(bindActionDef);
     }
 
     private void addOnPreBindAction(Element bindAction, BindActionDef bindActionDef,
             HashMap<Element, List<ViewBindingDef>> binders) {
-        ViewBindingDef viewBindingDef = getViewBindingDef(bindAction, binders);
-        viewBindingDef.addOnPreBindAction(bindActionDef);
+        ViewBindingDef viewViewBindingDef = getViewViewBindingDef(bindAction, binders);
+        viewViewBindingDef.addOnPreBindAction(bindActionDef);
     }
 
     private void addOnPostBindAction(Element bindAction, BindActionDef bindActionDef,
             HashMap<Element, List<ViewBindingDef>> binders) {
-        ViewBindingDef viewBindingDef = getViewBindingDef(bindAction, binders);
-        viewBindingDef.addOnPostBindAction(bindActionDef);
+        ViewBindingDef viewViewBindingDef = getViewViewBindingDef(bindAction, binders);
+        viewViewBindingDef.addOnPostBindAction(bindActionDef);
     }
 
-    private ViewBindingDef getViewBindingDef(Element bindAction, HashMap<Element, List<ViewBindingDef>> binders) {
+    private ViewBindingDef getViewViewBindingDef(Element bindAction, HashMap<Element, List<ViewBindingDef>> binders) {
         Element target = bindAction.getEnclosingElement();
         List<ViewBindingDef> viewActionses = binders.get(target);
 
         // Add bind actions to view binding
-        for (ViewBindingDef viewBindingDef : viewActionses) {
-            if (viewBindingDef.equals(bindAction)) {
-                return viewBindingDef;
+        for (ViewBindingDef viewViewBindingDef : viewActionses) {
+            if (viewViewBindingDef.equals(bindAction)) {
+                return viewViewBindingDef;
             }
         }
 
-        logError("Could not find view defined for: < " + target.getSimpleName() + "." + bindAction.getSimpleName() +" >"
-                + " . Make sure you have used any of the annotations that binds to a view id:"
-                + Arrays.toString(SupportedAnnotations.ALL_BIND_VIEW));
+        logError(
+                "Could not find view defined for: < " + target.getSimpleName() + "." + bindAction.getSimpleName() + " >"
+                        + " . Make sure you have used any of the annotations that binds to a view id:"
+                        + Arrays.toString(SupportedAnnotations.ALL_BIND_VIEW));
         return null;
     }
 
@@ -310,9 +358,8 @@ public class ZipperProcessor extends AbstractProcessor {
     private void createBindingSpec(Element target, HashMap<Element, List<ViewBindingDef>> binders) {
         ClassName viewHolderClassName = getBindingViewHolderName(target);
         ClassName bindingClassName = getBindingClassName(target);
-        ClassName targetClassName = getTargetClassName(target);
-        TypeSpec bindingTypeSpec = BinderCreatorJavaHelper
-                .toJava(targetClassName, binders.get(target), bindingClassName, viewHolderClassName);
+        ClassName targetClassName = getElementClassName(target);
+        TypeSpec bindingTypeSpec = BinderCreatorJavaHelper.toJava(targetClassName, binders.get(target), bindingClassName, viewHolderClassName);
         JavaFile bindingJavaFile = JavaFile.builder(bindingClassName.packageName(), bindingTypeSpec).build();
         try {
             bindingJavaFile.writeTo(filer);
@@ -344,7 +391,7 @@ public class ZipperProcessor extends AbstractProcessor {
         return ClassName.get(packageName, className);
     }
 
-    private ClassName getTargetClassName(Element target) {
+    private ClassName getElementClassName(Element target) {
         String className = ClassUtils.getTargetName(target);
         String packageName = ClassUtils.getBindingPackage(target);
         return ClassName.get(packageName, className);
@@ -400,4 +447,16 @@ public class ZipperProcessor extends AbstractProcessor {
         }
         return TypeName.get(bindClass);
     }
+
+    private TypeName getModTargetViewClass(Element mod) {
+        TypeMirror target = null;
+        try {
+            mod.getAnnotation(Mod.class).value();
+        } catch (MirroredTypeException mte) {
+            target = mte.getTypeMirror();
+        }
+        return TypeName.get(target);
+    }
+
+
 }

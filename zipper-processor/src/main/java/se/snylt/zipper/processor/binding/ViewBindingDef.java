@@ -8,7 +8,6 @@ import javax.lang.model.element.Element;
 
 public class ViewBindingDef {
 
-    // View
     public final Integer viewId;
 
     // Value
@@ -25,6 +24,17 @@ public class ViewBindingDef {
         this.onPreBindActions = new LinkedList<>();
         this.onBindActions = new LinkedList<>();
         this.onPostBindActions = new LinkedList<>();
+    }
+
+    // Mods
+    private final List<Element> mods = new ArrayList<>();
+
+    public void addMod(Element mod) {
+        this.mods.add(mod);
+    }
+
+    public List<Element> getMods(){
+        return mods;
     }
 
     public void addOnPreBindAction(BindActionDef onPostBindAction) {
@@ -47,7 +57,6 @@ public class ViewBindingDef {
         return allActions;
     }
 
-
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof ViewBindingDef) {
@@ -59,3 +68,5 @@ public class ViewBindingDef {
         return super.equals(obj);
     }
 }
+
+
