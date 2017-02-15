@@ -77,7 +77,34 @@ public class MyViewModel {
   public String text;
 }
 ```
+### Mod
 
+Add additional actions to view model with @Mod
+```java
+@Mod(ViewModel.class)
+public class ViewModelMod {
+  // Same field name as in view model
+  public List<BindAction> title = Arrays.asList(new MyMod());
+}
+
+public class MyMod implements OnPostBindAction<TextView, String> {
+
+    @Override
+    public void onPostBind(TextView view, String text) {
+        if(text == null) {
+          view.setVisibility(View.INVISIBLE);
+        } else {
+          view.setVisibility(View.VISIBLE);
+        }
+    }
+}
+
+public class ViewModel {
+
+  @BindTextView(id = R.id.text_view_title)
+  public String title;
+}
+```
 
 ## Goals
 TODO
