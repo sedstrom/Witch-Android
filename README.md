@@ -105,7 +105,7 @@ public class ViewModel {
   public String title;
 }
 ```
-Pass in bind call
+Use in .bind() call
 ```java
 Zipper.bind(model, activity, mod);
 ```
