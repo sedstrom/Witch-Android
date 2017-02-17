@@ -6,9 +6,6 @@ import android.view.View;
 import java.util.List;
 
 import se.snylt.zipper.viewbinder.bindaction.BindAction;
-import se.snylt.zipper.viewbinder.bindaction.OnBindAction;
-import se.snylt.zipper.viewbinder.bindaction.OnPostBindAction;
-import se.snylt.zipper.viewbinder.bindaction.OnPreBindAction;
 import se.snylt.zipper.viewbinder.viewfinder.ViewFinder;
 
 import static se.snylt.zipper.viewbinder.ZipperCore.TAG;
@@ -21,8 +18,6 @@ public abstract class ViewBinder {
 
     public final BindActions bindActions;
 
-    private BindActions bindActionsAndMods;
-
     private Object historyValue;
 
     private Object historyTarget;
@@ -33,45 +28,20 @@ public abstract class ViewBinder {
         this.bindActions = new BindActions(bindActions);
     }
 
-    public abstract List<BindAction> getModActions(Object mod);
-
-    public abstract Object getValue(Object target);
-
-    public abstract void setView(Object viewHolder, Object view);
-
-    public abstract Object getView(Object viewHolder);
-
     public void doBind(View view, Object value, Object ...mods) {
-        BindActions bindActions = prepareBindActions(mods);
-
-        for(OnPreBindAction action: bindActions.preBindActions) {
-            action.onPreBind(view, value);
+        BindActions bindActions = createModsBindActions(mods);
+        if(bindActions != null) {
+            bindActions.addAll(this.bindActions);
+        } else {
+            bindActions = this.bindActions;
         }
 
-        for(OnBindAction action: bindActions.onBindActions) {
-            action.onBind(view, value);
-        }
-
-        for(OnPostBindAction action: bindActions.postBindActions) {
-            action.onPostBind(view, value);
-        }
-
-        destroyBindActions();
+        bindActions.doBind(view, value);
     }
 
-    private void destroyBindActions() {
-        if(bindActionsAndMods != null) {
-            bindActionsAndMods.clear();
-        }
-    }
-
-    private BindActions prepareBindActions(Object[] mods) {
+    private BindActions createModsBindActions(Object[] mods) {
         if(mods != null && mods.length > 0) {
-            if(bindActionsAndMods == null) {
-                bindActionsAndMods = new BindActions();
-            }
-            bindActionsAndMods.clear();
-            bindActionsAndMods.addAll(this.bindActions);
+            BindActions bindActionsAndMods = new BindActions();
             for(Object mod : mods) {
                 List<BindAction> modActions = getModActions(mod);
                 if(modActions != null) {
@@ -79,21 +49,17 @@ public abstract class ViewBinder {
                 }
             }
             return bindActionsAndMods;
-        } else {
-            return this.bindActions;
         }
+        return null;
     }
 
     public void bind(Object viewHolder, ViewFinder viewFinder, Object target, Object ...mods) {
         Object value = getValue(target);
         boolean isSameTarget = isSameTarget(target, historyTarget);
         if((isSameTarget && isNewValue(value, historyValue)) || !isSameTarget) {
-            View view = findView(viewHolder, viewFinder);
-            doBind(view, value, mods);
-
-            // For later
-            historyTarget = target;
             historyValue = value;
+            historyTarget = target;
+            doBind(findView(viewHolder, viewFinder), value, mods);
         } else {
             Log.d(TAG, "Skip bind because of no change");
         }
@@ -122,4 +88,12 @@ public abstract class ViewBinder {
         }
         return (View) getView(viewHolder);
     }
+
+    public abstract List<BindAction> getModActions(Object mod);
+
+    public abstract Object getValue(Object target);
+
+    public abstract void setView(Object viewHolder, Object view);
+
+    public abstract Object getView(Object viewHolder);
 }

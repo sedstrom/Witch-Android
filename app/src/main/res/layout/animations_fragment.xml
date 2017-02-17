@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+            android:id="@+id/animations_fragment_text_1"
+            android:background="#447788"
+            android:textSize="34sp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+    <TextView
+            android:id="@+id/animations_fragment_text_2"
+            android:background="#997722"
+            android:textSize="34sp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+    <TextView
+            android:id="@+id/animations_fragment_text_3"
+            android:background="#881155"
+            android:textSize="34sp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+    <TextView
+            android:id="@+id/animations_fragment_text_4"
+            android:background="#557733"
+            android:textSize="34sp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_weight="0"
+                  android:orientation="horizontal"
+                  android:layout_height="wrap_content">
+
+
+        <Button
+                android:id="@+id/animations_fragment_bind_flip_button"
+                android:gravity="center"
+                android:text="bind flip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+
+        <Button
+                android:id="@+id/animations_fragment_bind_slide_button"
+                android:gravity="center"
+                android:text="bind slide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+        <Button
+                android:id="@+id/animations_fragment_bind_both_button"
+                android:gravity="center"
+                android:text="both"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</LinearLayout>

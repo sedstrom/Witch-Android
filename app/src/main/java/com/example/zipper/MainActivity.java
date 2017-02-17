@@ -1,5 +1,6 @@
 package com.example.zipper;
 
+import com.example.zipper.animations.AnimationsFragment;
 import com.example.zipper.customview.CustomViewFragment;
 import com.example.zipper.mod.ModsFragment;
 import com.example.zipper.recyclerview.RecyclerViewFragment;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         pages.add(newPage(RecyclerViewFragment.class.getName(), "RecyclerView"));
         pages.add(newPage(TextViewFragment.class.getName(), "TextView"));
         pages.add(newPage(CustomViewFragment.class.getName(), "CustomView"));
+        pages.add(newPage(AnimationsFragment.class.getName(), "Animations"));
         pages.add(newPage(ModsFragment.class.getName(), "Mods"));
         MainViewModel model = new MainViewModel(pages);
 

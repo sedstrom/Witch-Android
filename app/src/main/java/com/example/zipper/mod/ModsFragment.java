@@ -1,6 +1,7 @@
 package com.example.zipper.mod;
 
 import com.example.zipper.R;
+import com.example.zipper.animations.FlipMod;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ public class ModsFragment extends Fragment {
 
     private ViewModelMod blue = new ViewModelMod(new TextColor(Color.BLUE));
 
-    private ViewModelMod fadeIn = new ViewModelMod(new TextColor(Color.MAGENTA), new FadeIn());
+    private ViewModelMod fadeIn = new ViewModelMod(new TextColor(Color.MAGENTA), new FlipMod());
 
     private ViewModel model = new ViewModel();
 

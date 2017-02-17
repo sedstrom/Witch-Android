@@ -5,7 +5,7 @@ import android.view.View;
 
 import se.snylt.zipper.viewbinder.bindaction.OnPostBindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnPreBindAction;
-
+import se.snylt.zipper.viewbinder.bindaction.PreBindDone;
 
 public class FadeIn implements OnPostBindAction<View, Object>, OnPreBindAction<View, Object> {
 
@@ -15,7 +15,8 @@ public class FadeIn implements OnPostBindAction<View, Object>, OnPreBindAction<V
     }
 
     @Override
-    public void onPreBind(View view, Object o) {
+    public void onPreBind(View view, Object o, PreBindDone preBindDone) {
         view.setAlpha(0f);
+        preBindDone.done();
     }
 }

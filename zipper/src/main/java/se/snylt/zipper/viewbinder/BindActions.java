@@ -1,5 +1,7 @@
 package se.snylt.zipper.viewbinder;
 
+import android.view.View;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -8,6 +10,7 @@ import se.snylt.zipper.viewbinder.bindaction.BindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnBindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnPostBindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnPreBindAction;
+import se.snylt.zipper.viewbinder.bindaction.PreBindDone;
 
 public class BindActions {
 
@@ -24,6 +27,7 @@ public class BindActions {
     public BindActions() {}
 
     private void add(BindAction action) {
+
         if(action instanceof OnPreBindAction) {
             preBindActions.add((OnPreBindAction) action);
         }
@@ -49,9 +53,26 @@ public class BindActions {
         addAll(bindActions.postBindActions);
     }
 
-    public final void clear(){
-        preBindActions.clear();
-        onBindActions.clear();
-        postBindActions.clear();
+    public void doBind(final View view, final Object value){
+
+        AtomicPreBindDone preBind = new AtomicPreBindDone(new PreBindDone() {
+            @Override
+            public void done() {
+                for(OnBindAction action: onBindActions) {
+                    action.onBind(view, value);
+                }
+
+                for(OnPostBindAction action: postBindActions) {
+                    action.onPostBind(view, value);
+                }
+            }
+        });
+
+        for(OnPreBindAction action: preBindActions) {
+            preBind.waitForDone();
+            action.onPreBind(view, value, preBind);
+        }
+
+        preBind.check();
     }
 }
