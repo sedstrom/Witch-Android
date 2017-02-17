@@ -77,7 +77,38 @@ public class MyViewModel {
   public String text;
 }
 ```
+### Mods
 
+Add additional actions to view model binding with @Mod
+```java
+@Mod(ViewModel.class)
+public class ViewModelMod {
+  // Same field name as in view model
+  public List<BindAction> title = Arrays.asList(new MyMod());
+}
 
+public class MyMod implements OnPostBindAction<TextView, String> {
+
+    @Override
+    public void onPostBind(TextView view, String text) {
+        if(text == null) {
+          view.setVisibility(View.INVISIBLE);
+        } else {
+          view.setVisibility(View.VISIBLE);
+        }
+    }
+}
+
+public class ViewModel {
+
+  @BindTextView(id = R.id.text_view_title)
+  public String title;
+}
+```
+Use in .bind() call
+```java
+Zipper.bind(model, activity, mod);
+Zipper.bind(model, activity, mod1, mod2, mod3); // Use several mods
+```
 ## Goals
 TODO
