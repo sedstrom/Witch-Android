@@ -40,18 +40,11 @@ public class AnimationsFragment extends Fragment {
                 bind(new AnimationsViewModelMod(new FlipMod(), new SlideMod()));
             }
         });
+
         return view;
     }
 
-    private void bindSlide() {
-        bind(new AnimationsViewModelMod(new SlideMod()));
-    }
-
-    private void bindFlip() {
-        bind(new AnimationsViewModelMod(new FlipMod()));
-    }
-
-    private void bind(Object mod) {
+    private void bind(Object ...mod) {
         binding = Zipper.bind(randomNumbersViewModel(), getView(), mod);
     }
 
@@ -67,6 +60,7 @@ public class AnimationsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        bind();
     }
 
     @Override
