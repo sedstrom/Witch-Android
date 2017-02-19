@@ -12,13 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class MainActivity extends AppCompatActivity {
-
-    private Binding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +34,10 @@ public class MainActivity extends AppCompatActivity {
         pages.add(newPage(ModsFragment.class.getName(), "Mods"));
         MainViewModel model = new MainViewModel(pages);
 
-        binding = Zipper.bind(model, this);
+        Zipper.bind(model, this);
     }
 
     private MyViewPagerAdapter.Page newPage(String name, String title) {
         return new MyViewPagerAdapter.Page(name, title);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        binding.unBind();
     }
 }

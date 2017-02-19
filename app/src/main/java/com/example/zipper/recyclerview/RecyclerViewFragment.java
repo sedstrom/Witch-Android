@@ -16,12 +16,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class RecyclerViewFragment extends Fragment implements View.OnClickListener {
-
-    private Binding binding;
 
     private MyRecyclerViewAdapter adapter;
 
@@ -36,23 +33,14 @@ public class RecyclerViewFragment extends Fragment implements View.OnClickListen
         View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_fragment_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-
-        adapter = new MyRecyclerViewAdapter();
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(new MyRecyclerViewAdapter());
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding = Zipper.bind(createModel(), view);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding.unBind();
-        adapter.unBind();
+        Zipper.bind(createModel(), view);
     }
 
     private RecyclerViewViewModel createModel() {
