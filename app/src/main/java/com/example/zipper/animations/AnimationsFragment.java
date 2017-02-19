@@ -8,13 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class AnimationsFragment extends Fragment {
-
-    private Binding binding;
 
     @Nullable
     @Override
@@ -45,7 +41,7 @@ public class AnimationsFragment extends Fragment {
     }
 
     private void bind(Object ...mod) {
-        binding = Zipper.bind(randomNumbersViewModel(), getView(), mod);
+        Zipper.bind(randomNumbersViewModel(), getView(), mod);
     }
 
     private AnimationsViewModel randomNumbersViewModel() {
@@ -61,14 +57,5 @@ public class AnimationsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if(binding != null) {
-            binding.unBind();
-            binding = null;
-        }
     }
 }

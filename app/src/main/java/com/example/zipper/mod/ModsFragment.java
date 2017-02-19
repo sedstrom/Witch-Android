@@ -11,12 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import se.snylt.zipper.viewbinder.Binding;
 import se.snylt.zipper.viewbinder.Zipper;
 
 public class ModsFragment extends Fragment {
-
-    private Binding binding;
 
     private ViewModelMod red = new ViewModelMod(new TextColor(Color.RED));
 
@@ -58,20 +55,6 @@ public class ModsFragment extends Fragment {
     }
 
     private void bind(Object mod) {
-        binding = Zipper.bind(model, getView(), mod);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if(binding != null) {
-            binding.unBind();
-            binding = null;
-        }
+        Zipper.bind(model, getView(), mod);
     }
 }

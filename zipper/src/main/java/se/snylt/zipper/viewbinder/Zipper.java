@@ -3,7 +3,6 @@ package se.snylt.zipper.viewbinder;
 import android.app.Activity;
 import android.view.View;
 
-import se.snylt.zipper.viewbinder.viewfinder.ActivityViewFinder;
 import se.snylt.zipper.viewbinder.viewfinder.ViewFinder;
 import se.snylt.zipper.viewbinder.viewfinder.ViewViewFinder;
 
@@ -20,31 +19,23 @@ public class Zipper {
         return INSTANCE;
     }
 
-    public static Binding bind(Object target, Activity activity, Object ...mods) {
-        return bind(target, viewFinder(activity, activity), mods);
+    public static void bind(Object target, Activity activity, Object ...mods) {
+        bind(target, viewFinder(activity), mods);
     }
 
-    public static Binding bind(Object target, Object user, Activity activity, Object ...mods) {
-        return bind(target, viewFinder(activity, user), mods);
+    public static void bind(Object target, View view, Object ...mods) {
+        bind(target, viewFinder(view), mods);
     }
 
-    public static Binding bind(Object target, View view, Object ...mods) {
-        return bind(target, viewFinder(view, view), mods);
+    private static ViewFinder viewFinder(Activity activity) {
+        return new ViewViewFinder(activity.findViewById(android.R.id.content), VIEW_HOLDER_TAG_DEFAULT);
     }
 
-    public static Binding bind(Object target, Object user, View view, Object ...mods) {
-        return bind(target, viewFinder(view, user), mods);
+    private static ViewFinder viewFinder(View view) {
+        return new ViewViewFinder(view, VIEW_HOLDER_TAG_DEFAULT);
     }
 
-    private static ViewFinder viewFinder(Activity activity, Object user) {
-        return new ActivityViewFinder(activity, user, VIEW_HOLDER_TAG_DEFAULT);
-    }
-
-    private static ViewFinder viewFinder(View view, Object user) {
-        return new ViewViewFinder(view, user, VIEW_HOLDER_TAG_DEFAULT);
-    }
-
-    private static Binding bind(Object target, ViewFinder viewFinder, Object ...mods) {
-        return zipper().doBind(target, viewFinder, mods);
+    private static void bind(Object target, ViewFinder viewFinder, Object ...mods) {
+        zipper().doBind(target, viewFinder, mods);
     }
 }
