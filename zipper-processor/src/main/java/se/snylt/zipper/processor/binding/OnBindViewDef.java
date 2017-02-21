@@ -28,14 +28,13 @@ public class OnBindViewDef extends BindActionDef {
         MethodSpec method = MethodSpec.methodBuilder("onBind")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(viewType, "view")
-                .addParameter(Object.class, "value")
+                .addParameter(valueType, "value")
                 .returns(void.class)
                 .addStatement("$N.$N(($T)value)", "view", getPropertySetter(property), valueType)
                 .build();
 
         TypeSpec anonymous = TypeSpec.anonymousClassBuilder("")
-                .addSuperinterface(ParameterizedTypeName
-                        .get(TypeUtils.ON_BIND_ACTION, viewType))
+                .addSuperinterface(ParameterizedTypeName.get(TypeUtils.ON_BIND_ACTION, viewType, valueType))
                 .addMethod(method)
                 .build();
 

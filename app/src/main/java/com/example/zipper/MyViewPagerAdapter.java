@@ -39,6 +39,7 @@ public class MyViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     public static class Page {
+
         public final String fragment;
 
         public final String title;

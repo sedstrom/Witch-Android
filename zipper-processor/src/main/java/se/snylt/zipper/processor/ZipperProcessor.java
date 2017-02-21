@@ -27,6 +27,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
@@ -136,7 +137,8 @@ public class ZipperProcessor extends AbstractProcessor {
         List<? extends Element> mods = new ArrayList<>(mod.getEnclosedElements());
         Iterator<? extends Element> iterator = mods.iterator();
         while (iterator.hasNext()) {
-            if(!iterator.next().getKind().isField()) {
+            Element element = iterator.next();
+            if(!element.getKind().isField() || !element.getModifiers().contains(Modifier.PUBLIC)) {
                 iterator.remove();
             }
         }
@@ -249,13 +251,13 @@ public class ZipperProcessor extends AbstractProcessor {
         }
 
         // TODO
+        // BindToToolBar
         // BindToAdapterView
         // BindToProgressBar
         // BindToToggleButton
         // BindToCheckedTextView
         // BindToRatingBar
         // BindToTextSwitcher
-        // BindToToolBar
         // BindGridLayout
     }
 

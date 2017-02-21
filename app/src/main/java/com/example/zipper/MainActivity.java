@@ -1,43 +1,83 @@
 package com.example.zipper;
 
-import com.example.zipper.animations.AnimationsFragment;
-import com.example.zipper.customview.CustomViewFragment;
-import com.example.zipper.mod.ModsFragment;
-import com.example.zipper.recyclerview.RecyclerViewFragment;
-import com.example.zipper.textview.TextViewFragment;
-
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
+
+import se.snylt.zipper.annotations.Mod;
 import se.snylt.zipper.viewbinder.Zipper;
+import se.snylt.zipper.viewbinder.bindaction.BindAction;
+import se.snylt.zipper.viewbinder.bindaction.OnBindAction;
 
-public class MainActivity extends AppCompatActivity {
+@Mod(MainViewModel.class)
+public class MainActivity extends AppCompatActivity implements OnExampleFragmentSelected {
+
+    // Stack fragments
+    Stack<MainViewModel> models = new Stack<>();
+
+    public BindAction[] fragment = new BindAction[] {new OnBindAction<ViewGroup, Fragment>() {
+        @Override
+        public void onBind(ViewGroup view, Fragment fragment) {
+            getSupportFragmentManager().beginTransaction()
+                    .setTransition(transaction)
+                    .replace(view.getId(), fragment)
+                    .commit();
+        }
+    }};
+
+    public BindAction[] displayHomeAsUp = new BindAction[] {new OnBindAction<Toolbar, Boolean>() {
+        @Override
+        public void onBind(Toolbar view, Boolean enabled) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
+            getSupportActionBar().setDisplayShowHomeEnabled(enabled);
+        }
+    }};
+
+    private int transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Adapter
-        ViewPager viewPager = (ViewPager) findViewById(R.id.main_activity_view_pager);
-        viewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(), this));
-
-        // Pages in main view
-        List<MyViewPagerAdapter.Page> pages = new ArrayList<>();
-        pages.add(newPage(RecyclerViewFragment.class.getName(), "RecyclerView"));
-        pages.add(newPage(TextViewFragment.class.getName(), "TextView"));
-        pages.add(newPage(CustomViewFragment.class.getName(), "CustomView"));
-        pages.add(newPage(AnimationsFragment.class.getName(), "Animations"));
-        pages.add(newPage(ModsFragment.class.getName(), "Mods"));
-        MainViewModel model = new MainViewModel(pages);
-
-        Zipper.bind(model, this);
+        setSupportActionBar((Toolbar) findViewById(R.id.main_activity_toolbar));
+        addFragment(Fragment.instantiate(this, ExampleListFragment.class.getName()), "Pick an example", false);
     }
 
-    private MyViewPagerAdapter.Page newPage(String name, String title) {
-        return new MyViewPagerAdapter.Page(name, title);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void addFragment(Fragment fragment, String title, boolean displayHomeAsUp) {
+        models.add(new MainViewModel(fragment, displayHomeAsUp, title));
+        transaction = FragmentTransaction.TRANSIT_FRAGMENT_OPEN;
+        Zipper.bind(models.peek(), this, this);
+    }
+
+    @Override
+    public void onExampleFragmentSelected(String fragment, String title) {
+        addFragment(Fragment.instantiate(this, fragment), title, true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(models.size() > 1) {
+            models.pop();
+            transaction = FragmentTransaction.TRANSIT_FRAGMENT_CLOSE;
+            Zipper.bind(models.peek(), this, this);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

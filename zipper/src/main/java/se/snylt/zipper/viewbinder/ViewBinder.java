@@ -1,5 +1,7 @@
 package se.snylt.zipper.viewbinder;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import android.util.Log;
 import android.view.View;
 
@@ -41,14 +43,11 @@ public abstract class ViewBinder {
 
     private BindActions createModsBindActions(Object[] mods) {
         if(mods != null && mods.length > 0) {
-            BindActions bindActionsAndMods = new BindActions();
+            BindAction[] modActions = new BindAction[0];
             for(Object mod : mods) {
-                List<BindAction> modActions = getModActions(mod);
-                if(modActions != null) {
-                    bindActionsAndMods.addAll(modActions);
-                }
+                modActions = ArrayUtils.addAll(getModActions(mod));
             }
-            return bindActionsAndMods;
+            return new BindActions(modActions);
         }
         return null;
     }
@@ -89,7 +88,7 @@ public abstract class ViewBinder {
         return (View) getView(viewHolder);
     }
 
-    public abstract List<BindAction> getModActions(Object mod);
+    public abstract BindAction[] getModActions(Object mod);
 
     public abstract Object getValue(Object target);
 

@@ -1,5 +1,6 @@
 package se.snylt.zipper.processor.java;
 
+import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -102,7 +103,8 @@ public class BinderCreatorJavaHelper {
                 .build();
 
         // Mods
-        TypeName listOfMods = ParameterizedTypeName.get(LIST, BIND_ACTION);
+
+        TypeName listOfMods = ArrayTypeName.of(BIND_ACTION);
         MethodSpec.Builder getModActions = MethodSpec.methodBuilder("getModActions")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "mod")

@@ -1,5 +1,6 @@
 package se.snylt.zipper.viewbinder;
 
+
 import android.view.View;
 
 import java.util.ArrayList;
@@ -24,7 +25,9 @@ public class BindActions {
         addAll(bindActions);
     }
 
-    public BindActions() {}
+    public BindActions(BindAction ...bindActions) {
+        addAll(bindActions);
+    }
 
     private void add(BindAction action) {
 
@@ -42,6 +45,12 @@ public class BindActions {
     }
 
     public final void addAll(Collection<? extends BindAction> actions) {
+        for(BindAction action: actions) {
+            add(action);
+        }
+    }
+
+    public final void addAll(BindAction[] actions) {
         for(BindAction action: actions) {
             add(action);
         }
