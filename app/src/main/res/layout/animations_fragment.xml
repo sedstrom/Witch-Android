@@ -6,7 +6,7 @@
 
     <TextView
             android:id="@+id/animations_fragment_text_1"
-            android:background="#447788"
+            android:background="@color/colorAccent"
             android:textSize="34sp"
             android:textColor="#ffffff"
             android:gravity="center"
@@ -17,7 +17,7 @@
 
     <TextView
             android:id="@+id/animations_fragment_text_2"
-            android:background="#997722"
+            android:background="@color/colorAccent"
             android:textSize="34sp"
             android:textColor="#ffffff"
             android:gravity="center"
@@ -28,7 +28,7 @@
 
     <TextView
             android:id="@+id/animations_fragment_text_3"
-            android:background="#881155"
+            android:background="@color/colorAccent"
             android:textSize="34sp"
             android:textColor="#ffffff"
             android:gravity="center"
@@ -39,7 +39,7 @@
 
     <TextView
             android:id="@+id/animations_fragment_text_4"
-            android:background="#557733"
+            android:background="@color/colorAccent"
             android:textSize="34sp"
             android:textColor="#ffffff"
             android:gravity="center"
