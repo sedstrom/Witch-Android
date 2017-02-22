@@ -29,6 +29,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
@@ -263,36 +264,50 @@ public class ZipperProcessor extends AbstractProcessor {
 
     private void addBindTypeMirror(Element bindAction, TypeMirror bindTypeMirror,
             HashMap<Element, List<ViewBindingDef>> binders) {
-        boolean noMatch = true;
+        boolean match = false;
 
         TypeName typeName = TypeName.get(bindTypeMirror);
+        DeclaredType bindingDeclaredType = typeUtils.getDeclaredType(elementUtils.getTypeElement(bindTypeMirror.toString()));
+
         BindActionDef actionDef = new NewInstanceDef(typeName);
 
         // Implements OnPreBind
         String name = TypeUtils.asString(TypeUtils.ON_PRE_BIND_ACTION);
-        TypeMirror onPreBind = elementUtils.getTypeElement(name).asType();
-        if (typeUtils.isAssignable(bindTypeMirror, onPreBind)) {
+        TypeMirror onPreBind = typeUtils.getDeclaredType(elementUtils.getTypeElement(name),
+                typeUtils.getWildcardType(null, null),
+                typeUtils.getWildcardType(null, null));
+        if (typeUtils.isAssignable(bindingDeclaredType, onPreBind)) {
             addOnPreBindAction(bindAction, actionDef, binders);
-            noMatch = false;
+            match = true;
+        } else {
+            logNote(typeName + " is NOT OnPreBindAction");
         }
 
         // Implements OnBind
         name = TypeUtils.asString(TypeUtils.ON_BIND_ACTION);
-        TypeMirror onBind = elementUtils.getTypeElement(name).asType();
-        if (typeUtils.isAssignable(bindTypeMirror, onBind)) {
+        TypeMirror onBind = typeUtils.getDeclaredType(elementUtils.getTypeElement(name),
+                typeUtils.getWildcardType(null, null),
+                typeUtils.getWildcardType(null, null));
+        if (typeUtils.isAssignable(bindingDeclaredType, onBind)) {
             addOnBindAction(bindAction, actionDef, binders);
-            noMatch = false;
+            match = true;
+        } else {
+            logNote(typeName + " is NOT OnBindAction");
         }
 
         // Implements OnPostBind
         name = TypeUtils.asString(TypeUtils.ON_POST_BIND_ACTION);
-        TypeMirror onPostBind = elementUtils.getTypeElement(name).asType();
-        if (typeUtils.isAssignable(bindTypeMirror, onPostBind)) {
+        TypeMirror onPostBind = typeUtils.getDeclaredType(elementUtils.getTypeElement(name),
+                typeUtils.getWildcardType(null, null),
+                typeUtils.getWildcardType(null, null));
+        if (typeUtils.isAssignable(bindingDeclaredType, onPostBind)) {
             addOnPostBindAction(bindAction, actionDef, binders);
-            noMatch = false;
+            match = true;
+        } else {
+            logNote(typeName + " is NOT OnPostBindAction");
         }
 
-        if (noMatch) {
+        if (!match) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder
                     .append(typeName + " does not implement required interface. Make sure classes provided in: ")

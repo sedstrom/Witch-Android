@@ -21,6 +21,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
 
     // zipper

@@ -18,7 +18,7 @@ import se.snylt.zipper.viewbinder.bindaction.OnBindAction;
 @Mod(MainViewModel.class)
 public class MainActivity extends AppCompatActivity implements OnExampleFragmentSelected {
 
-    // Stack fragments
+    // View model back stack
     Stack<MainViewModel> models = new Stack<>();
 
     public BindAction[] fragment = new BindAction[] {new OnBindAction<ViewGroup, Fragment>() {
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements OnExampleFragment
         @Override
         public void onBind(Toolbar view, Boolean enabled) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
-            getSupportActionBar().setDisplayShowHomeEnabled(enabled);
         }
     }};
 
@@ -46,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements OnExampleFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.main_activity_toolbar));
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // Initial fragment
         addFragment(Fragment.instantiate(this, ExampleListFragment.class.getName()), "Pick an example", false);
     }
 

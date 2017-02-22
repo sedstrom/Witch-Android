@@ -22,8 +22,6 @@ public abstract class ViewBinder {
 
     private Object historyValue;
 
-    private Object historyTarget;
-
     public ViewBinder(int viewId, String key, List<BindAction> bindActions) {
         this.viewId = viewId;
         this.key = key;
@@ -54,20 +52,14 @@ public abstract class ViewBinder {
 
     public void bind(Object viewHolder, ViewFinder viewFinder, Object target, Object ...mods) {
         Object value = getValue(target);
-        boolean isSameTarget = isSameTarget(target, historyTarget);
-        if((isSameTarget && isNewValue(value, historyValue)) || !isSameTarget) {
+        if(isNewValue(value, historyValue)) {
             historyValue = value;
-            historyTarget = target;
             doBind(findView(viewHolder, viewFinder), value, mods);
         } else {
             Log.d(TAG, "Skip bind because of no change");
         }
     }
-
-    private boolean isSameTarget(Object target, Object history) {
-        return target == null && history == null ? false : target == history;
-    }
-
+    
     private boolean isNewValue(Object newValue, Object oldValue) {
 
         if(newValue == null && oldValue != null) {

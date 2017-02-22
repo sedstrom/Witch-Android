@@ -44,6 +44,7 @@ public class ViewViewFinder implements ViewFinder {
         Tag tag = (Tag) view.getTag(this.tag);
         if(tag == null) {
             tag  = new Tag();
+            view.setTag(this.tag, tag);
         }
         return tag;
     }
