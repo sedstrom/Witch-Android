@@ -52,6 +52,9 @@ Direct view binding
 @BindToImageView
 @BindToRecyclerView
 @BindToViewPager
+@AlwaysBind
+@BindToView
+@BindTo
 // More to come!
 ```
 
@@ -77,6 +80,19 @@ public class MyViewModel {
   public String text;
 }
 ```
+
+### @AlwaysBind
+By default Zipper wont re-bind values that has not changed in the view model. If the view model is out of sync with the actual value in the view, for example when a seekbar is changed by the user, @AlwaysBind can be used to always refresh the binding.
+```java
+public class MyViewModel {
+
+  @BindToView(R.id.my_seek_bar, class = SeekBar.class, set = "progress")
+  @AlwaysBind
+  public Integer progess;
+}
+```
+![](./assets/alwaysbind.gif)
+
 ### Mods
 
 Add additional actions to view model binding with @Mod
