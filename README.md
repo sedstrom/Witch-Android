@@ -38,7 +38,7 @@ A view model will have its own view holder which eliminates the need for definin
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        binding = Zipper.bind(items.get(position), holder.itemView);
+        Zipper.bind(items.get(position), holder.itemView);
     }
 ```
 
