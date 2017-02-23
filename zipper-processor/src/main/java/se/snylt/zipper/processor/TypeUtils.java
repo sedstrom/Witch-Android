@@ -18,11 +18,7 @@ public class TypeUtils {
 
     public static final TypeName VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "ViewBinder");
 
-    public static final TypeName VIEW_BINDER_MOD = ClassName.get(LIBRARY_PACKAGE, "ViewBinderMod");
-
     public final static TypeName BINDING_CREATOR = ClassName.get(LIBRARY_PACKAGE, "BindingCreator");
-
-    public final static TypeName MODS_CREATOR = ClassName.get(LIBRARY_PACKAGE, "ModsCreator");
 
     public final static TypeName BINDER = ClassName.get(LIBRARY_PACKAGE, "Binder");
 
