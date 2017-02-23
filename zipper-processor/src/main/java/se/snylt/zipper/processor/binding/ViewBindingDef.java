@@ -15,7 +15,7 @@ public class ViewBindingDef {
 
     // Flag always bind
     private boolean alwaysBind = false;
-
+    
     // Bind actions
     private final List<BindActionDef> onPreBindActions;
     private final List<BindActionDef> onBindActions;

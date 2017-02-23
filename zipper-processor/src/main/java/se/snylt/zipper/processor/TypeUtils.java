@@ -6,6 +6,10 @@ import com.squareup.javapoet.TypeName;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+
 public class TypeUtils {
 
     private final static String LIBRARY_PACKAGE = "se.snylt.zipper.viewbinder";
@@ -34,5 +38,24 @@ public class TypeUtils {
 
     public static String asString(ClassName className) {
         return className.packageName() + "." + className.simpleName();
+    }
+
+    public static TypeMirror onPostBindActionDeclaredType(Types types, Elements elements) {
+        return declared(types, elements, ON_POST_BIND_ACTION);
+    }
+
+    public static TypeMirror onPreBindActionDeclaredType(Types types, Elements elements) {
+        return declared(types, elements, ON_PRE_BIND_ACTION);
+    }
+
+    public static TypeMirror onBindActionDeclaredType(Types types, Elements elements) {
+        return declared(types, elements, ON_PRE_BIND_ACTION);
+    }
+
+
+    private static TypeMirror declared(Types types, Elements elements, ClassName name) {
+        return types.getDeclaredType(elements.getTypeElement(asString(name)),
+                types.getWildcardType(null, null),
+                types.getWildcardType(null, null));
     }
 }

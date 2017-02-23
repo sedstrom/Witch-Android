@@ -73,7 +73,6 @@ public class ZipperProcessor extends AbstractProcessor {
 
     private Messager messager;
 
-
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
@@ -280,35 +279,27 @@ public class ZipperProcessor extends AbstractProcessor {
 
         BindActionDef actionDef = new NewInstanceDef(typeName);
 
-        // Implements OnPreBind
-        String name = TypeUtils.asString(TypeUtils.ON_PRE_BIND_ACTION);
-        TypeMirror onPreBind = typeUtils.getDeclaredType(elementUtils.getTypeElement(name),
-                typeUtils.getWildcardType(null, null),
-                typeUtils.getWildcardType(null, null));
+        // OnPreBinAction
+        TypeMirror onPreBind = TypeUtils.onPreBindActionDeclaredType(typeUtils, elementUtils);
         if (typeUtils.isAssignable(bindingDeclaredType, onPreBind)) {
             addOnPreBindAction(bindAction, actionDef, binders);
             match = true;
         }
 
-        // Implements OnBind
-        name = TypeUtils.asString(TypeUtils.ON_BIND_ACTION);
-        TypeMirror onBind = typeUtils.getDeclaredType(elementUtils.getTypeElement(name),
-                typeUtils.getWildcardType(null, null),
-                typeUtils.getWildcardType(null, null));
+        // OnBindAction
+        TypeMirror onBind = TypeUtils.onBindActionDeclaredType(typeUtils, elementUtils);
         if (typeUtils.isAssignable(bindingDeclaredType, onBind)) {
             addOnBindAction(bindAction, actionDef, binders);
             match = true;
         }
 
-        // Implements OnPostBind
-        name = TypeUtils.asString(TypeUtils.ON_POST_BIND_ACTION);
-        TypeMirror onPostBind = typeUtils.getDeclaredType(elementUtils.getTypeElement(name),
-                typeUtils.getWildcardType(null, null),
-                typeUtils.getWildcardType(null, null));
+        // OnPostBindAction
+        TypeMirror onPostBind = TypeUtils.onPostBindActionDeclaredType(typeUtils, elementUtils);
         if (typeUtils.isAssignable(bindingDeclaredType, onPostBind)) {
             addOnPostBindAction(bindAction, actionDef, binders);
             match = true;
         }
+
 
         if (!match) {
             StringBuilder stringBuilder = new StringBuilder();

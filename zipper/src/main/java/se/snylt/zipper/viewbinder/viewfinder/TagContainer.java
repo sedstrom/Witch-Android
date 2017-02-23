@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import se.snylt.zipper.viewbinder.Binder;
 
-public class Tag {
+public class TagContainer {
 
     private HashMap<Object, Object> viewHolders = new HashMap<>();
 

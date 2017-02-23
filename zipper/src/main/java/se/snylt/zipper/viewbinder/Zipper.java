@@ -10,12 +10,18 @@ public class Zipper {
 
     private static ZipperCore INSTANCE;
 
-    private final static int VIEW_HOLDER_TAG_DEFAULT = Integer.MIN_VALUE;
+    public final static int VIEW_HOLDER_TAG_DEFAULT = Integer.MIN_VALUE;
 
     private static ZipperCore zipper() {
         if(INSTANCE == null) {
             INSTANCE = new ZipperCore(new ViewHolderFactory(), new BinderFactory());
         }
+        return INSTANCE;
+    }
+
+    // Test
+    protected static ZipperCore withCore(ZipperCore zipperCore) {
+        INSTANCE = zipperCore;
         return INSTANCE;
     }
 

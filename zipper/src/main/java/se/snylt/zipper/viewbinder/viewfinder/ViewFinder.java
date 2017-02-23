@@ -6,6 +6,10 @@ import se.snylt.zipper.viewbinder.Binder;
 
 public interface ViewFinder {
 
+    View getRoot();
+
+    int getTag();
+
     View findViewById(int id);
 
     Object getViewHolder(Object key);

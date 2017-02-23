@@ -16,36 +16,46 @@ public class ViewViewFinder implements ViewFinder {
     }
 
     @Override
+    public View getRoot() {
+        return view;
+    }
+
+    @Override
+    public int getTag() {
+        return tag;
+    }
+
+    @Override
     public View findViewById(int id) {
         return view.findViewById(id);
     }
 
     @Override
     public Object getViewHolder(Object key) {
-        return getTag().getViewHolder(key);
+        return getTagContainer().getViewHolder(key);
     }
 
     @Override
     public void putViewHolder(Object key, Object viewHolder) {
-        getTag().putViewHolder(key, viewHolder);
+        getTagContainer().putViewHolder(key, viewHolder);
     }
 
     @Override
     public Binder getBinder(Object key) {
-        return getTag().getBinder(key);
+        return getTagContainer().getBinder(key);
     }
 
     @Override
     public void putBinder(Object key, Binder binder) {
-        getTag().putBinder(key, binder);
+        getTagContainer().putBinder(key, binder);
     }
 
-    private Tag getTag() {
-        Tag tag = (Tag) view.getTag(this.tag);
-        if(tag == null) {
-            tag  = new Tag();
-            view.setTag(this.tag, tag);
+    private TagContainer getTagContainer() {
+        TagContainer tagContainer = (TagContainer) view.getTag(tag);
+        if(tagContainer == null) {
+            tagContainer = new TagContainer();
+            view.setTag(tag, tagContainer);
         }
-        return tag;
+        return tagContainer;
     }
 }

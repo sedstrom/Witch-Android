@@ -26,4 +26,7 @@ dependencies {
     compile project(path: ':zipper-commons')
     compile 'com.esotericsoftware:reflectasm:1.11.3'
     compile 'org.apache.commons:commons-lang3:3.4'
+
+    testCompile 'org.mockito:mockito-android:2.7.11'
+    testCompile 'junit:junit:4.12'
 }
