@@ -64,10 +64,10 @@ Custom bind function
 
 ```java
 // Must have empty constructor
-public class MyOnBind implements OnBind<TextView> {
+public class MyOnBind implements OnBindAction<TextView, String> {
 
-  void onBind(TextView view, Object value) {
-    view.setText("Prefix all texts: " + (String)value);
+  void onBind(TextView view, String text) {
+    view.setText("Prefix all texts: " + text);
   }
 }
 
