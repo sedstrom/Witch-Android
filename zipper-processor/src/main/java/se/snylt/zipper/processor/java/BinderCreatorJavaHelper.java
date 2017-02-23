@@ -102,8 +102,14 @@ public class BinderCreatorJavaHelper {
                 .addStatement("return (($T)target).$N", targetTypeName, valueKey)
                 .build();
 
-        // Mods
+        // Always bind
+        MethodSpec alwaysBind = MethodSpec.methodBuilder("isAlwaysBind")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(boolean.class)
+                .addStatement("return $L", viewBindingDef.isAlwaysBind())
+                .build();
 
+        // Mods
         TypeName listOfMods = ArrayTypeName.of(BIND_ACTION);
         MethodSpec.Builder getModActions = MethodSpec.methodBuilder("getModActions")
                 .addModifiers(Modifier.PUBLIC)
@@ -123,6 +129,7 @@ public class BinderCreatorJavaHelper {
                 .addMethod(setView)
                 .addMethod(getView)
                 .addMethod(getValue)
+                .addMethod(alwaysBind)
                 .addMethod(getModActions.build())
                 .build();
 

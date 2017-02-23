@@ -52,7 +52,7 @@ public abstract class ViewBinder {
 
     public void bind(Object viewHolder, ViewFinder viewFinder, Object target, Object ...mods) {
         Object value = getValue(target);
-        if(isNewValue(value, historyValue)) {
+        if(isAlwaysBind() || isNewValue(value, historyValue)) {
             historyValue = value;
             doBind(findView(viewHolder, viewFinder), value, mods);
         } else {
@@ -87,4 +87,6 @@ public abstract class ViewBinder {
     public abstract void setView(Object viewHolder, Object view);
 
     public abstract Object getView(Object viewHolder);
+
+    public abstract boolean isAlwaysBind();
 }

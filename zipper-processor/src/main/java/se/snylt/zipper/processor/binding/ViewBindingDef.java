@@ -13,6 +13,9 @@ public class ViewBindingDef {
     // Value
     public final Element value;
 
+    // Flag always bind
+    private boolean alwaysBind = false;
+
     // Bind actions
     private final List<BindActionDef> onPreBindActions;
     private final List<BindActionDef> onBindActions;
@@ -66,6 +69,14 @@ public class ViewBindingDef {
             return obj.equals(value);
         }
         return super.equals(obj);
+    }
+
+    public boolean isAlwaysBind() {
+        return alwaysBind;
+    }
+
+    public void setAlwaysBind(boolean alwaysBind) {
+        this.alwaysBind = alwaysBind;
     }
 }
 

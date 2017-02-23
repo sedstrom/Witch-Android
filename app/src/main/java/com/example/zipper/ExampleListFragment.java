@@ -1,5 +1,6 @@
 package com.example.zipper;
 
+import com.example.zipper.alwaysbind.AlwaysBindFragment;
 import com.example.zipper.animations.AnimationsFragment;
 import com.example.zipper.customview.CustomViewFragment;
 import com.example.zipper.mod.ModsFragment;
@@ -56,10 +57,12 @@ public class ExampleListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         // Pages in main view
         List<ExampleItem> items = new ArrayList<>();
-        items.add(newItem(RecyclerViewFragment.class.getName(), "RecyclerView", "Bind items in a recycler view adapter"));
-        items.add(newItem(TextViewFragment.class.getName(), "TextView", "TextView binding" ));
+        items.add(newItem(RecyclerViewFragment.class.getName(), "@BindToRecyclerView", "Bind items in a recycler view adapter"));
+        items.add(newItem(TextViewFragment.class.getName(), "@BindToTextView", "TextView binding" ));
+        items.add(newItem(AlwaysBindFragment.class.getName(), "@AlwaysBind", "Example of how to use @AlwaysBind to skip value diffing"));
         items.add(newItem(CustomViewFragment.class.getName(), "CustomView", "Bind values to a custom view class"));
         items.add(newItem(ModsFragment.class.getName(), "Mods", "Add one or more mods to an existing binding."));
         items.add(newItem(AnimationsFragment.class.getName(), "Animations", "Example of how animations can be added to binding"));

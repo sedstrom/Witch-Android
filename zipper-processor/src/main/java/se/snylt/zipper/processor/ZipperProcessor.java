@@ -60,6 +60,7 @@ import se.snylt.zipper.processor.java.ViewHolderJavaHelper;
         SupportedAnnotations.OnBind.name,
         SupportedAnnotations.OnBindEach.name,
         SupportedAnnotations.Mod.name,
+        SupportedAnnotations.AlwaysBind.name
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ZipperProcessor extends AbstractProcessor {
@@ -106,11 +107,19 @@ public class ZipperProcessor extends AbstractProcessor {
         addBindingTargets(binders, roundEnv, SupportedAnnotations.ALL_BIND_VIEW);
         addBindingsOnBindActions(binders, roundEnv);
         addMods(binders, roundEnv);
+        addAlwaysBind(binders, roundEnv);
 
         // Generate java
         buildJava(binders);
 
         return true;
+    }
+
+    private void addAlwaysBind(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
+        // OnBind
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.zipper.annotations.AlwaysBind.class)) {
+            getViewViewBindingDef(bindAction, binders).setAlwaysBind(true);
+        }
     }
 
     private void addMods(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
@@ -279,8 +288,6 @@ public class ZipperProcessor extends AbstractProcessor {
         if (typeUtils.isAssignable(bindingDeclaredType, onPreBind)) {
             addOnPreBindAction(bindAction, actionDef, binders);
             match = true;
-        } else {
-            logNote(typeName + " is NOT OnPreBindAction");
         }
 
         // Implements OnBind
@@ -291,8 +298,6 @@ public class ZipperProcessor extends AbstractProcessor {
         if (typeUtils.isAssignable(bindingDeclaredType, onBind)) {
             addOnBindAction(bindAction, actionDef, binders);
             match = true;
-        } else {
-            logNote(typeName + " is NOT OnBindAction");
         }
 
         // Implements OnPostBind
@@ -303,8 +308,6 @@ public class ZipperProcessor extends AbstractProcessor {
         if (typeUtils.isAssignable(bindingDeclaredType, onPostBind)) {
             addOnPostBindAction(bindAction, actionDef, binders);
             match = true;
-        } else {
-            logNote(typeName + " is NOT OnPostBindAction");
         }
 
         if (!match) {

@@ -182,6 +182,11 @@ public class SupportedAnnotations {
         public final static String name = "se.snylt.zipper.annotations.OnBind";
     }
 
+    // AlwaysBind
+    public final static class AlwaysBind {
+        public final static String name = "se.snylt.zipper.annotations.AlwaysBind";
+    }
+
     public final static class OnBindEach {
         public final static String name = "se.snylt.zipper.annotations.OnBindEach";
     }
