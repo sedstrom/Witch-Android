@@ -110,5 +110,7 @@ Use in .bind() call
 Zipper.bind(model, activity, mod);
 Zipper.bind(model, activity, mod1, mod2, mod3); // Use several mods
 ```
+Mods can be used to very binding behaviour at runtime without changing view model. One example could be to add animations.
+![](./assets/mods.gif)
 ## Goals
 TODO
