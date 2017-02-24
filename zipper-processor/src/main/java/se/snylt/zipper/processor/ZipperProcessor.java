@@ -392,19 +392,19 @@ public class ZipperProcessor extends AbstractProcessor {
 
     private ClassName getBindingViewHolderName(Element target) {
         String className = ClassUtils.getViewHolderName(target);
-        String packageName = ClassUtils.getBindingPackage(target);
+        String packageName = ClassUtils.getElementPackage(target);
         return ClassName.get(packageName, className);
     }
 
     private ClassName getBindingClassName(Element target) {
-        String className = ClassUtils.getBindingName(target);
-        String packageName = ClassUtils.getBindingPackage(target);
+        String className = ClassUtils.getBinderName(target);
+        String packageName = ClassUtils.getElementPackage(target);
         return ClassName.get(packageName, className);
     }
 
     private ClassName getElementClassName(Element target) {
         String className = ClassUtils.getTargetName(target);
-        String packageName = ClassUtils.getBindingPackage(target);
+        String packageName = ClassUtils.getElementPackage(target);
         return ClassName.get(packageName, className);
     }
 

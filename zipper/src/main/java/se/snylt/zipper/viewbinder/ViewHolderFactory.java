@@ -14,7 +14,7 @@ public class ViewHolderFactory {
             Class clazz = ClassUtils.findViewHolder(target);
             return clazz.newInstance();
         } catch (Exception e) {
-            throw new BindingNotFoundException("Could not find binding for " + target.getClass().getName());
+            throw new ViewHolderNotFoundException("Could not find view holder for " + target.getClass().getName());
         }
     }
 }

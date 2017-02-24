@@ -11,10 +11,10 @@ public class BinderFactory {
      */
     public Binder createBinder(Object target) {
         try {
-            Class clazz = ClassUtils.findBinding(target);
+            Class clazz = ClassUtils.findBinder(target);
             return ((BindingCreator) clazz.newInstance()).createBinder();
         } catch (Exception e) {
-            throw new BindingNotFoundException(target);
+            throw new BinderNotFoundException("Could not find binder for " + target.getClass().getName());
         }
     }
 }

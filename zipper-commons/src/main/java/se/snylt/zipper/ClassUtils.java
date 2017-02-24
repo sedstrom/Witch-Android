@@ -10,14 +10,14 @@ public class ClassUtils {
 
     private final static String VIEW_HOLDER_SUFFIX = "_ViewHolder";
 
-    private final static String CLASS_SUFFIX = "_ViewBinding";
+    private final static String VIEW_BINDER_SUFFIX = "_ViewBinder";
 
     private final static char NOT_A_DOT = '$';
 
     private final static char DOT = '.';
 
-    public static Class findBinding(Object target) throws ClassNotFoundException {
-        return Class.forName(classNameForTarget(target));
+    public static Class findBinder(Object target) throws ClassNotFoundException {
+        return Class.forName(classNameForTarget(target) + VIEW_BINDER_SUFFIX);
     }
 
     public static Class findViewHolder(Object target) throws ClassNotFoundException {
@@ -28,27 +28,29 @@ public class ClassUtils {
         String packageName = target.getClass().getPackage().getName();
         String className = target.getClass().getName().toString();
         className = className.substring(packageName.length() + 1).replace(DOT, NOT_A_DOT);
-        return packageName + DOT + className + CLASS_SUFFIX;
+        return packageName + DOT + className;
     }
 
     public static String getViewHolderName(Element element) {
-        return getBindingName(element) + VIEW_HOLDER_SUFFIX;
+        return getElementClassName(element) + VIEW_HOLDER_SUFFIX;
     }
 
-    public static String getBindingName(Element element) {
-        String packageName = getBindingPackage(element);
+    public static String getBinderName(Element element) {
+        return getElementClassName(element) + VIEW_BINDER_SUFFIX;
+    }
+
+    private static String getElementClassName(Element element) {
+        String packageName = getElementPackage(element);
         String className = ((TypeElement) element).getQualifiedName().toString();
-        className = className.substring(packageName.length() + 1).replace(DOT, NOT_A_DOT);
-        return className + CLASS_SUFFIX;
+        return className.substring(packageName.length() + 1).replace(DOT, NOT_A_DOT);
     }
 
     public static String getTargetName(Element element) {
-        String packageName = getBindingPackage(element);
         String className = ((TypeElement) element).getQualifiedName().toString();
         return className;
     }
 
-    public static String getBindingPackage(Element element) {
+    public static String getElementPackage(Element element) {
         while (element.getKind() != PACKAGE) {
             element = element.getEnclosingElement();
         }
