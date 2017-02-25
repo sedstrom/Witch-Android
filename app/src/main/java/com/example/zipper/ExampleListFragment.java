@@ -6,6 +6,7 @@ import com.example.zipper.customview.CustomViewFragment;
 import com.example.zipper.mod.ModsFragment;
 import com.example.zipper.picasso.PicassoFragment;
 import com.example.zipper.recyclerview.RecyclerViewFragment;
+import com.example.zipper.responsemodel.ResponseModelFragment;
 import com.example.zipper.textview.TextViewFragment;
 
 import android.content.Context;
@@ -67,6 +68,7 @@ public class ExampleListFragment extends Fragment {
         items.add(newItem(ModsFragment.class.getName(), "Mods", "Add one or more mods to an existing binding."));
         items.add(newItem(AnimationsFragment.class.getName(), "Animations", "Example of how animations can be added to binding"));
         items.add(newItem(PicassoFragment.class.getName(), "Picasso", "Example of how picasso can be used in binding"));
+        items.add(newItem(ResponseModelFragment.class.getName(), "ResponseModel", "Combine response model and view model."));
 
         ExampleListFragmentViewModel model = new ExampleListFragmentViewModel(items);
 

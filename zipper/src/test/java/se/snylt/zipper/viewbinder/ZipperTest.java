@@ -37,7 +37,7 @@ public class ZipperTest {
     public void setup(){
         MockitoAnnotations.initMocks(this);
         when(activity.findViewById(android.R.id.content)).thenReturn(activityContentView);
-        Zipper.withCore(core);
+        Zipper.zipper(core);
     }
 
     @Test

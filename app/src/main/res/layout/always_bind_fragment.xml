@@ -13,7 +13,7 @@
 
     <EditText
             android:layout_marginTop="50dp"
-            android:inputType="number"
+            android:inputType="text"
             android:id="@+id/always_bind_fragment_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

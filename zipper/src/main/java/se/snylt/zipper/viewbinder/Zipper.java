@@ -20,9 +20,9 @@ public class Zipper {
     }
 
     // Test
-    protected static ZipperCore withCore(ZipperCore zipperCore) {
+    protected static ZipperCore zipper(ZipperCore zipperCore) {
         INSTANCE = zipperCore;
-        return INSTANCE;
+        return zipper();
     }
 
     public static void bind(Object target, Activity activity, Object ...mods) {

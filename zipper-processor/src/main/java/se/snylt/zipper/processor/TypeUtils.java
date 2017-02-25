@@ -49,7 +49,7 @@ public class TypeUtils {
     }
 
     public static TypeMirror onBindActionDeclaredType(Types types, Elements elements) {
-        return declared(types, elements, ON_PRE_BIND_ACTION);
+        return declared(types, elements, ON_BIND_ACTION);
     }
 
 
