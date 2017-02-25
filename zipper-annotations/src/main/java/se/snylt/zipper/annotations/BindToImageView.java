@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 import static se.snylt.zipper.annotations.ViewProperties.ImageView.IMG_RESOURCE;
 
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
 public @interface BindToImageView {
 

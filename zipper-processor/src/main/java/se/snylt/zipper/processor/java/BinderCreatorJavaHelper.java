@@ -12,6 +12,7 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 
+import se.snylt.zipper.processor.valueaccessor.ValueAccessor;
 import se.snylt.zipper.processor.binding.BindActionDef;
 import se.snylt.zipper.processor.binding.ViewBindingDef;
 
@@ -49,7 +50,7 @@ public class BinderCreatorJavaHelper {
         for (ViewBindingDef viewBindingDef : viewActionses) {
 
             createBinding.addComment("===========================================");
-            createBinding.addComment("Bind " + viewBindingDef.value.getSimpleName());
+            createBinding.addComment("Bind " + viewBindingDef.value.accessValueString());
 
             // Add all binding actions
             createBinding.addStatement("bindActions = new $T()", ARRAY_LIST);
@@ -74,15 +75,15 @@ public class BinderCreatorJavaHelper {
 
     private static TypeSpec newBindSpecInstance(ClassName targetTypeName, ViewBindingDef viewBindingDef, ClassName viewHolderClassName) {
         ClassName viewClassName = ClassName.get("android.view", "View");
-        String valueKey =  viewBindingDef.value.getSimpleName().toString();
         int viewId = viewBindingDef.viewId;
+        ValueAccessor accessor = viewBindingDef.value;
 
         // Get view
         MethodSpec getView = MethodSpec.methodBuilder("getView")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "viewHolder")
                 .returns(viewClassName)
-                .addStatement("return (($T)viewHolder).$N", viewHolderClassName, valueKey)
+                .addStatement("return (($T)viewHolder).$N", viewHolderClassName, accessor.viewHolderFieldName())
                 .build();
 
         // Set view
@@ -91,7 +92,7 @@ public class BinderCreatorJavaHelper {
                 .addParameter(Object.class, "viewHolder")
                 .addParameter(Object.class, "view")
                 .returns(void.class)
-                .addStatement("(($T)viewHolder).$N = ($T)$N", viewHolderClassName, valueKey, viewClassName, "view")
+                .addStatement("(($T)viewHolder).$N = ($T)$N", viewHolderClassName, accessor.viewHolderFieldName(), viewClassName, "view")
                 .build();
 
         // Value
@@ -99,7 +100,7 @@ public class BinderCreatorJavaHelper {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "target")
                 .returns(Object.class)
-                .addStatement("return (($T)target).$N", targetTypeName, valueKey)
+                .addStatement("return (($T)target).$N", targetTypeName, accessor.accessValueString())
                 .build();
 
         // Always bind
@@ -118,13 +119,13 @@ public class BinderCreatorJavaHelper {
 
         for(Element e: viewBindingDef.getMods()){
             getModActions.addCode("if(mod instanceof $T) {\n", e.asType());
-            getModActions.addStatement("return (($T)mod).$N", e.asType(), valueKey);
+            getModActions.addStatement("return (($T)mod).$N", e.asType(), accessor.accessValueString());
             getModActions.addCode("}\n");
         }
 
         getModActions.addStatement("return null");
 
-        TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, $N", viewId, valueKey, "bindActions")
+        TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, $N", viewId, accessor.viewHolderFieldName(), "bindActions")
                 .addSuperinterface(VIEW_BINDER)
                 .addMethod(setView)
                 .addMethod(getView)

@@ -60,7 +60,7 @@ public class ResponseModelFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseViewModel> call, Response<ResponseViewModel> response) {
                 if(response.isSuccessful()) {
-                    bindResult(response.body());
+                    Zipper.bind(response.body(), getView());
                 } else {
                     bindError(String.format("Could not find \"%s\"", user));
                 }
@@ -74,29 +74,14 @@ public class ResponseModelFragment extends Fragment {
     }
 
     private void bindStart() {
-        ResponseViewModel model = new ResponseViewModel();
-        model.progressBarVisibility = View.INVISIBLE;
-        model.error = null;
-        Zipper.bind(model, getView());
+        Zipper.bind(ResponseViewModel.idle(), getView());
     }
 
     private void bindFetching() {
-        ResponseViewModel model = new ResponseViewModel();
-        model.progressBarVisibility = View.VISIBLE;
-        model.error = null;
-        Zipper.bind(model, getView());
-    }
-
-    private void bindResult(ResponseViewModel model) {
-        model.progressBarVisibility = View.INVISIBLE;
-        model.error = null;
-        Zipper.bind(model, getView());
+        Zipper.bind(ResponseViewModel.progress(), getView());
     }
 
     private void bindError(String error) {
-        ResponseViewModel model = new ResponseViewModel();
-        model.progressBarVisibility = View.INVISIBLE;
-        model.error = error;
-        Zipper.bind(model, getView());
+        Zipper.bind(ResponseViewModel.error(error), getView());
     }
 }

@@ -20,8 +20,6 @@ import se.snylt.zipper.viewbinder.Zipper;
 
 public class RecyclerViewFragment extends Fragment implements View.OnClickListener {
 
-    private MyRecyclerViewAdapter adapter;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

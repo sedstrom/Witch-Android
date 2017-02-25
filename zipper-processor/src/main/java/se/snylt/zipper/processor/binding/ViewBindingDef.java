@@ -6,12 +6,14 @@ import java.util.List;
 
 import javax.lang.model.element.Element;
 
+import se.snylt.zipper.processor.valueaccessor.ValueAccessor;
+
 public class ViewBindingDef {
 
     public final Integer viewId;
 
     // Value
-    public final Element value;
+    public final ValueAccessor value;
 
     // Flag always bind
     private boolean alwaysBind = false;
@@ -21,7 +23,7 @@ public class ViewBindingDef {
     private final List<BindActionDef> onBindActions;
     private final List<BindActionDef> onPostBindActions;
 
-    public ViewBindingDef(Integer viewId, Element value) {
+    public ViewBindingDef(Integer viewId, ValueAccessor value) {
         this.viewId = viewId;
         this.value = value;
         this.onPreBindActions = new LinkedList<>();
@@ -65,7 +67,7 @@ public class ViewBindingDef {
         if(obj instanceof ViewBindingDef) {
             return ((ViewBindingDef) obj).value.equals(value);
         }
-        if(obj instanceof Element) {
+        if(obj instanceof ValueAccessor) {
             return obj.equals(value);
         }
         return super.equals(obj);

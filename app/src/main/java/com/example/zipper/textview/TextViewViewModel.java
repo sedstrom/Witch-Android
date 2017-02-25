@@ -9,6 +9,7 @@ import static se.snylt.zipper.annotations.ViewProperties.EditText.HINT;
 
 public class TextViewViewModel {
 
+
     @BindToTextView(id = R.id.text_view_fragment_text_view)
     public final String text;
 

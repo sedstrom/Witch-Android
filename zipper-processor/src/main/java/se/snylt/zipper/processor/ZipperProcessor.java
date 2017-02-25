@@ -27,9 +27,11 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
@@ -46,6 +48,9 @@ import se.snylt.zipper.processor.binding.OnBindViewDef;
 import se.snylt.zipper.processor.binding.ViewBindingDef;
 import se.snylt.zipper.processor.java.BinderCreatorJavaHelper;
 import se.snylt.zipper.processor.java.ViewHolderJavaHelper;
+import se.snylt.zipper.processor.valueaccessor.FieldAccessor;
+import se.snylt.zipper.processor.valueaccessor.MethodAccessor;
+import se.snylt.zipper.processor.valueaccessor.ValueAccessor;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
@@ -94,8 +99,9 @@ public class ZipperProcessor extends AbstractProcessor {
         messager.printMessage(Diagnostic.Kind.WARNING, message);
     }
 
-    private void logError(String message) {
+    private void logAndThrowError(String message) {
         messager.printMessage(Diagnostic.Kind.ERROR, message);
+        throw new ZipperException(message);
     }
 
 
@@ -128,14 +134,18 @@ public class ZipperProcessor extends AbstractProcessor {
             List<? extends Element> mods = getEnclosedMods(mod);
             for(Element e: mods) {
                 boolean viewBindingFound = false;
+                ValueAccessor modAccessor = getValueAccessor(e);
+                logNote("Mod = " + modAccessor.accessValueString());
+
                 for(ViewBindingDef viewBindingDef: getBindersForTargetClass(binders, targetClass)) {
-                    if (e.getSimpleName().equals(viewBindingDef.value.getSimpleName())) {
+                    logNote("Mod ? " + modAccessor.accessValueString() + " : " + viewBindingDef.value.accessValueString());
+                    if (modAccessor.accessValueString().equals(viewBindingDef.value.accessValueString())) {
                         viewBindingDef.addMod(mod);
                         viewBindingFound = true;
                     }
                 }
                 if(!viewBindingFound) {
-                    logError("Could not find matching view binding in " + targetClass + " for mod \""
+                    logAndThrowError("Could not find matching view binding in " + targetClass + " for mod \""
                             + e.getSimpleName() + "\" defined in " + mod.getSimpleName());
                 }
             }
@@ -151,6 +161,7 @@ public class ZipperProcessor extends AbstractProcessor {
                 iterator.remove();
             }
         }
+        logNote("Mods: " + mods.size());
         return mods;
     }
 
@@ -178,10 +189,25 @@ public class ZipperProcessor extends AbstractProcessor {
                 List<ViewBindingDef> viewActionses = targets.get(target);
                 if (!viewActionses.contains(value)) {
                     int viewId = hasViewIdAnnotation.getViewId(value);
-                    viewActionses.add(new ViewBindingDef(viewId, value));
+                    ValueAccessor valueAccessor = getValueAccessor(value);
+                    viewActionses.add(new ViewBindingDef(viewId, valueAccessor));
                 }
             }
         }
+    }
+
+    private ValueAccessor getValueAccessor(Element value) {
+        if(value.getKind().isField() && value.getModifiers().contains(Modifier.PUBLIC)) {
+            return new FieldAccessor(value.getSimpleName().toString());
+        }
+
+        if(value.getModifiers().contains(Modifier.PUBLIC)) {
+            return new MethodAccessor(value.getSimpleName().toString());
+        }
+
+        logAndThrowError("Can't access " + value.getEnclosingElement().getSimpleName() + "." + value.getSimpleName() + ". Make sure "
+                + "value is either a public field or a public method.");
+        return null;
     }
 
     private void addBindingsOnBindActions(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
@@ -311,16 +337,28 @@ public class ZipperProcessor extends AbstractProcessor {
                     .append(TypeUtils.ON_PRE_BIND_ACTION).append(", ").append(TypeUtils.ON_BIND_ACTION).append(" or ")
                     .append(TypeUtils.ON_POST_BIND_ACTION);
 
-            logError(stringBuilder.toString());
+            logAndThrowError(stringBuilder.toString());
         }
 
     }
 
     private void addOnBindViewDef(HashMap<Element, List<ViewBindingDef>> binders, String property, TypeName viewType,
             Element bindAction) {
-        TypeName valueType = ClassName.get(bindAction.asType());
+
+        TypeName valueType = getValueType(bindAction);
         BindActionDef actionDef = new OnBindViewDef(property, viewType, valueType);
         addOnBindAction(bindAction, actionDef, binders);
+    }
+
+    private TypeName getValueType(Element bindAction) {
+        if(bindAction.getKind().isField()) {
+            return ClassName.get(bindAction.asType());
+        } else if (bindAction.getKind() == ElementKind.METHOD) {
+            ExecutableType type = (ExecutableType) bindAction.asType();
+            return ClassName.get(type.getReturnType());
+        }
+        logAndThrowError("Could not get value type for: " + bindAction.getSimpleName());
+        return null;
     }
 
     private void addOnBindAction(Element bindAction, BindActionDef bindActionDef,
@@ -347,12 +385,12 @@ public class ZipperProcessor extends AbstractProcessor {
 
         // Add bind actions to view binding
         for (ViewBindingDef viewViewBindingDef : viewActionses) {
-            if (viewViewBindingDef.equals(bindAction)) {
+            if (viewViewBindingDef.equals(getValueAccessor(bindAction))) {
                 return viewViewBindingDef;
             }
         }
 
-        logError(
+        logAndThrowError(
                 "Could not find view defined for: < " + target.getSimpleName() + "." + bindAction.getSimpleName() + " >"
                         + " . Make sure you have used any of the annotations that binds to a view id:"
                         + Arrays.toString(SupportedAnnotations.ALL_BIND_VIEW));

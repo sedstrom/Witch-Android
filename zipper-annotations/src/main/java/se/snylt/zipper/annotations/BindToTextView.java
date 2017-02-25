@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 import static se.snylt.zipper.annotations.ViewProperties.TextView.TEXT;
 
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
 public @interface BindToTextView {
 
