@@ -1,7 +1,7 @@
 package se.snylt.zipper.viewbinder;
 
 
-import android.view.View;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +11,6 @@ import se.snylt.zipper.viewbinder.bindaction.BindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnBindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnPostBindAction;
 import se.snylt.zipper.viewbinder.bindaction.OnPreBindAction;
-import se.snylt.zipper.viewbinder.bindaction.PreBindDone;
 
 public class BindActions {
 
@@ -20,10 +19,6 @@ public class BindActions {
     public final List<OnBindAction> onBindActions = new ArrayList<>();
 
     public final List<OnPostBindAction> postBindActions = new ArrayList<>();
-
-    public BindActions(List<BindAction> bindActions) {
-        addAll(bindActions);
-    }
 
     public BindActions(BindAction ...bindActions) {
         addAll(bindActions);
@@ -62,26 +57,26 @@ public class BindActions {
         addAll(bindActions.postBindActions);
     }
 
-    public void doBind(final View view, final Object value){
-
-        AtomicPreBindDone preBind = new AtomicPreBindDone(new PreBindDone() {
-            @Override
-            public void done() {
-                for(OnBindAction action: onBindActions) {
-                    action.onBind(view, value);
-                }
-
-                for(OnPostBindAction action: postBindActions) {
-                    action.onPostBind(view, value);
-                }
-            }
-        });
-
-        for(OnPreBindAction action: preBindActions) {
-            preBind.waitForDone();
-            action.onPreBind(view, value, preBind);
+    public BindActions applyMods(ViewBinder viewBinder, Object[] mods) {
+        BindActions finalActions = createModsBindActions(viewBinder, mods);
+        if(finalActions != null) {
+            finalActions.addAll(this);
+        } else {
+            finalActions = this;
         }
 
-        preBind.check();
+        return finalActions;
     }
+
+    private BindActions createModsBindActions( ViewBinder viewBinder, Object[] mods) {
+        if(mods != null && mods.length > 0) {
+            BindAction[] modActions = new BindAction[0];
+            for(Object mod : mods) {
+                modActions = ArrayUtils.addAll(viewBinder.getModActions(mod));
+            }
+            return new BindActions(modActions);
+        }
+        return null;
+    }
+
 }
