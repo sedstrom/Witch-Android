@@ -24,6 +24,10 @@ public class BindActions {
         addAll(bindActions);
     }
 
+    public BindActions(List<BindAction> bindActions) {
+        addAll(bindActions);
+    }
+
     private void add(BindAction action) {
 
         if(action instanceof OnPreBindAction) {

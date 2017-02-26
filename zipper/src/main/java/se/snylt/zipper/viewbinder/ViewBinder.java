@@ -2,6 +2,8 @@ package se.snylt.zipper.viewbinder;
 
 import android.view.View;
 
+import java.util.List;
+
 import se.snylt.zipper.viewbinder.bindaction.BindAction;
 import se.snylt.zipper.viewbinder.viewfinder.ViewFinder;
 
@@ -19,6 +21,10 @@ public abstract class ViewBinder {
         this.viewId = viewId;
         this.key = key;
         this.bindActions = bindActions;
+    }
+
+    public ViewBinder(int viewId, String key, List<BindAction> bindActions) {
+        this(viewId, key, new BindActions(bindActions));
     }
 
     public void doBind(View view, Object value, Object ...mods) {
