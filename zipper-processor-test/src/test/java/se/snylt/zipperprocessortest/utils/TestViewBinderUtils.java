@@ -19,19 +19,24 @@ public class TestViewBinderUtils {
         void onPostBind(View mockedView, T viewModel, int viewId);
     }
 
-    public static <T extends TestViewModel> void verifyViewBinder(List<ViewBinder> viewBinders, Object viewHolder, T viewModel, VerifyPostBind<T> verifyPostBind) {
+    public interface ViewMocker {
+        View mockView();
+    }
 
-        Class<? extends View> viewClass = viewModel.VIEW_CLASS;
+    public static <T extends TestViewModel> void verifyViewBinder(List<ViewBinder> viewBinders, Object viewHolder, T viewModel,  VerifyPostBind<T> verifyPostBind) {
+        verifyViewBinder(viewBinders, viewHolder, viewModel, new DefaultViewMocker(viewModel.VIEW_CLASS), verifyPostBind);
+    }
+
+    public static <T extends TestViewModel> void verifyViewBinder(List<ViewBinder> viewBinders, Object viewHolder, T viewModel, ViewMocker viewMocker, VerifyPostBind<T> verifyPostBind) {
 
         // Check correct view and value
         for (ViewBinder binder : viewBinders) {
-            View view = mock(viewClass);
+            View view = viewMocker.mockView();
             ViewFinder viewFinder = viewFinderWithView(view);
             binder.bind(viewHolder, viewFinder, viewModel);
             verifyPostBind.onPostBind(view, viewModel, binder.viewId);
             break;
         }
-
     }
 
     private static ViewFinder viewFinderWithView(View view) {
@@ -40,4 +45,17 @@ public class TestViewBinderUtils {
         return finder;
     }
 
+    private static class DefaultViewMocker implements ViewMocker {
+
+        Class<? extends View> viewClass;
+
+        public DefaultViewMocker(Class<? extends View> viewClass) {
+            this.viewClass = viewClass;
+        }
+
+        @Override
+        public View mockView() {
+            return mock(viewClass);
+        }
+    }
 }
