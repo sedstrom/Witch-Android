@@ -18,6 +18,7 @@ public class Binder {
         }
     }
 
+    // Test
     public final List<ViewBinder> getViewBinders() {
         return viewBinders;
     }

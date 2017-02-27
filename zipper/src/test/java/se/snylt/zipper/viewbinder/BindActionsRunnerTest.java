@@ -30,21 +30,24 @@ public class BindActionsRunnerTest {
     @Mock
     View view;
 
+    BindActionsRunner runner;
+
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
+        runner = new BindActionsRunner();
     }
 
     @Test
     public void bind_EmptyActions_Should_Not_Break() {
-        BindActionsRunner.runner().bind(new BindActions(), view, "123");
+        runner.bind(new BindActions(), view, "123");
     }
 
     @Test
     public void bind_With_One_OnBindAction_Should_BindWithViewAndValue() {
         // When
         OnBindAction action = mock(OnBindAction.class);
-        BindActionsRunner.runner().bind(new BindActions(action), view, "123");
+        runner.bind(new BindActions(action), view, "123");
 
         // Then
         verify(action).onBind(same(view), eq("123"));
@@ -56,7 +59,7 @@ public class BindActionsRunnerTest {
         OnBindAction onBindAction = mock(OnBindAction.class);
         OnPostBindAction onPostBindAction = mock(OnPostBindAction.class);
         InOrder inOrder = Mockito.inOrder(onBindAction, onPostBindAction);
-        BindActionsRunner.runner().bind(new BindActions(onBindAction, onPostBindAction), view, "123");
+        runner.bind(new BindActions(onBindAction, onPostBindAction), view, "123");
 
         // Then
         inOrder.verify(onBindAction).onBind(same(view), eq("123"));
@@ -70,7 +73,7 @@ public class BindActionsRunnerTest {
         OnBindAction onBindAction = mock(OnBindAction.class);
         OnPostBindAction onPostBindAction = mock(OnPostBindAction.class);
         InOrder inOrder = Mockito.inOrder(onBindAction, onPostBindAction, onPreBindAction);
-        BindActionsRunner.runner().bind(new BindActions(onPreBindAction, onBindAction, onPostBindAction), view, "123");
+        runner.bind(new BindActions(onPreBindAction, onBindAction, onPostBindAction), view, "123");
 
         // Then
         inOrder.verify(onPreBindAction).onPreBind(same(view), eq("123"), any(PreBindDone.class));
@@ -85,7 +88,7 @@ public class BindActionsRunnerTest {
         OnBindAction onBindAction = mock(OnBindAction.class);
         OnPostBindAction onPostBindAction = mock(OnPostBindAction.class);
         InOrder inOrder = Mockito.inOrder(onBindAction, onPostBindAction, onPreBindAction);
-        BindActionsRunner.runner().bind(new BindActions(onPreBindAction, onBindAction, onPostBindAction), view, "123");
+        runner.bind(new BindActions(onPreBindAction, onBindAction, onPostBindAction), view, "123");
         onPreBindAction.preBindDone.done();
 
         // Then
@@ -102,7 +105,7 @@ public class BindActionsRunnerTest {
         OnBindAction onBindAction = mock(OnBindAction.class);
         OnPostBindAction onPostBindAction = mock(OnPostBindAction.class);
         InOrder inOrder = Mockito.inOrder(onBindAction, onPostBindAction, onPreBindActionOne, onPreBindActionTwo);
-        BindActionsRunner.runner().bind(new BindActions(onPreBindActionOne, onPreBindActionTwo, onBindAction, onPostBindAction), view, "123");
+        runner.bind(new BindActions(onPreBindActionOne, onPreBindActionTwo, onBindAction, onPostBindAction), view, "123");
         // Only one reports done
         onPreBindActionOne.preBindDone.done();
 
@@ -121,7 +124,7 @@ public class BindActionsRunnerTest {
         OnBindAction onBindAction = mock(OnBindAction.class);
         OnPostBindAction onPostBindAction = mock(OnPostBindAction.class);
         InOrder inOrder = Mockito.inOrder(onBindAction, onPostBindAction, onPreBindActionOne, onPreBindActionTwo);
-        BindActionsRunner.runner().bind(new BindActions(onPreBindActionOne, onPreBindActionTwo, onBindAction, onPostBindAction), view, "123");
+        runner.bind(new BindActions(onPreBindActionOne, onPreBindActionTwo, onBindAction, onPostBindAction), view, "123");
         // Only one reports done
         onPreBindActionOne.preBindDone.done();
         onPreBindActionTwo.preBindDone.done();
@@ -140,7 +143,7 @@ public class BindActionsRunnerTest {
         OnBindAction onBindAction = mock(OnBindAction.class);
         OnPostBindAction onPostBindAction = mock(OnPostBindAction.class);
         InOrder inOrder = Mockito.inOrder(onBindAction, onPostBindAction, onPreBindAction);
-        BindActionsRunner.runner().bind(new BindActions(onPreBindAction, onBindAction, onPostBindAction), view, "123");
+        runner.bind(new BindActions(onPreBindAction, onBindAction, onPostBindAction), view, "123");
 
         // Then
         inOrder.verify(onPreBindAction).onPreBind(same(view), eq("123"), any(PreBindDone.class));
@@ -150,32 +153,32 @@ public class BindActionsRunnerTest {
 
     @Test
     public void isNewValue_Null_NoHistory_Should_ReturnTrue() {
-        assertTrue(BindActionsRunner.runner().isNewValue(null, BindActionsRunner.NO_HISTORY));
+        assertTrue(runner.isNewValue(null, BindActionsRunner.NO_HISTORY));
     }
 
     @Test
     public void isNewValue_Null_Null_Should_ReturnFalse() {
-        assertFalse(BindActionsRunner.runner().isNewValue(null, null));
+        assertFalse(runner.isNewValue(null, null));
     }
 
     @Test
     public void isNewValue_NotNull_Null_Should_ReturnTrue() {
-        assertTrue(BindActionsRunner.runner().isNewValue("123", null));
+        assertTrue(runner.isNewValue("123", null));
     }
 
     @Test
     public void isNewValue_Null_NotNull_Should_ReturnTrue() {
-        assertTrue(BindActionsRunner.runner().isNewValue(null,"123"));
+        assertTrue(runner.isNewValue(null,"123"));
     }
 
     @Test
     public void isNewValue_NonEqualValues_Should_ReturnTrue() {
-        assertTrue(BindActionsRunner.runner().isNewValue("123", "456"));
+        assertTrue(runner.isNewValue("123", "456"));
     }
 
     @Test
     public void isNewValue_EqualValues_DifferentValues_Should_ReturnFalse() {
-        assertFalse(BindActionsRunner.runner().isNewValue("123", "123"));
+        assertFalse(runner.isNewValue("123", "123"));
     }
 
     private class TestOnPreBindAction implements OnPreBindAction {
