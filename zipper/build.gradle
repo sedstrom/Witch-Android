@@ -24,7 +24,6 @@ android {
 dependencies {
     compile project(':zipper-annotations')
     compile project(path: ':zipper-commons')
-    compile 'com.esotericsoftware:reflectasm:1.11.3'
     compile 'org.apache.commons:commons-lang3:3.4'
 
     testCompile 'org.mockito:mockito-core:2.7.12'

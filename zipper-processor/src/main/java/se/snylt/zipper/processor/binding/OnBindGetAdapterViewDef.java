@@ -9,6 +9,8 @@ import javax.lang.model.element.Modifier;
 
 import se.snylt.zipper.processor.TypeUtils;
 
+import static se.snylt.zipper.PropertytUtils.getPropertySetter;
+
 public class OnBindGetAdapterViewDef extends BindActionDef {
 
     private final String property;
@@ -44,10 +46,4 @@ public class OnBindGetAdapterViewDef extends BindActionDef {
 
         return anonymous.toString();
     }
-
-    private static String getPropertySetter(String property) {
-        String firstUpperCase = property.toUpperCase().charAt(0) + ((property.length() > 0) ? property.substring(1) : "");
-        return "set" + firstUpperCase;
-    }
-
 }

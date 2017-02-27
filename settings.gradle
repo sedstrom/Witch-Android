@@ -1,1 +1,1 @@
-include ':app', ':zipper', ':zipper-annotations', ':zipper-processor', ':zipper-commons'
+include ':app', ':zipper', ':zipper-annotations', ':zipper-processor', ':zipper-commons', ':zipper-processor-test'

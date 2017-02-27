@@ -17,4 +17,8 @@ public class Binder {
             viewBinder.bind(viewHolder, viewFinder, target, mods);
         }
     }
+
+    public final List<ViewBinder> getViewBinders() {
+        return viewBinders;
+    }
 }

@@ -24,6 +24,8 @@ public class TypeUtils {
 
     public final static TypeName BINDING_CREATOR = ClassName.get(LIBRARY_PACKAGE, "BindingCreator");
 
+    public static final TypeName BIND_ACTIONS = ClassName.get(LIBRARY_PACKAGE, "BindActions");
+
     public final static TypeName BINDER = ClassName.get(LIBRARY_PACKAGE, "Binder");
 
     public static final TypeName ANDROID_VIEW = ClassName.get("android.view", "View");

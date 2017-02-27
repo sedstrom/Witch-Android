@@ -135,10 +135,7 @@ public class ZipperProcessor extends AbstractProcessor {
             for(Element e: mods) {
                 boolean viewBindingFound = false;
                 ValueAccessor modAccessor = getValueAccessor(e);
-                logNote("Mod = " + modAccessor.accessValueString());
-
                 for(ViewBindingDef viewBindingDef: getBindersForTargetClass(binders, targetClass)) {
-                    logNote("Mod ? " + modAccessor.accessValueString() + " : " + viewBindingDef.value.accessValueString());
                     if (modAccessor.accessValueString().equals(viewBindingDef.value.accessValueString())) {
                         viewBindingDef.addMod(mod);
                         viewBindingFound = true;

@@ -20,6 +20,7 @@ import static se.snylt.zipper.processor.TypeUtils.ARRAY_LIST;
 import static se.snylt.zipper.processor.TypeUtils.BINDER;
 import static se.snylt.zipper.processor.TypeUtils.BINDING_CREATOR;
 import static se.snylt.zipper.processor.TypeUtils.BIND_ACTION;
+import static se.snylt.zipper.processor.TypeUtils.BIND_ACTIONS;
 import static se.snylt.zipper.processor.TypeUtils.LIST;
 import static se.snylt.zipper.processor.TypeUtils.VIEW_BINDER;
 
@@ -60,7 +61,7 @@ public class BinderCreatorJavaHelper {
 
             // Add complete binding spec
             createBinding.addStatement("bindingSpecs.add($L)",
-                    newBindSpecInstance(
+                    newViewBinderInstance(
                             target,
                             viewBindingDef,
                             viewHolderClassName));
@@ -73,7 +74,7 @@ public class BinderCreatorJavaHelper {
         return builder.build();
     }
 
-    private static TypeSpec newBindSpecInstance(ClassName targetTypeName, ViewBindingDef viewBindingDef, ClassName viewHolderClassName) {
+    private static TypeSpec newViewBinderInstance(ClassName targetTypeName, ViewBindingDef viewBindingDef, ClassName viewHolderClassName) {
         ClassName viewClassName = ClassName.get("android.view", "View");
         int viewId = viewBindingDef.viewId;
         ValueAccessor accessor = viewBindingDef.value;
@@ -125,7 +126,7 @@ public class BinderCreatorJavaHelper {
 
         getModActions.addStatement("return null");
 
-        TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, $N", viewId, accessor.viewHolderFieldName(), "bindActions")
+        TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, new $T($N)", viewId, accessor.viewHolderFieldName(), BIND_ACTIONS, "bindActions")
                 .addSuperinterface(VIEW_BINDER)
                 .addMethod(setView)
                 .addMethod(getView)
