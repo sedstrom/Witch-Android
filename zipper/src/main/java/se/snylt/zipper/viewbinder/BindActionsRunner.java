@@ -36,13 +36,13 @@ public class BindActionsRunner {
                     action.onBind(view, value);
                 }
 
-                for (OnPostBindAction action : bindActions.postBindActions) {
+                for (OnPostBindAction action : bindActions.onPostBindActions) {
                     action.onPostBind(view, value);
                 }
             }
         });
 
-        for (OnPreBindAction action : bindActions.preBindActions) {
+        for (OnPreBindAction action : bindActions.onPreBindActions) {
             preBind.waitForDone();
             action.onPreBind(view, value, preBind);
         }

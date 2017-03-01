@@ -14,11 +14,11 @@ import se.snylt.zipper.viewbinder.bindaction.OnPreBindAction;
 
 public class BindActions {
 
-    public final List<OnPreBindAction> preBindActions = new ArrayList<>();
+    public final List<OnPreBindAction> onPreBindActions = new ArrayList<>();
 
     public final List<OnBindAction> onBindActions = new ArrayList<>();
 
-    public final List<OnPostBindAction> postBindActions = new ArrayList<>();
+    public final List<OnPostBindAction> onPostBindActions = new ArrayList<>();
 
     public BindActions(BindAction ...bindActions) {
         addAll(bindActions);
@@ -31,7 +31,7 @@ public class BindActions {
     private void add(BindAction action) {
 
         if(action instanceof OnPreBindAction) {
-            preBindActions.add((OnPreBindAction) action);
+            onPreBindActions.add((OnPreBindAction) action);
         }
 
         if(action instanceof OnBindAction) {
@@ -39,14 +39,14 @@ public class BindActions {
         }
 
         if (action instanceof OnPostBindAction) {
-            postBindActions.add((OnPostBindAction) action);
+            onPostBindActions.add((OnPostBindAction) action);
         }
     }
 
     public final void addAll(Collection<? extends BindAction> actions) {
-        for(BindAction action: actions) {
-            add(action);
-        }
+        BindAction[] actionsArray = new BindAction[actions.size()];
+        actions.toArray(actionsArray);
+        addAll(actionsArray);
     }
 
     public final void addAll(BindAction[] actions) {
@@ -56,9 +56,9 @@ public class BindActions {
     }
 
     public final void addAll(BindActions bindActions) {
-        addAll(bindActions.preBindActions);
+        addAll(bindActions.onPreBindActions);
         addAll(bindActions.onBindActions);
-        addAll(bindActions.postBindActions);
+        addAll(bindActions.onPostBindActions);
     }
 
     public BindActions applyMods(ViewBinder viewBinder, Object[] mods) {
@@ -68,7 +68,6 @@ public class BindActions {
         } else {
             finalActions = this;
         }
-
         return finalActions;
     }
 
