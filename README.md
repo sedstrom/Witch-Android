@@ -1,4 +1,4 @@
-# Zipper
+# Witch
 
 An attempt at making an easy to use view-model-binding framework for Android. (Yeah I know... the name needs to change.)
 
@@ -23,7 +23,7 @@ public class MyViewModel {
 Bind view model to view
 ```java
 MyViewModel model = new MyViewModel("The title", "The sub-title"));
-Zipper.bind(model, activity); // Binds to anything that contains the views defined in view model.
+Witch.bind(model, activity); // Binds to anything that contains the views defined in view model.
 ```
 ### ViewHolders built in
 A view model will have its own view holder which eliminates the need for defining view holders in adapters:
@@ -38,7 +38,7 @@ A view model will have its own view holder which eliminates the need for definin
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Zipper.bind(items.get(position), holder.itemView);
+        Witch.bind(items.get(position), holder.itemView);
     }
 ```
 
@@ -123,8 +123,8 @@ public class ViewModel {
 ```
 Use in .bind() call
 ```java
-Zipper.bind(model, activity, mod);
-Zipper.bind(model, activity, mod1, mod2, mod3); // Use several mods
+Witch.bind(model, activity, mod);
+Witch.bind(model, activity, mod1, mod2, mod3); // Use several mods
 ```
 Mods can be used to vary binding behaviour at runtime without changing view model. One example could be to add animations.
 
