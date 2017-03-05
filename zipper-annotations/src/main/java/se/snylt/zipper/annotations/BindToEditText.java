@@ -7,13 +7,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static se.snylt.zipper.annotations.ViewProperties.EditText.TEXT;
-
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
 public @interface BindToEditText {
 
     @IdRes int id();
 
-    String set() default TEXT;
+    String set() default "text";
 }
