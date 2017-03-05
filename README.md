@@ -82,7 +82,7 @@ public class MyViewModel {
 ```
 
 ### @AlwaysBind
-By default Zipper wont re-bind values that has not changed in the view model. If the view model is out of sync with the actual value in the view, for example when a seekbar is changed by the user, @AlwaysBind can be used to always refresh the binding.
+By default Witch wont re-bind values that has not changed in the view model. If the view model is out of sync with the actual value in the view, for example when a seekbar is changed by the user, @AlwaysBind can be used to always refresh the binding.
 ```java
 public class MyViewModel {
 
