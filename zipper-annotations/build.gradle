@@ -1,9 +1,0 @@
-apply plugin: 'java'
-
-dependencies {
-    compile 'com.android.support:support-annotations:23.2.1'
-    compile project(path: ':zipper-commons')
-}
-
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"

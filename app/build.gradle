@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "24.0.3"
     defaultConfig {
-        applicationId "com.example.zipper"
+        applicationId "com.example.witch"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
@@ -21,8 +21,8 @@ android {
 
 dependencies {
     // zipper
-    compile project(path: ':zipper')
-    annotationProcessor project(':zipper-processor')
+    compile project(path: ':witch')
+    annotationProcessor project(':witch-processor')
 
     // other
     compile 'com.android.support:appcompat-v7:25.0.0'
