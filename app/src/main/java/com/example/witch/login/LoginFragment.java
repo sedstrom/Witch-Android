@@ -1,12 +1,11 @@
 package com.example.witch.login;
 
 import com.example.witch.R;
+import com.example.witch.utils.TextWatcherAdapter;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,38 +22,22 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.login_fragment, container, false);
 
-        ((EditText)view.findViewById(R.id.login_fragment_password)).addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+        ((EditText)view.findViewById(R.id.login_fragment_password)).addTextChangedListener(new TextWatcherAdapter() {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                model.setPassword(String.valueOf(charSequence));
             }
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-                model.setPassword(editable.toString());
-            }
         });
 
-        ((EditText)view.findViewById(R.id.login_fragment_username)).addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+        ((EditText)view.findViewById(R.id.login_fragment_username)).addTextChangedListener(new TextWatcherAdapter() {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                model.setUsername(String.valueOf(charSequence));
             }
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-                model.setUsername(editable.toString());
-            }
         });
 
         view.findViewById(R.id.login_fragment_button).setOnClickListener(new View.OnClickListener() {
@@ -67,18 +50,17 @@ public class LoginFragment extends Fragment {
 
                     @Override
                     public void loginSuccessful() {
-                        // Yey
                         model.setIsError(false);
                         model.setLoggingIn(false);
-                        model.setSuccessMessage("Yey! Logged in!");
+                        model.setMessage("Logged in :)");
                         bind();
-                        model.setSuccessMessage(null); // Make @AlwaysBind not show message on each bind.
                     }
 
                     @Override
                     public void loginFailed() {
                         model.setIsError(true);
                         model.setLoggingIn(false);
+                        model.setMessage("Something went wrong :(");
                         bind();
                     }
                 });
@@ -95,9 +77,9 @@ public class LoginFragment extends Fragment {
         bind();
     }
 
-    private void bind(Object ...mods){
+    private void bind(){
         if(isAdded()){
-            Witch.bind(model, getView(), mods);
+            Witch.bind(model, getView());
         }
     }
 }

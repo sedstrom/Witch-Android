@@ -5,6 +5,8 @@ import com.example.witch.utils.ToastShort;
 
 import android.view.View;
 
+import java.util.PriorityQueue;
+
 import se.snylt.witch.annotations.AlwaysBind;
 import se.snylt.witch.annotations.BindTo;
 import se.snylt.witch.annotations.BindToEditText;
@@ -17,7 +19,7 @@ class LoginViewModel {
 
     private String username;
 
-    private String successMessage = null;
+    private PriorityQueue<String> message = new PriorityQueue<>(1);
 
     private boolean isError = false;
 
@@ -89,11 +91,11 @@ class LoginViewModel {
     @BindTo(R.id.login_fragment_container)
     @OnBind(ToastShort.class)
     @AlwaysBind
-    String getSuccessMessage() {
-        return successMessage;
+    String getMessage() {
+        return message.isEmpty() ? null : message.poll();
     }
 
-    void setSuccessMessage(String successMessage) {
-        this.successMessage = successMessage;
+    void setMessage(String alert) {
+        this.message.add(alert);
     }
 }
