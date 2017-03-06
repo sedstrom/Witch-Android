@@ -132,17 +132,18 @@ public class WitchProcessor extends AbstractProcessor {
         for (Element mod : roundEnv.getElementsAnnotatedWith(Mod.class)) {
             TypeName targetClass = getModTargetViewClass(mod);
             List<? extends Element> mods = getEnclosedMods(mod);
-            for(Element e: mods) {
+            for (Element e : mods) {
                 boolean viewBindingFound = false;
                 ValueAccessor modAccessor = getValueAccessor(e);
-                for(ViewBindingDef viewBindingDef: getBindersForTargetClass(binders, targetClass)) {
+                for (ViewBindingDef viewBindingDef : getBindersForTargetClass(binders, targetClass)) {
                     if (modAccessor.accessValueString().equals(viewBindingDef.value.accessValueString())) {
                         viewBindingDef.addMod(mod);
                         viewBindingFound = true;
                     }
                 }
-                if(!viewBindingFound) {
-                    logAndThrowError("Could not find matching view binding in " + targetClass + " for mod \""
+
+                if (!viewBindingFound) {
+                    logNote("Could not find matching view binding in " + targetClass + " for mod \""
                             + e.getSimpleName() + "\" defined in " + mod.getSimpleName());
                 }
             }
@@ -154,17 +155,24 @@ public class WitchProcessor extends AbstractProcessor {
         Iterator<? extends Element> iterator = mods.iterator();
         while (iterator.hasNext()) {
             Element element = iterator.next();
-            if(!element.getKind().isField() || !element.getModifiers().contains(Modifier.PUBLIC)) {
-                iterator.remove();
+
+            if (element.getKind().isField() && notPrivateOrProtected(element)) {
+                continue;
             }
+
+            if (element.getKind() == ElementKind.METHOD && notPrivateOrProtected(element)) {
+                continue;
+            }
+
+            iterator.remove();
         }
-        logNote("Mods: " + mods.size());
         return mods;
     }
 
-    private List<ViewBindingDef> getBindersForTargetClass(HashMap<Element, List<ViewBindingDef>> binders, TypeName targetClass) {
-        for(Element target: binders.keySet()) {
-            if(target.asType().toString().equals(targetClass.toString())) {
+    private List<ViewBindingDef> getBindersForTargetClass(HashMap<Element, List<ViewBindingDef>> binders,
+            TypeName targetClass) {
+        for (Element target : binders.keySet()) {
+            if (target.asType().toString().equals(targetClass.toString())) {
                 return binders.get(target);
             }
         }
@@ -194,17 +202,23 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private ValueAccessor getValueAccessor(Element value) {
-        if(value.getKind().isField() && value.getModifiers().contains(Modifier.PUBLIC)) {
+        if (value.getKind().isField() && notPrivateOrProtected(value)) {
             return new FieldAccessor(value.getSimpleName().toString());
         }
 
-        if(value.getModifiers().contains(Modifier.PUBLIC)) {
+        if (value.getKind() == ElementKind.METHOD && notPrivateOrProtected(value)) {
             return new MethodAccessor(value.getSimpleName().toString());
         }
 
-        logAndThrowError("Can't access " + value.getEnclosingElement().getSimpleName() + "." + value.getSimpleName() + ". Make sure "
-                + "value is either a public field or a public method.");
+        logAndThrowError("Can't access " + value.getEnclosingElement().getSimpleName() + "." + value.getSimpleName()
+                + ". Make sure value does not have private or protected access.");
+
         return null;
+    }
+
+    private boolean notPrivateOrProtected(Element e){
+        Set<Modifier> modifiers = e.getModifiers();
+        return !modifiers.contains(Modifier.PRIVATE) || !modifiers.contains(Modifier.PROTECTED);
     }
 
     private void addBindingsOnBindActions(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
@@ -298,7 +312,8 @@ public class WitchProcessor extends AbstractProcessor {
         boolean match = false;
 
         TypeName typeName = TypeName.get(bindTypeMirror);
-        DeclaredType bindingDeclaredType = typeUtils.getDeclaredType(elementUtils.getTypeElement(bindTypeMirror.toString()));
+        DeclaredType bindingDeclaredType = typeUtils
+                .getDeclaredType(elementUtils.getTypeElement(bindTypeMirror.toString()));
 
         BindActionDef actionDef = new NewInstanceDef(typeName);
 
@@ -322,7 +337,6 @@ public class WitchProcessor extends AbstractProcessor {
             addOnPostBindAction(bindAction, actionDef, binders);
             match = true;
         }
-
 
         if (!match) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -348,7 +362,7 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private TypeName getValueType(Element bindAction) {
-        if(bindAction.getKind().isField()) {
+        if (bindAction.getKind().isField()) {
             return ClassName.get(bindAction.asType());
         } else if (bindAction.getKind() == ElementKind.METHOD) {
             ExecutableType type = (ExecutableType) bindAction.asType();
@@ -405,7 +419,8 @@ public class WitchProcessor extends AbstractProcessor {
         ClassName viewHolderClassName = getBindingViewHolderName(target);
         ClassName bindingClassName = getBindingClassName(target);
         ClassName targetClassName = getElementClassName(target);
-        TypeSpec bindingTypeSpec = BinderCreatorJavaHelper.toJava(targetClassName, binders.get(target), bindingClassName, viewHolderClassName);
+        TypeSpec bindingTypeSpec = BinderCreatorJavaHelper
+                .toJava(targetClassName, binders.get(target), bindingClassName, viewHolderClassName);
         JavaFile bindingJavaFile = JavaFile.builder(bindingClassName.packageName(), bindingTypeSpec).build();
         try {
             bindingJavaFile.writeTo(filer);

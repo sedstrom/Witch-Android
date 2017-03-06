@@ -1,14 +1,14 @@
 package com.example.witch;
 
-import com.example.witch.mod.ModsFragment;
-import com.example.witch.textview.TextViewFragment;
-import com.example.witch.R;
 import com.example.witch.alwaysbind.AlwaysBindFragment;
 import com.example.witch.animations.AnimationsFragment;
 import com.example.witch.customview.CustomViewFragment;
+import com.example.witch.login.LoginFragment;
+import com.example.witch.mod.ModsFragment;
 import com.example.witch.picasso.PicassoFragment;
 import com.example.witch.recyclerview.RecyclerViewFragment;
 import com.example.witch.responsemodel.ResponseModelFragment;
+import com.example.witch.textview.TextViewFragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -70,6 +70,7 @@ public class ExampleListFragment extends Fragment {
         items.add(newItem(AnimationsFragment.class.getName(), "Animations", "Example of how animations can be added to binding"));
         items.add(newItem(PicassoFragment.class.getName(), "Picasso", "Example of how picasso can be used in binding"));
         items.add(newItem(ResponseModelFragment.class.getName(), "ResponseModel", "Combine response model and view model."));
+        items.add(newItem(LoginFragment.class.getName(), "Login", "Example how view states can be handled for a login view"));
 
         ExampleListFragmentViewModel model = new ExampleListFragmentViewModel(items);
 
