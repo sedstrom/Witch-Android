@@ -1,6 +1,6 @@
 ![](./assets/witch-logo-black.png)
 
-An attempt at making an easy to use view-model-binding framework for Android. (Yeah I know... the name needs to change.)
+An attempt at making an easy to use view-model-binding framework for Android.
 
 ### Basic concept
 Represent a views state with a view model. 
