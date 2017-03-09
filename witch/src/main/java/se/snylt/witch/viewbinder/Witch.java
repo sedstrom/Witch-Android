@@ -25,10 +25,38 @@ public class Witch {
         return witch();
     }
 
+    /**
+     * Like {@link #bind(Object, Activity, Object...)} but more majestic.
+     */
+    public static void spellBind(Object target, Activity activity, Object ...mods) {
+        bind(target, activity, mods);
+    }
+
+    /**
+     * Binds annotated values in {@code target} to views in {@code activity} with additional mods.
+     *
+     * @param target view model
+     * @param activity activity containing views specified in {@code target}
+     * @param mods additional bind actions
+     */
     public static void bind(Object target, Activity activity, Object ...mods) {
         bind(target, viewFinder(activity), mods);
     }
 
+    /**
+     * Like {@link #bind(Object, View, Object...)} but more majestic.
+     */
+    public static void spellBind(Object target, View view, Object ...mods) {
+        bind(target, view, mods);
+    }
+
+    /**
+     * Binds annotated values in {@code target} to views in {@code view} with additional mods.
+     *
+     * @param target view model
+     * @param view view containing child-views specified in {@code target}
+     * @param mods additional bind actions
+     */
     public static void bind(Object target, View view, Object ...mods) {
         bind(target, viewFinder(view), mods);
     }

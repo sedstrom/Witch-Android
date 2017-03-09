@@ -50,7 +50,7 @@ public class WitchTest {
     }
 
     @Test
-    public void bind_WhitView_Should_Call_WitchCoree_doBind_With_Target_And_ViewBinderWithView(){
+    public void bind_WhitView_Should_Call_WitchCore_doBind_With_Target_And_ViewBinderWithView(){
         // When
         Witch.bind(target, view);
 
@@ -62,6 +62,24 @@ public class WitchTest {
     public void bind_Should_Call_WitchCore_doBind_With_Target_And_ViewBinderWithDefaultTag(){
         // When
         Witch.bind(target, view);
+
+        // Then
+        verify(core).doBind(same(target), viewFinderWithTag(Witch.VIEW_HOLDER_TAG_DEFAULT));
+    }
+
+    @Test
+    public void spellBind_WithActivity_Should_DoWhateverBindDoes(){
+        // When
+        Witch.spellBind(target, activity);
+
+        // Then
+        verify(core).doBind(same(target), viewFinderWithTag(Witch.VIEW_HOLDER_TAG_DEFAULT));
+    }
+
+    @Test
+    public void spellBind_WithView_Should_DoWhateverBindDoes(){
+        // When
+        Witch.spellBind(target, view);
 
         // Then
         verify(core).doBind(same(target), viewFinderWithTag(Witch.VIEW_HOLDER_TAG_DEFAULT));

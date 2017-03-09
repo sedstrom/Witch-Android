@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnExampleFragment
     private void addFragment(Fragment fragment, String title, boolean displayHomeAsUp) {
         models.add(new MainViewModel(fragment, displayHomeAsUp, title));
         transaction = FragmentTransaction.TRANSIT_FRAGMENT_OPEN;
-        Witch.bind(models.peek(), this, this);
+        Witch.spellBind(models.peek(), this, this);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnExampleFragment
         if(models.size() > 1) {
             models.pop();
             transaction = FragmentTransaction.TRANSIT_FRAGMENT_CLOSE;
-            Witch.bind(models.peek(), this, this);
+            Witch.spellBind(models.peek(), this, this);
         } else {
             super.onBackPressed();
         }
