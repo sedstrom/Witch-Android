@@ -9,6 +9,7 @@ import com.example.witch.picasso.PicassoFragment;
 import com.example.witch.recyclerview.RecyclerViewFragment;
 import com.example.witch.responsemodel.ResponseModelFragment;
 import com.example.witch.textview.TextViewFragment;
+import com.example.witch.undo.UndoFragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -71,6 +72,7 @@ public class ExampleListFragment extends Fragment {
         items.add(newItem(PicassoFragment.class.getName(), "Picasso", "Example of how picasso can be used in binding"));
         items.add(newItem(ResponseModelFragment.class.getName(), "ResponseModel", "Combine response model and view model."));
         items.add(newItem(LoginFragment.class.getName(), "Login", "Example how view states can be handled for a login view"));
+        items.add(newItem(UndoFragment.class.getName(), "Undo", "Example how stack fo view can be used for view history"));
 
         ExampleListFragmentViewModel model = new ExampleListFragmentViewModel(items);
 

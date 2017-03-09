@@ -22,6 +22,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.login_fragment, container, false);
 
+        // Track input change
         ((EditText)view.findViewById(R.id.login_fragment_password)).addTextChangedListener(new TextWatcherAdapter() {
 
             @Override
@@ -46,7 +47,7 @@ public class LoginFragment extends Fragment {
                 model.setLoggingIn(true);
                 bind();
 
-                Login.login(model.getUsername(), model.getPassword(), new Login.LoginListener(){
+                Login.login(model.username(), model.password(), new Login.LoginListener(){
 
                     @Override
                     public void loginSuccessful() {

@@ -24,6 +24,9 @@ dependencies {
     compile project(path: ':witch')
     annotationProcessor project(':witch-processor')
 
+    // Check for leaks
+    compile 'com.squareup.leakcanary:leakcanary-android:1.5'
+
     // other
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:recyclerview-v7:25.0.0'

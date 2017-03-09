@@ -31,7 +31,7 @@ class LoginViewModel {
     }
 
     @BindToEditText(id = R.id.login_fragment_password)
-    String getPassword() {
+    String password() {
         return password;
     }
 
@@ -40,7 +40,7 @@ class LoginViewModel {
     }
 
     @BindToEditText(id = R.id.login_fragment_username)
-    String getUsername() {
+    String username() {
         return username;
     }
 
@@ -54,33 +54,33 @@ class LoginViewModel {
 
     @BindTo(R.id.login_fragment_password)
     @OnBind(EditTextValidOnBind.class)
-    boolean getPasswordValid() {
+    boolean passwordValid() {
         return !isError;
     }
 
     @BindToView(id = R.id.login_fragment_button, view = View.class, set = "enabled")
-    Boolean getGetButtonEnabled() {
+    Boolean loginButtonEnabled() {
         return isLoggingIn ? false : true;
     }
 
     @BindTo(R.id.login_fragment_username)
     @OnBind(EditTextValidOnBind.class)
-    boolean getUsernameValid() {
+    boolean usernameValid() {
         return !isError;
     }
 
     @BindToView(id = R.id.login_fragment_username, view = View.class, set = "enabled")
-    Boolean getUsernameEnabled() {
+    Boolean usernameEnabled() {
         return !isLoggingIn;
     }
 
     @BindToView(id = R.id.login_fragment_password, view = View.class, set = "enabled")
-    Boolean getPasswordEnabled() {
+    Boolean passwordEnabled() {
         return !isLoggingIn;
     }
 
     @BindToView(id = R.id.login_fragment_progress_view, view = View.class, set = "visibility")
-    Integer getProgressVisible() {
+    Integer progressVisible() {
         return isLoggingIn ? View.VISIBLE : View.INVISIBLE;
     }
 
@@ -91,7 +91,7 @@ class LoginViewModel {
     @BindTo(R.id.login_fragment_container)
     @OnBind(ToastShort.class)
     @AlwaysBind
-    String getMessage() {
+    String message() {
         return message.isEmpty() ? null : message.poll();
     }
 
