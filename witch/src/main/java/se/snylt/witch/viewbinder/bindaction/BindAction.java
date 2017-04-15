@@ -1,3 +1,3 @@
 package se.snylt.witch.viewbinder.bindaction;
 
-public interface BindAction {}
+public interface BindAction<Value> {}

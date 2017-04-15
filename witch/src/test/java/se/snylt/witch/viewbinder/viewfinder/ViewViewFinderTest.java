@@ -12,7 +12,7 @@ import android.view.View;
 
 import java.util.HashMap;
 
-import se.snylt.witch.viewbinder.Binder;
+import se.snylt.witch.viewbinder.TargetViewBinder;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertSame;
@@ -94,13 +94,13 @@ public class ViewViewFinderTest {
     @Test
     public void putBinder_Should_StoreBinderWithKey(){
         Object key = new Object();
-        Binder binder = mock(Binder.class);
+        TargetViewBinder targetViewBinder = mock(TargetViewBinder.class);
 
         // When
-        viewFinder.putBinder(key, binder);
+        viewFinder.putBinder(key, targetViewBinder);
 
         // Then
-        assertSame(binder, viewFinder.getBinder(key));
+        assertSame(targetViewBinder, viewFinder.getBinder(key));
     }
 
 }

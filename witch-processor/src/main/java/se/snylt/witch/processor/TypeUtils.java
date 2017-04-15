@@ -20,44 +20,37 @@ public class TypeUtils {
 
     public static final TypeName ARRAY_LIST = TypeName.get(ArrayList.class);
 
-    public static final TypeName VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "ViewBinder");
+    public final static TypeName VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "ViewBinder");
 
-    public final static TypeName BINDING_CREATOR = ClassName.get(LIBRARY_PACKAGE, "BindingCreator");
+    public static final TypeName TARGET_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinder");
 
-    public static final TypeName BIND_ACTIONS = ClassName.get(LIBRARY_PACKAGE, "BindActions");
+    public final static TypeName TARGET_VIEW_BINDER_FACTORY = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinderFactory");
 
-    public final static TypeName BINDER = ClassName.get(LIBRARY_PACKAGE, "Binder");
+    public final static TypeName VALUE_BINDER = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "ValueBinder");
+
+    public final static TypeName BINDER = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "Binder");
 
     public static final TypeName ANDROID_VIEW = ClassName.get("android.view", "View");
 
-    public static final ClassName ON_PRE_BIND_ACTION = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "OnPreBindAction");
+    static final ClassName ON_BIND = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "OnBind");
 
-    public static final ClassName ON_BIND_ACTION =  ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "OnBindAction");
+    public static final ClassName SYNC_ON_BIND = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "SyncOnBind");
 
-    public static final ClassName ON_POST_BIND_ACTION =  ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "OnPostBindAction");
-
-    public static final ClassName BIND_ACTION =  ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "BindAction");
-
-    public static String asString(ClassName className) {
+    private static String asString(ClassName className) {
         return className.packageName() + "." + className.simpleName();
     }
 
-    public static TypeMirror onPostBindActionDeclaredType(Types types, Elements elements) {
-        return declared(types, elements, ON_POST_BIND_ACTION);
+    public static TypeMirror onBindDeclaredType(Types types, Elements elements) {
+        return declared(types, elements, ON_BIND);
     }
-
-    public static TypeMirror onPreBindActionDeclaredType(Types types, Elements elements) {
-        return declared(types, elements, ON_PRE_BIND_ACTION);
-    }
-
-    public static TypeMirror onBindActionDeclaredType(Types types, Elements elements) {
-        return declared(types, elements, ON_BIND_ACTION);
-    }
-
 
     private static TypeMirror declared(Types types, Elements elements, ClassName name) {
         return types.getDeclaredType(elements.getTypeElement(asString(name)),
                 types.getWildcardType(null, null),
                 types.getWildcardType(null, null));
+    }
+
+    public static TypeMirror typeMirror(Types types, Elements elements, TypeName typeName) {
+        return types.getDeclaredType(elements.getTypeElement(typeName.toString()));
     }
 }

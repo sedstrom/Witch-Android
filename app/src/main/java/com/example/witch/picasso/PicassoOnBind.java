@@ -5,9 +5,9 @@ import com.squareup.picasso.Picasso;
 
 import android.widget.ImageView;
 
-import se.snylt.witch.viewbinder.bindaction.OnBindAction;
+import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
 
-public class PicassoOnBind implements OnBindAction<ImageView, String> {
+public class PicassoOnBind extends SyncOnBind<ImageView,String> {
 
     @Override
     public void onBind(ImageView view, String url) {

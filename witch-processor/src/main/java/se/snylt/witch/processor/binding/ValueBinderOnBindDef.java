@@ -9,41 +9,40 @@ import javax.lang.model.element.Modifier;
 
 import se.snylt.witch.processor.TypeUtils;
 
-public class OnBindViewDef extends BindActionDef {
-
-    private final String property;
+public class ValueBinderOnBindDef extends OnBindDef {
 
     private final TypeName viewType;
 
     private final TypeName valueType;
 
-    public OnBindViewDef(String property, TypeName viewType, TypeName valueType) {
-        this.property = property;
+    private final TypeName valueBinderType;
+
+    private final TypeName binderType;
+
+    public ValueBinderOnBindDef(TypeName viewType, TypeName valueType, TypeName binderType, TypeName valueBinderType) {
         this.viewType = viewType;
         this.valueType = valueType;
+        this.binderType = binderType;
+        this.valueBinderType = valueBinderType;
     }
 
     @Override
     public String getNewInstanceJava() {
         MethodSpec method = MethodSpec.methodBuilder("onBind")
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(viewType, "view")
-                .addParameter(valueType, "value")
+                .addParameter(viewType, "target")
+                .addParameter(valueBinderType, "valueBinder")
                 .returns(void.class)
-                .addStatement("$N.$N(($T)value)", "view", getPropertySetter(property), valueType)
+                .addStatement("$T binder = valueBinder.getBinder()", binderType)
+                .addStatement("$T value = valueBinder.getValue()", valueType)
+                .addStatement("binder.bind(target, value)")
                 .build();
 
         TypeSpec anonymous = TypeSpec.anonymousClassBuilder("")
-                .addSuperinterface(ParameterizedTypeName.get(TypeUtils.ON_BIND_ACTION, viewType, valueType))
+                .addSuperinterface(ParameterizedTypeName.get(TypeUtils.SYNC_ON_BIND, viewType, valueBinderType))
                 .addMethod(method)
                 .build();
 
         return anonymous.toString();
     }
-
-    private static String getPropertySetter(String property) {
-        String firstUpperCase = property.toUpperCase().charAt(0) + ((property.length() > 0) ? property.substring(1) : "");
-        return "set" + firstUpperCase;
-    }
-
 }

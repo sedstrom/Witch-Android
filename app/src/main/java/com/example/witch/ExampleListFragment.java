@@ -10,6 +10,7 @@ import com.example.witch.recyclerview.RecyclerViewFragment;
 import com.example.witch.responsemodel.ResponseModelFragment;
 import com.example.witch.textview.TextViewFragment;
 import com.example.witch.undo.UndoFragment;
+import com.example.witch.value.ValueFragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -73,6 +74,7 @@ public class ExampleListFragment extends Fragment {
         items.add(newItem(ResponseModelFragment.class.getName(), "ResponseModel", "Combine response model and view model."));
         items.add(newItem(LoginFragment.class.getName(), "Login", "Example how view states can be handled for a login view"));
         items.add(newItem(UndoFragment.class.getName(), "Undo", "Example how stack fo view can be used for view history"));
+        items.add(newItem(ValueFragment.class.getName(), "ValueBinder", "Use a ValueBinder to chain bind actions"));
 
         ExampleListFragmentViewModel model = new ExampleListFragmentViewModel(items);
 

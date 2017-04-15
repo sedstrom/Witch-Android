@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.3.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -14,9 +14,20 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
         def androidHome = System.getenv("ANDROID_HOME")
-        maven { url "${androidHome}/extras/android/m2repository/" }
+        maven { url "/Users/sied/Android/sdk/extras/android/m2repository/" }
+        // Local maven
+        /*
+        def logger = new com.android.build.gradle.internal.LoggerWrapper(project.logger)
+        def sdkHandler = new com.android.build.gradle.internal.SdkHandler(project, logger)
+        for (File file : sdkHandler.sdkLoader.repositories) {
+            repositories.maven {
+                url = file.toURI()
+            }
+        }*/
+
+
     }
 }
 

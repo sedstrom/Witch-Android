@@ -9,22 +9,17 @@ import javax.lang.model.element.Modifier;
 
 import se.snylt.witch.processor.TypeUtils;
 
-import static se.snylt.witch.PropertytUtils.getPropertySetter;
-
-public class OnBindGetAdapterViewDef extends BindActionDef {
+public class OnOnBindViewDef extends OnBindDef {
 
     private final String property;
 
     private final TypeName viewType;
 
-    private final TypeName adapterType;
-
     private final TypeName valueType;
 
-    public OnBindGetAdapterViewDef(String property, TypeName viewType, TypeName adapterType,  TypeName valueType) {
+    public OnOnBindViewDef(String property, TypeName viewType, TypeName valueType) {
         this.property = property;
         this.viewType = viewType;
-        this.adapterType = adapterType;
         this.valueType = valueType;
     }
 
@@ -32,18 +27,23 @@ public class OnBindGetAdapterViewDef extends BindActionDef {
     public String getNewInstanceJava() {
         MethodSpec method = MethodSpec.methodBuilder("onBind")
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(viewType, "view")
+                .addParameter(viewType, "target")
                 .addParameter(valueType, "value")
                 .returns(void.class)
-                .addStatement("(($T)$N.getAdapter()).$N(($T)value)", adapterType, "view", getPropertySetter(property), valueType)
+                .addStatement("$N.$N(value)", "target", getPropertySetter(property))
                 .build();
 
         TypeSpec anonymous = TypeSpec.anonymousClassBuilder("")
-                .addSuperinterface(ParameterizedTypeName
-                        .get(TypeUtils.ON_BIND_ACTION, viewType, valueType))
+                .addSuperinterface(ParameterizedTypeName.get(TypeUtils.SYNC_ON_BIND, viewType, valueType))
                 .addMethod(method)
                 .build();
 
         return anonymous.toString();
     }
+
+    private static String getPropertySetter(String property) {
+        String firstUpperCase = property.toUpperCase().charAt(0) + ((property.length() > 0) ? property.substring(1) : "");
+        return "set" + firstUpperCase;
+    }
+
 }

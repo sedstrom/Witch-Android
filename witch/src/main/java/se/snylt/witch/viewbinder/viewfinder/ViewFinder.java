@@ -2,7 +2,7 @@ package se.snylt.witch.viewbinder.viewfinder;
 
 import android.view.View;
 
-import se.snylt.witch.viewbinder.Binder;
+import se.snylt.witch.viewbinder.TargetViewBinder;
 
 public interface ViewFinder {
 
@@ -16,7 +16,7 @@ public interface ViewFinder {
 
     void putViewHolder(Object key, Object viewHolder);
 
-    Binder getBinder(Object key);
+    TargetViewBinder getBinder(Object key);
 
-    void putBinder(Object key, Binder binder);
+    void putBinder(Object key, TargetViewBinder targetViewBinder);
 }

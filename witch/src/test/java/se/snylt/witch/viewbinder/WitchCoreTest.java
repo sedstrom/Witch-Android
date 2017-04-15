@@ -7,6 +7,7 @@ import org.mockito.MockitoAnnotations;
 
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
+import static junit.framework.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
@@ -28,7 +29,7 @@ public class WitchCoreTest {
     BinderFactory binderFactory;
 
     @Mock
-    Binder binderFromFactory;
+    TargetViewBinder targetViewBinderFromFactory;
 
     @Mock
     Object target;
@@ -40,7 +41,7 @@ public class WitchCoreTest {
     public void setup(){
         MockitoAnnotations.initMocks(this);
         when(viewHolderFactory.createViewHolder(same(target))).thenReturn(viewHolderFromFactory);
-        when(binderFactory.createBinder(same(target))).thenReturn(binderFromFactory);
+        when(binderFactory.createBinder(same(target))).thenReturn(targetViewBinderFromFactory);
         core = new WitchCore(viewHolderFactory, binderFactory);
     }
 
@@ -50,7 +51,7 @@ public class WitchCoreTest {
         core.doBind(target, viewFinder);
 
         // Then
-        verify(binderFromFactory).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
+        verify(targetViewBinderFromFactory).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
     }
 
     @Test
@@ -60,7 +61,7 @@ public class WitchCoreTest {
 
         // Then
         verify(viewFinder).putViewHolder(same(target.getClass()), same(viewHolderFromFactory));
-        verify(binderFromFactory).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
+        verify(targetViewBinderFromFactory).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
     }
 
     @Test
@@ -72,7 +73,7 @@ public class WitchCoreTest {
 
         // Then
         verify(viewFinder, never()).putViewHolder(any(Class.class), any(Object.class));
-        verify(binderFromFactory).bind(same(viewHolder), same(viewFinder), same(target));
+        verify(targetViewBinderFromFactory).bind(same(viewHolder), same(viewFinder), same(target));
     }
 
     @Test
@@ -81,20 +82,20 @@ public class WitchCoreTest {
         core.doBind(target, viewFinder);
 
         // Then
-        verify(viewFinder).putBinder(same(target.getClass()), same(binderFromFactory));
-        verify(binderFromFactory).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
+        verify(viewFinder).putBinder(same(target.getClass()), same(targetViewBinderFromFactory));
+        verify(targetViewBinderFromFactory).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
     }
 
     @Test
     public void doBind_When_ViewBinderPut_Should_NotPutAnyViewBinder_BindWithViewBinder() {
         // When
-        Binder binder = mock(Binder.class);
-        viewBinderForKey(viewFinder, target.getClass(), binder);
+        TargetViewBinder targetViewBinder = mock(TargetViewBinder.class);
+        viewBinderForKey(viewFinder, target.getClass(), targetViewBinder);
         core.doBind(target, viewFinder);
 
         // Then
-        verify(viewFinder, never()).putBinder(any(Class.class), any(Binder.class));
-        verify(binder).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
+        verify(viewFinder, never()).putBinder(any(Class.class), any(TargetViewBinder.class));
+        verify(targetViewBinder).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
     }
 
     @Test
@@ -102,14 +103,15 @@ public class WitchCoreTest {
         // When
         Object mod1 = new Object();
         Object mod2 = new Object();
-        core.doBind(target, viewFinder, mod1, mod2);
+        core.doBind(target, viewFinder);
 
         // Then
-        verify(binderFromFactory).bind(same(viewHolderFromFactory), same(viewFinder), same(target), same(mod1), same(mod2));
+        verify(targetViewBinderFromFactory).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
+        fail();
     }
 
-    private void viewBinderForKey(ViewFinder viewFinder, Class<?> key, Binder viewBinder) {
-        when(viewFinder.getBinder(same(key))).thenReturn(viewBinder);
+    private void viewBinderForKey(ViewFinder viewFinder, Class<?> key, TargetViewBinder viewTargetViewBinder) {
+        when(viewFinder.getBinder(same(key))).thenReturn(viewTargetViewBinder);
     }
 
     private void viewHolderForKey(ViewFinder viewFinder, Class<?> key, Object viewHolder) {

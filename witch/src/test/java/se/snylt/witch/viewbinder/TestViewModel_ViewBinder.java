@@ -2,18 +2,18 @@ package se.snylt.witch.viewbinder;
 
 import java.util.List;
 
-public class TestViewModel_ViewBinder implements BindingCreator {
+public class TestViewModel_ViewBinder implements TargetViewBinderFactory {
 
-    public final TestBinder binder = new TestBinder(null);
+    public final TestTargetViewBinder binder = new TestTargetViewBinder(null);
 
     @Override
-    public Binder createBinder() {
+    public TargetViewBinder createBinder() {
         return binder;
     }
 
-    public static class TestBinder extends Binder {
+    public static class TestTargetViewBinder extends TargetViewBinder {
 
-        public TestBinder(List<ViewBinder> viewBinders) {
+        public TestTargetViewBinder(List<ViewBinder> viewBinders) {
             super(viewBinders);
         }
     }

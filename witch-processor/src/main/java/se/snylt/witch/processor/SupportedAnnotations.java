@@ -4,16 +4,16 @@ import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 
-public class SupportedAnnotations {
+class SupportedAnnotations {
 
-    public interface HasViewId {
+    interface HasViewId {
         Integer getViewId(Element element);
         Class<? extends Annotation> getClazz();
     }
 
     // BindTo
     public final static class BindTo implements HasViewId {
-        public final static String name = "se.snylt.witch.annotations.BindTo";
+        final static String name = "se.snylt.witch.annotations.BindTo";
 
         @Override
         public Integer getViewId(Element element) {
@@ -21,7 +21,7 @@ public class SupportedAnnotations {
         }
 
         @Override
-        public Class getClazz() {
+        public Class<? extends Annotation> getClazz() {
             return se.snylt.witch.annotations.BindTo.class;
         }
 
@@ -33,7 +33,7 @@ public class SupportedAnnotations {
 
     // BindToView
     public final static class BindToView implements HasViewId {
-        public final static String name = "se.snylt.witch.annotations.BindToView";
+        final static String name = "se.snylt.witch.annotations.BindToView";
 
         @Override
         public Integer getViewId(Element element) {
@@ -41,7 +41,7 @@ public class SupportedAnnotations {
         }
 
         @Override
-        public Class getClazz() {
+        public Class<? extends Annotation> getClazz() {
             return  se.snylt.witch.annotations.BindToView.class;
         }
 
@@ -52,8 +52,8 @@ public class SupportedAnnotations {
     }
 
     // BindToEditText
-    public final static class BindToEditText implements HasViewId {
-        public final static String name = "se.snylt.witch.annotations.BindToEditText";
+    final static class BindToEditText implements HasViewId {
+        final static String name = "se.snylt.witch.annotations.BindToEditText";
 
         @Override
         public Integer getViewId(Element element) {
@@ -61,7 +61,7 @@ public class SupportedAnnotations {
         }
 
         @Override
-        public Class getClazz() {
+        public Class<? extends Annotation> getClazz() {
             return se.snylt.witch.annotations.BindToEditText.class;
         }
 
@@ -73,7 +73,7 @@ public class SupportedAnnotations {
 
     // BindToTextView
     public final static class BindToTextView implements HasViewId {
-        public final static String name = "se.snylt.witch.annotations.BindToTextView";
+        final static String name = "se.snylt.witch.annotations.BindToTextView";
 
         @Override
         public Integer getViewId(Element element) {
@@ -81,7 +81,7 @@ public class SupportedAnnotations {
         }
 
         @Override
-        public Class getClazz() {
+        public Class<? extends Annotation> getClazz() {
             return se.snylt.witch.annotations.BindToTextView.class;
         }
 
@@ -92,8 +92,8 @@ public class SupportedAnnotations {
     }
 
     // BindToImageView
-    public final static class BindToImageView implements HasViewId {
-        public final static String name = "se.snylt.witch.annotations.BindToImageView";
+    final static class BindToImageView implements HasViewId {
+        final static String name = "se.snylt.witch.annotations.BindToImageView";
 
         @Override
         public Integer getViewId(Element element) {
@@ -101,7 +101,7 @@ public class SupportedAnnotations {
         }
 
         @Override
-        public Class getClazz() {
+        public Class<? extends Annotation> getClazz() {
             return se.snylt.witch.annotations.BindToImageView.class;
         }
 
@@ -112,8 +112,8 @@ public class SupportedAnnotations {
     }
 
     // BindToCompoundButton
-    public final static class BindToCompoundButton implements HasViewId {
-        public final static String name = "se.snylt.witch.annotations.BindToCompoundButton";
+    final static class BindToCompoundButton implements HasViewId {
+        final static String name = "se.snylt.witch.annotations.BindToCompoundButton";
 
         @Override
         public Integer getViewId(Element element) {
@@ -121,7 +121,7 @@ public class SupportedAnnotations {
         }
 
         @Override
-        public Class getClazz() {
+        public Class<? extends Annotation> getClazz() {
             return se.snylt.witch.annotations.BindToCompoundButton.class;
         }
 
@@ -133,8 +133,8 @@ public class SupportedAnnotations {
     }
 
     // BindToRecyclerView
-    public final static class BindToRecyclerView implements HasViewId {
-        public final static String name = "se.snylt.witch.annotations.BindToRecyclerView";
+    final static class BindToRecyclerView implements HasViewId {
+        final static String name = "se.snylt.witch.annotations.BindToRecyclerView";
 
         @Override
         public Integer getViewId(Element element) {
@@ -142,7 +142,7 @@ public class SupportedAnnotations {
         }
 
         @Override
-        public Class getClazz() {
+        public Class<? extends Annotation> getClazz() {
             return se.snylt.witch.annotations.BindToRecyclerView.class;
         }
 
@@ -153,8 +153,8 @@ public class SupportedAnnotations {
     }
 
     // BindToViewPager
-    public final static class BindToViewPager implements HasViewId {
-        public final static String name = "se.snylt.witch.annotations.BindToViewPager";
+    final static class BindToViewPager implements HasViewId {
+        final static String name = "se.snylt.witch.annotations.BindToViewPager";
 
         @Override
         public Integer getViewId(Element element) {
@@ -162,7 +162,7 @@ public class SupportedAnnotations {
         }
 
         @Override
-        public Class getClazz() {
+        public Class<? extends Annotation> getClazz() {
             return se.snylt.witch.annotations.BindToViewPager.class;
         }
 
@@ -173,27 +173,30 @@ public class SupportedAnnotations {
     }
 
     // Mod
-    public final static class Mod {
-        public final static String name = "se.snylt.witch.annotations.Mod";
+    @Deprecated
+    final static class Mod {
+        final static String name = "se.snylt.witch.annotations.Mod";
     }
 
     // OnBind
+    @Deprecated
     public final static class OnBind {
-        public final static String name = "se.snylt.witch.annotations.OnBind";
+        final static String name = "se.snylt.witch.annotations.OnBind";
     }
 
     // AlwaysBind
-    public final static class AlwaysBind {
-        public final static String name = "se.snylt.witch.annotations.AlwaysBind";
+    final static class AlwaysBind {
+        final static String name = "se.snylt.witch.annotations.AlwaysBind";
     }
 
-    public final static class OnBindEach {
-        public final static String name = "se.snylt.witch.annotations.OnBindEach";
+    @Deprecated
+    final static class OnBindEach {
+        final static String name = "se.snylt.witch.annotations.OnBindEach";
     }
 
 
     // All annotations that bind to a view id
-    public final static HasViewId[] ALL_BIND_VIEW = new HasViewId[] {
+    final static HasViewId[] ALL_BIND_VIEW = new HasViewId[] {
             new BindTo(),
             new BindToView(),
             new BindToRecyclerView(),

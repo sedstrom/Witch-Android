@@ -4,7 +4,7 @@ import android.view.View;
 
 import java.util.List;
 
-import se.snylt.witch.viewbinder.Binder;
+import se.snylt.witch.viewbinder.TargetViewBinder;
 import se.snylt.witch.viewbinder.ViewBinder;
 import se.snylt.witchprocessortest.utils.TestViewBinderUtils;
 
@@ -35,7 +35,7 @@ public class ViewViewModelTest extends TestBase {
     }
 
     @Override
-    protected Binder getBinder() {
+    protected TargetViewBinder getTargetViewBinder() {
         return new ViewViewModel_ViewBinder().createBinder();
     }
 }

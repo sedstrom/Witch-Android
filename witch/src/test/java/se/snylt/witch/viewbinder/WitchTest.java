@@ -11,6 +11,7 @@ import android.view.View;
 
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
+import static junit.framework.Assert.fail;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
@@ -99,10 +100,12 @@ public class WitchTest {
         // When
         Object mod1 = new Object();
         Object mod2 = new Object();
-        Witch.bind(target, view, mod1, mod2);
+        Witch.bind(target, view);
 
         // Then
-        verify(core).doBind(same(target), viewFinderWith(view), same(mod1), same(mod2));
+        verify(core).doBind(same(target), viewFinderWith(view));
+
+        fail();
     }
 
     private ViewFinder viewFinderWith(final View view) {

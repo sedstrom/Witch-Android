@@ -5,30 +5,30 @@ import org.junit.Test;
 
 import java.util.List;
 
-import se.snylt.witch.viewbinder.Binder;
+import se.snylt.witch.viewbinder.TargetViewBinder;
 import se.snylt.witch.viewbinder.ViewBinder;
 
 public abstract class TestBase {
 
-    private Binder binder;
+    private TargetViewBinder targetViewBinder;
 
     private Object viewHolder;
 
     @Before
     public void setup(){
-        binder = getBinder();
+        targetViewBinder = getTargetViewBinder();
         viewHolder = getViewHolder();
     }
 
     @Test
     public void testSimpleBind(){
-        testBind(getBinder().getViewBinders(), getViewHolder());
+        testBind(getTargetViewBinder().getViewBinders(), getViewHolder());
     }
 
     protected abstract void testBind(List<ViewBinder> binder, Object viewHolder);
 
     protected abstract Object getViewHolder();
 
-    protected abstract Binder getBinder();
+    protected abstract TargetViewBinder getTargetViewBinder();
 
 }

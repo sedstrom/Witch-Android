@@ -1,34 +1,32 @@
 package se.snylt.witch.processor.java;
 
-import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.util.List;
 
-import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 
-import se.snylt.witch.processor.valueaccessor.ValueAccessor;
-import se.snylt.witch.processor.binding.BindActionDef;
+import se.snylt.witch.processor.binding.OnBindDef;
 import se.snylt.witch.processor.binding.ViewBindingDef;
+import se.snylt.witch.processor.valueaccessor.ValueAccessor;
 
 import static se.snylt.witch.processor.TypeUtils.ARRAY_LIST;
 import static se.snylt.witch.processor.TypeUtils.BINDER;
-import static se.snylt.witch.processor.TypeUtils.BINDING_CREATOR;
-import static se.snylt.witch.processor.TypeUtils.BIND_ACTION;
-import static se.snylt.witch.processor.TypeUtils.BIND_ACTIONS;
 import static se.snylt.witch.processor.TypeUtils.LIST;
+import static se.snylt.witch.processor.TypeUtils.TARGET_VIEW_BINDER;
+import static se.snylt.witch.processor.TypeUtils.TARGET_VIEW_BINDER_FACTORY;
 import static se.snylt.witch.processor.TypeUtils.VIEW_BINDER;
 
 public class BinderCreatorJavaHelper {
 
+    private final static String VAR_BINDER = "binder";
+
     public static TypeSpec toJava(
             ClassName target,
-            List<ViewBindingDef> viewActionses,
+            List<ViewBindingDef> viewBindings,
             ClassName binderClassName,
             ClassName viewHolderClassName) {
 
@@ -36,39 +34,48 @@ public class BinderCreatorJavaHelper {
         TypeSpec.Builder builder =
                 TypeSpec.classBuilder(binderClassName)
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                        .addSuperinterface(BINDING_CREATOR);
+                        .addSuperinterface(TARGET_VIEW_BINDER_FACTORY);
 
         // createBinding
         MethodSpec.Builder createBinding = MethodSpec.methodBuilder("createBinder")
                 .addModifiers(Modifier.PUBLIC)
-                .returns(BINDER);
+                .returns(TARGET_VIEW_BINDER);
 
         createBinding.addStatement("$T bindingSpecs = new $T<>()", ParameterizedTypeName.get(LIST, VIEW_BINDER), ARRAY_LIST);
-
-        createBinding.addStatement("$T bindActions", LIST);
+        createBinding.addStatement("$T $N", BINDER, VAR_BINDER);
 
         // All views
-        for (ViewBindingDef viewBindingDef : viewActionses) {
+        for (ViewBindingDef viewBindingDef : viewBindings) {
+
 
             createBinding.addComment("===========================================");
-            createBinding.addComment("Bind " + viewBindingDef.value.accessValueString());
+            createBinding.addComment("Bind " + viewBindingDef.value.accessValueString() + " BEGIN");
 
-            // Add all binding actions
-            createBinding.addStatement("bindActions = new $T()", ARRAY_LIST);
-            for (BindActionDef bindAction : viewBindingDef.getBindActions()) {
-                createBinding.addStatement("bindActions.add($L)", bindAction.getNewInstanceJava());
+
+            // Create Binder
+            createBinding.addCode("\n");
+            createBinding.addComment("Create Binder");
+            createBinding.addStatement("$N = $T.create()", VAR_BINDER, BINDER);
+            for (OnBindDef bindAction : viewBindingDef.getOnBinds()) {
+                createBinding.addStatement("binder = binder.next($L)", bindAction.getNewInstanceJava());
             }
 
-            // Add complete binding spec
+
+            createBinding.addCode("\n");
+            createBinding.addComment("Create ViewBinder");
             createBinding.addStatement("bindingSpecs.add($L)",
                     newViewBinderInstance(
                             target,
                             viewBindingDef,
                             viewHolderClassName));
+
+            createBinding.addComment("Bind " + viewBindingDef.value.accessValueString() + " END");
+            createBinding.addComment("===========================================");
+            createBinding.addCode("\n");
         }
 
         // Return
-        createBinding.addStatement("return new Binder($N)", "bindingSpecs");
+        createBinding.addStatement("return new TargetViewBinder($N)", "bindingSpecs");
         builder.addMethod(createBinding.build());
 
         return builder.build();
@@ -111,28 +118,12 @@ public class BinderCreatorJavaHelper {
                 .addStatement("return $L", viewBindingDef.isAlwaysBind())
                 .build();
 
-        // Mods
-        TypeName listOfMods = ArrayTypeName.of(BIND_ACTION);
-        MethodSpec.Builder getModActions = MethodSpec.methodBuilder("getModActions")
-                .addModifiers(Modifier.PUBLIC)
-                .addParameter(Object.class, "mod")
-                .returns(listOfMods);
-
-        for(Element e: viewBindingDef.getMods()){
-            getModActions.addCode("if(mod instanceof $T) {\n", e.asType());
-            getModActions.addStatement("return (($T)mod).$N", e.asType(), accessor.accessValueString());
-            getModActions.addCode("}\n");
-        }
-
-        getModActions.addStatement("return null");
-
-        TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, new $T($N)", viewId, accessor.viewHolderFieldName(), BIND_ACTIONS, "bindActions")
+        TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, $N", viewId, accessor.viewHolderFieldName(), VAR_BINDER)
                 .addSuperinterface(VIEW_BINDER)
                 .addMethod(setView)
                 .addMethod(getView)
                 .addMethod(getValue)
                 .addMethod(alwaysBind)
-                .addMethod(getModActions.build())
                 .build();
 
         return anonymous;

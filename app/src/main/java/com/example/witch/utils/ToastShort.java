@@ -3,9 +3,9 @@ package com.example.witch.utils;
 import android.view.View;
 import android.widget.Toast;
 
-import se.snylt.witch.viewbinder.bindaction.OnBindAction;
+import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
 
-public class ToastShort implements OnBindAction<View, String> {
+public class ToastShort extends SyncOnBind<View,String> {
 
     @Override
     public void onBind(View view, String s) {

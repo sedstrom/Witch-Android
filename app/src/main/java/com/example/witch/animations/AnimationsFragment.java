@@ -41,7 +41,7 @@ public class AnimationsFragment extends Fragment {
     }
 
     private void bind(Object ...mod) {
-        Witch.bind(randomNumbersViewModel(), getView(), mod);
+        Witch.bind(randomNumbersViewModel(), getView());
     }
 
     private AnimationsViewModel randomNumbersViewModel() {

@@ -26,10 +26,10 @@ public class Witch {
     }
 
     /**
-     * Like {@link #bind(Object, Activity, Object...)} but more majestic.
+     * Like {@link #bind(Object, Activity)} but more majestic.
      */
-    public static void spellBind(Object target, Activity activity, Object ...mods) {
-        bind(target, activity, mods);
+    public static void spellBind(Object target, Activity activity) {
+        bind(target, activity);
     }
 
     /**
@@ -37,17 +37,16 @@ public class Witch {
      *
      * @param target view model
      * @param activity activity containing views specified in {@code target}
-     * @param mods additional bind actions
      */
-    public static void bind(Object target, Activity activity, Object ...mods) {
-        bind(target, viewFinder(activity), mods);
+    public static void bind(Object target, Activity activity) {
+        bind(target, viewFinder(activity));
     }
 
     /**
-     * Like {@link #bind(Object, View, Object...)} but more majestic.
+     * Like {@link #bind(Object, View)} but more majestic.
      */
-    public static void spellBind(Object target, View view, Object ...mods) {
-        bind(target, view, mods);
+    public static void spellBind(Object target, View view) {
+        bind(target, view);
     }
 
     /**
@@ -55,10 +54,9 @@ public class Witch {
      *
      * @param target view model
      * @param view view containing child-views specified in {@code target}
-     * @param mods additional bind actions
      */
-    public static void bind(Object target, View view, Object ...mods) {
-        bind(target, viewFinder(view), mods);
+    public static void bind(Object target, View view) {
+        bind(target, viewFinder(view));
     }
 
     private static ViewFinder viewFinder(Activity activity) {
@@ -69,7 +67,7 @@ public class Witch {
         return new ViewViewFinder(view, VIEW_HOLDER_TAG_DEFAULT);
     }
 
-    private static void bind(Object target, ViewFinder viewFinder, Object ...mods) {
-        witch().doBind(target, viewFinder, mods);
+    private static void bind(Object target, ViewFinder viewFinder) {
+        witch().doBind(target, viewFinder);
     }
 }

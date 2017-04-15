@@ -5,7 +5,7 @@ import android.widget.CompoundButton;
 
 import java.util.List;
 
-import se.snylt.witch.viewbinder.Binder;
+import se.snylt.witch.viewbinder.TargetViewBinder;
 import se.snylt.witch.viewbinder.ViewBinder;
 import se.snylt.witchprocessortest.utils.TestViewBinderUtils;
 
@@ -43,7 +43,7 @@ public class CompoundButtonViewModelTest extends TestBase {
     }
 
     @Override
-    protected Binder getBinder() {
+    protected TargetViewBinder getTargetViewBinder() {
         return new CompoundButtonViewModel_ViewBinder().createBinder();
     }
 }

@@ -2,7 +2,7 @@ package se.snylt.witch.viewbinder.viewfinder;
 
 import android.view.View;
 
-import se.snylt.witch.viewbinder.Binder;
+import se.snylt.witch.viewbinder.TargetViewBinder;
 
 public class ViewViewFinder implements ViewFinder {
 
@@ -41,13 +41,13 @@ public class ViewViewFinder implements ViewFinder {
     }
 
     @Override
-    public Binder getBinder(Object key) {
+    public TargetViewBinder getBinder(Object key) {
         return getTagContainer().getBinder(key);
     }
 
     @Override
-    public void putBinder(Object key, Binder binder) {
-        getTagContainer().putBinder(key, binder);
+    public void putBinder(Object key, TargetViewBinder targetViewBinder) {
+        getTagContainer().putBinder(key, targetViewBinder);
     }
 
     private TagContainer getTagContainer() {

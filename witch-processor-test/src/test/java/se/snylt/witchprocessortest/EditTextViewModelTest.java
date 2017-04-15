@@ -6,7 +6,7 @@ import android.widget.EditText;
 
 import java.util.List;
 
-import se.snylt.witch.viewbinder.Binder;
+import se.snylt.witch.viewbinder.TargetViewBinder;
 import se.snylt.witch.viewbinder.ViewBinder;
 import se.snylt.witchprocessortest.utils.TestViewBinderUtils;
 
@@ -44,7 +44,7 @@ public class EditTextViewModelTest extends TestBase {
     }
 
     @Override
-    protected Binder getBinder() {
+    protected TargetViewBinder getTargetViewBinder() {
         return new EditTextViewModel_ViewBinder().createBinder();
     }
 }

@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import se.snylt.witch.viewbinder.Binder;
+import se.snylt.witch.viewbinder.TargetViewBinder;
 import se.snylt.witch.viewbinder.ViewBinder;
 import se.snylt.witchprocessortest.utils.TestViewBinderUtils;
 
@@ -40,7 +40,7 @@ public class TextViewViewModelTest extends TestBase {
     }
 
     @Override
-    protected Binder getBinder() {
+    protected TargetViewBinder getTargetViewBinder() {
         return new TextViewViewModel_ViewBinder().createBinder();
     }
 }

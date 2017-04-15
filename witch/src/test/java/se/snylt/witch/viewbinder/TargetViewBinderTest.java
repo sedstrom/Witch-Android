@@ -12,7 +12,7 @@ import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
 
-public class BinderTest {
+public class TargetViewBinderTest {
 
     @Mock
     ViewBinder viewBinderOne;
@@ -29,22 +29,22 @@ public class BinderTest {
     @Mock
     ViewFinder viewFinder;
 
-    private Binder binder;
+    private TargetViewBinder targetViewBinder;
 
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
-        binder = new Binder(Arrays.asList(viewBinderOne, viewBinderTwo));
+        targetViewBinder = new TargetViewBinder(Arrays.asList(viewBinderOne, viewBinderTwo));
     }
 
     @Test
     public void bind_Should_CallBindOnEachViewBinder(){
         // When
-        binder.bind(viewHolder, viewFinder, target, mod);
+        targetViewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
-        verify(viewBinderOne).bind(same(viewHolder), same(viewFinder), same(target), same(mod));
-        verify(viewBinderTwo).bind(same(viewHolder), same(viewFinder), same(target), same(mod));
+        verify(viewBinderOne).bind(same(viewHolder), same(viewFinder), same(target));
+        verify(viewBinderTwo).bind(same(viewHolder), same(viewFinder), same(target));
     }
 
 }

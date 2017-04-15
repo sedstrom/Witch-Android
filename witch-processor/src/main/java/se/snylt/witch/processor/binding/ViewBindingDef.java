@@ -1,10 +1,7 @@
 package se.snylt.witch.processor.binding;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-
-import javax.lang.model.element.Element;
 
 import se.snylt.witch.processor.valueaccessor.ValueAccessor;
 
@@ -17,49 +14,21 @@ public class ViewBindingDef {
 
     // Flag always bind
     private boolean alwaysBind = false;
-    
-    // Bind actions
-    private final List<BindActionDef> onPreBindActions;
-    private final List<BindActionDef> onBindActions;
-    private final List<BindActionDef> onPostBindActions;
+
+    private final List<OnBindDef> onBinds;
 
     public ViewBindingDef(Integer viewId, ValueAccessor value) {
         this.viewId = viewId;
         this.value = value;
-        this.onPreBindActions = new LinkedList<>();
-        this.onBindActions = new LinkedList<>();
-        this.onPostBindActions = new LinkedList<>();
+        this.onBinds = new ArrayList<>();
     }
 
-    // Mods
-    private final List<Element> mods = new ArrayList<>();
-
-    public void addMod(Element mod) {
-        this.mods.add(mod);
+    public void addOnBind(OnBindDef onBindDef) {
+        onBinds.add(onBindDef);
     }
 
-    public List<Element> getMods(){
-        return mods;
-    }
-
-    public void addOnPreBindAction(BindActionDef onPostBindAction) {
-        onPreBindActions.add(onPostBindAction);
-    }
-
-    public void addOnBindAction(BindActionDef onBindAction){
-        onBindActions.add(onBindAction);
-    }
-
-    public void addOnPostBindAction(BindActionDef onPostBindAction) {
-        onPostBindActions.add(onPostBindAction);
-    }
-
-    public List<BindActionDef> getBindActions(){
-        List<BindActionDef> allActions = new ArrayList();
-        allActions.addAll(onPreBindActions);
-        allActions.addAll(onBindActions);
-        allActions.addAll(onPostBindActions);
-        return allActions;
+    public List<OnBindDef> getOnBinds(){
+        return onBinds;
     }
 
     @Override

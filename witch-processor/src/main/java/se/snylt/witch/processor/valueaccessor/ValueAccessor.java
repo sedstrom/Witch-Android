@@ -2,9 +2,9 @@ package se.snylt.witch.processor.valueaccessor;
 
 public abstract class ValueAccessor {
 
-    protected final String valueAccessorName;
+    final String valueAccessorName;
 
-    protected ValueAccessor(String valueAccessorName) {
+    ValueAccessor(String valueAccessorName) {
         this.valueAccessorName = valueAccessorName;
     }
 

@@ -3,7 +3,7 @@ package se.snylt.witchprocessortest;
 
 import java.util.List;
 
-import se.snylt.witch.viewbinder.Binder;
+import se.snylt.witch.viewbinder.TargetViewBinder;
 import se.snylt.witch.viewbinder.ViewBinder;
 
 import static junit.framework.Assert.assertTrue;
@@ -21,7 +21,7 @@ public class AlwaysBindViewModelTest extends TestBase {
     }
 
     @Override
-    protected Binder getBinder() {
+    protected TargetViewBinder getTargetViewBinder() {
         return new AlwaysBindViewModel_ViewBinder().createBinder();
     }
 }

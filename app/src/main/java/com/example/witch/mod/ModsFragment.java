@@ -54,6 +54,6 @@ public class ModsFragment extends Fragment {
     }
 
     private void bind(Object mod) {
-        Witch.bind(model, getView(), mod);
+        Witch.bind(model, getView());
     }
 }

@@ -15,10 +15,10 @@ class WitchCore {
         this.binderFactory = binderFactory;
     }
 
-    void doBind(Object target, ViewFinder viewFinder, Object ...mods) {
+    void doBind(Object target, ViewFinder viewFinder) {
         Object viewHolder = getOrCreateViewHolder(target, viewFinder);
-        Binder binder = getOrCreateBinder(target, viewFinder);
-        binder.bind(viewHolder, viewFinder, target, mods);
+        TargetViewBinder targetViewBinder = getOrCreateBinder(target, viewFinder);
+        targetViewBinder.bind(viewHolder, viewFinder, target);
     }
 
     private Object getOrCreateViewHolder(Object target, ViewFinder viewFinder) {
@@ -31,14 +31,14 @@ class WitchCore {
         return viewHolder;
     }
 
-    private Binder getOrCreateBinder(Object target, ViewFinder viewFinder) {
+    private TargetViewBinder getOrCreateBinder(Object target, ViewFinder viewFinder) {
         Object key = keyForTarget(target);
-        Binder binder = viewFinder.getBinder(key);
-        if (binder == null) {
-            binder = binderFactory.createBinder(target);
-            viewFinder.putBinder(key, binder);
+        TargetViewBinder targetViewBinder = viewFinder.getBinder(key);
+        if (targetViewBinder == null) {
+            targetViewBinder = binderFactory.createBinder(target);
+            viewFinder.putBinder(key, targetViewBinder);
         }
-        return binder;
+        return targetViewBinder;
     }
 
     private Object keyForTarget(Object target){
