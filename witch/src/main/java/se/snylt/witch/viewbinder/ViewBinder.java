@@ -9,17 +9,14 @@ public abstract class ViewBinder {
 
     public final int viewId;
 
-    public final String key;
-
     public final Binder binder;
 
     private final static Object NO_HISTORY = new Object();
 
     private Object historyValue = NO_HISTORY;
 
-    public ViewBinder(int viewId, String key, Binder binder) {
+    public ViewBinder(int viewId, Binder binder) {
         this.viewId = viewId;
-        this.key = key;
         this.binder = binder;
     }
 
@@ -28,10 +25,10 @@ public abstract class ViewBinder {
         if(isAlwaysBind() || isNewValue(value, historyValue)) {
             historyValue = value;
             View view = findView(viewHolder, viewFinder);
+            // TODO check types
             binder.bind(view, value);
         }
     }
-
 
     private static boolean isNewValue(Object newValue, Object oldValue) {
         if(oldValue == NO_HISTORY) {
@@ -40,13 +37,12 @@ public abstract class ViewBinder {
             return true;
         } else if(newValue != null && oldValue == null) {
             return true;
-        } else if(newValue == null && oldValue == null) {
+        } else if(newValue == null) {
             return false;
         } else {
             return !newValue.equals(oldValue);
         }
     }
-
 
     private View findView(Object viewHolder, ViewFinder viewFinder) {
         if (getView(viewHolder) == null) {

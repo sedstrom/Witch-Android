@@ -12,11 +12,12 @@ import android.view.View;
 
 import java.util.HashMap;
 
+import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
-import static junit.framework.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
@@ -24,11 +25,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class ViewTargetViewBinderTest {
+public class ViewBinderTest {
 
     private final static int VIEW_ID = 666;
-
-    private final static String KEY = "valueKey";
 
     @Mock
     View rootView;
@@ -36,13 +35,16 @@ public class ViewTargetViewBinderTest {
     @Mock
     View bindView;
 
-    TestViewBinder viewBinder;
+    @Mock
+    Binder<View, String> binder;
 
-    TestViewHolder viewHolder;
+    private TestViewBinder viewBinder;
 
-    TestViewFinder viewFinder;
+    private TestViewHolder viewHolder;
 
-    Object target;
+    private TestViewFinder viewFinder;
+
+    private Object target;
 
     @Before
     public void setup(){
@@ -52,16 +54,12 @@ public class ViewTargetViewBinderTest {
         viewFinder = spy(new TestViewFinder(rootView));
         viewFinder.childView(VIEW_ID, bindView);
         viewHolder = spy(new TestViewHolder());
-        viewBinder = spy(new TestViewBinder(VIEW_ID, KEY));
-
-        setIsNewValue(true);
-
-        fail();
+        viewBinder = spy(new TestViewBinder(VIEW_ID, binder));
     }
 
     @Test
-    public void bind_Should_InOrder_GetValueFromTarget_FindViewInViewFinder_SetViewInViewHolder_RunBindActionsAndModsWithValueAndView(){
-        InOrder inOrder = Mockito.inOrder(viewBinder, viewFinder);
+    public void bind_Should_InOrder_GetValueFromTarget_FindViewInViewFinder_SetViewInViewHolder_RunBindWithValueAndView(){
+        InOrder inOrder = Mockito.inOrder(viewBinder, viewFinder, binder);
 
         viewBinder.setValue("123");
 
@@ -72,81 +70,64 @@ public class ViewTargetViewBinderTest {
         inOrder.verify(viewBinder).getValue(same(target));
         inOrder.verify(viewFinder).findViewById(eq(VIEW_ID));
         inOrder.verify(viewBinder).setView(same(viewHolder), same(bindView));
-        // inOrder.verify(runner).bind(same(bindActionsAndMods), same(bindView), eq("123"));
-
-        fail();
+        inOrder.verify(binder).bind(same(bindView), eq("123"));
     }
 
     @Test
-    public void bind_When_NewValue_Should_RunBindActionsAndModsWithValueAndView() {
+    public void bind_When_FirstValue_Should_RunBindWithValueAndView() {
         viewBinder.setValue("123");
 
         // When
-        setIsNewValue(true);
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
-        // verify(runner).bind(same(bindActionsAndMods), same(bindView), eq("123"));
-        fail();
+        verify(binder).bind(same(bindView), eq("123"));
     }
 
     @Test
-    public void bind_When_IsNotNewValue_Should_Never_RunBindActionsAndModsWithValueAndView() {
-        viewBinder.setValue("123");
-
+    public void bind_When_IsNewValue_Should_Never_RunBindWithValueAndView() {
         // When
-        setIsNewValue(false);
+        viewBinder.setValue("123");
+        viewBinder.bind(viewHolder, viewFinder, target);
+        viewBinder.setValue("456"); // New value
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
-        // verify(runner, never()).bind(same(bindActionsAndMods), same(bindView), eq("123"));
-        fail();
+        verify(binder).bind(same(bindView), eq("123"));
+        verify(binder).bind(same(bindView), eq("456"));
     }
 
     @Test
-    public void bind_When_IsNotNewValue_IsAlwaysBind_Should_RunBindActionsAndModsWithValueAndView() {
+    public void bind_When_IsNotNewValue_Should_Never_RunBindWithValueAndView() {
         viewBinder.setValue("123");
+        viewBinder.bind(viewHolder, viewFinder, target);
+        Mockito.reset((Binder)binder);
 
         // When
-        setIsNewValue(false);
+        viewBinder.setValue("123"); // Same value again
+        viewBinder.bind(viewHolder, viewFinder, target);
+
+        // Then
+        verify(binder, never()).bind(any(View.class), anyString());
+    }
+
+    @Test
+    public void bind_When_IsNotNewValue_IsAlwaysBind_Should_RunBindWithValueAndView() {
+        viewBinder.setValue("123");
+        viewBinder.bind(viewHolder, viewFinder, target);
+        Mockito.reset((Binder)binder);
+
+        // When
         isAlwaysBind(true);
+        viewBinder.setValue("123");
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
-        // verify(runner).bind(same(bindActionsAndMods), same(bindView), eq("123"));
-        fail();
+        verify(binder).bind(same(bindView), eq("123"));
     }
 
     private void isAlwaysBind(boolean alwaysBind) {
         viewBinder.setAlwaysBind(alwaysBind);
-    }
-
-    @Test
-    public void bind_When_TwoDifferentValues_Should_TwoTimes_RunBindActionsAndModsWithValueAndView(){
-        // When
-        viewBinder.setValue("123");
-        viewBinder.bind(viewHolder, viewFinder, target);
-        viewBinder.setValue("456");
-        viewBinder.bind(viewHolder, viewFinder, target);
-
-        // Then
-        // verify(runner, times(1)).bind(same(bindActionsAndMods), same(bindView), eq("123"));
-        // verify(runner, times(1)).bind(same(bindActionsAndMods), same(bindView), eq("456"));
-        fail();
-    }
-
-
-    @Test
-    public void bind_With_Mods_Should_AddModsToBindActions(){
-        viewBinder.setValue("123");
-
-        // When
-        Object[] mods = new Object[] {new Object(), new Object()};
-        // viewBinder.bind(viewHolder, viewFinder, target, mods);
-
-        // Then
-        // verify(bindActions).applyMods(same(viewBinder), same(mods));
-        fail();
     }
 
     @Test
@@ -162,12 +143,6 @@ public class ViewTargetViewBinderTest {
         // Then
         verify(viewHolder, never()).setView(any(View.class));
         verify(viewFinder, never()).findViewById(anyInt());
-    }
-
-
-    public void setIsNewValue(boolean isNewValue) {
-        // when(runner.isNewValue(any(Object.class), any(Object.class))).thenReturn(isNewValue);
-        fail();
     }
 
     private class TestViewHolder {
@@ -190,9 +165,8 @@ public class ViewTargetViewBinderTest {
 
         private boolean alwaysBind;
 
-        public TestViewBinder(int viewId, String key) {
-            super(viewId, key, null);
-            fail();
+        TestViewBinder(int viewId, Binder binder) {
+            super(viewId, binder);
         }
 
         @Override
@@ -200,7 +174,7 @@ public class ViewTargetViewBinderTest {
             return this.value;
         }
 
-        public void setValue(Object value) {
+        void setValue(Object value) {
             this.value = value;
         }
 
@@ -220,7 +194,7 @@ public class ViewTargetViewBinderTest {
         }
 
 
-        public void setAlwaysBind(boolean alwaysBind) {
+        void setAlwaysBind(boolean alwaysBind) {
             this.alwaysBind = alwaysBind;
         }
     }
@@ -229,7 +203,7 @@ public class ViewTargetViewBinderTest {
 
         private final View rootView;
 
-        private HashMap<Integer, View> views = new HashMap<>();
+        private HashMap<Integer, View> views = new HashMap();
 
         private TestViewFinder(View rootView) {
             this.rootView = rootView;
