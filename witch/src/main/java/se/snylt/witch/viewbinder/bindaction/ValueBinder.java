@@ -8,14 +8,8 @@ package se.snylt.witch.viewbinder.bindaction;
  */
 public class ValueBinder<Target, Value> {
 
-    /**
-     * Binder to bind value
-     */
     private final Binder<Target, Value> binder;
 
-    /**
-     * {@link Value} to be bound.
-     */
     private Value value;
 
     private ValueBinder(Value value, Binder<Target, Value> binder) {

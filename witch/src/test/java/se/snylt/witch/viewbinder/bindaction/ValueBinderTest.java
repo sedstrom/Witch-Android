@@ -1,46 +1,45 @@
 package se.snylt.witch.viewbinder.bindaction;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import android.widget.TextView;
-
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertSame;
 
 public class ValueBinderTest {
 
+    @Mock
+    Binder<Object, Object> binder;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
     @Test
-    public void test() {
+    public void create_With_Binder_Should_HaveBinderAndNullValue() {
+        ValueBinder valueBinder = ValueBinder.create(binder);
+        assertSame(binder, valueBinder.getBinder());
+        assertNull(valueBinder.getValue());
+    }
 
-        Binder<TextView, String> binder = Binder.create(new SyncOnBind<TextView, String>() {
-            @Override
-            public void onBind(TextView textView, String s) {
-                textView.setText(s);
-            }
-        }).next(new AsyncOnBind<TextView, String>() {
-            @Override
-            public void onBind(TextView textView, String s, OnBindListener onBindDone) {
-                textView.append("B");
-                onBindDone.onBindDone();
-            }
-        }).next(new AsyncOnBind<TextView, String>() {
-            @Override
-            public void onBind(TextView textView, String s, OnBindListener onBindDone) {
-                textView.append("C");
-                onBindDone.onBindDone();
-            }
-        });
+    @Test
+    public void create_With_Value_Binder_Should_HaveBinderAndNullValue() {
+        Object value = new Object();
+        ValueBinder valueBinder = ValueBinder.create(value, binder);
+        assertSame(binder, valueBinder.getBinder());
+        assertSame(value, valueBinder.getValue());
+    }
 
-        ValueBinder<TextView, String> valueBinder = ValueBinder.create("A", binder);
-
-        // Bind
-        TextView view = mock(TextView.class);
-        String value = valueBinder.getValue();
-        valueBinder.getBinder().bind(view, value);
-
-        verify(view).setText(eq("A"));
-        verify(view).append(eq("B"));
-        verify(view).append(eq("C"));
+    @Test
+    public void setValue_Should_UpdateValue() {
+        Object value = new Object();
+        Object newValue = new Object();
+        ValueBinder<Object, Object> valueBinder = ValueBinder.create(value, binder);
+        assertSame(value, valueBinder.getValue());
+        valueBinder.setValue(newValue);
+        assertSame(newValue, valueBinder.getValue());
     }
 }
