@@ -3,7 +3,7 @@ package se.snylt.witchprocessortest;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 
-public class ViewPagerAdapter extends PagerAdapter {
+class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
@@ -15,7 +15,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         return false;
     }
 
-    public void setItems(Object items) {
+    void setItems(Object items) {
 
     }
 }

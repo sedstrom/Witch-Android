@@ -5,13 +5,13 @@ import android.view.View;
 import se.snylt.witch.annotations.AlwaysBind;
 import se.snylt.witch.annotations.BindTo;
 
-public class AlwaysBindViewModel extends TestViewModel {
+class AlwaysBindViewModel extends TestViewModel {
 
     @BindTo(android.R.id.button1)
     @AlwaysBind
-    public final String something = "something";
+    final String something = "something";
 
-    public AlwaysBindViewModel() {
+    AlwaysBindViewModel() {
         super(View.class);
     }
 }

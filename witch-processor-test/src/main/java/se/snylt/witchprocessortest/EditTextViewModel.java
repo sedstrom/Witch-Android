@@ -4,15 +4,15 @@ import android.widget.EditText;
 
 import se.snylt.witch.annotations.BindToEditText;
 
-public class EditTextViewModel extends TestViewModel {
+class EditTextViewModel extends TestViewModel {
 
     @BindToEditText(id = android.R.id.button1)
-    public final String text = "text";
+    final String text = "text";
 
     @BindToEditText(id = android.R.id.button2, set = "hint")
-    public String hint = "a hint text";
+    String hint = "a hint text";
 
-    public EditTextViewModel() {
+    EditTextViewModel() {
         super(EditText.class);
     }
 }

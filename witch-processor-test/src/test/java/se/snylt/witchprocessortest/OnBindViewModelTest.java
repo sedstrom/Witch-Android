@@ -7,12 +7,11 @@ import java.util.List;
 
 import se.snylt.witch.viewbinder.TargetViewBinder;
 import se.snylt.witch.viewbinder.ViewBinder;
-import se.snylt.witchprocessortest.bindactions.TestOnBindAction;
-import se.snylt.witchprocessortest.bindactions.TestOnPostBindAction;
-import se.snylt.witchprocessortest.bindactions.TestOnPreBindAction;
+import se.snylt.witchprocessortest.bindactions.TestOnBind;
 import se.snylt.witchprocessortest.utils.TestViewBinderUtils;
 
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static se.snylt.witchprocessortest.utils.TestViewBinderUtils.verifyViewBinder;
 
@@ -29,12 +28,10 @@ public class OnBindViewModelTest extends TestBase {
                     public void onPostBind(View mockedView, OnBindViewModel viewModel, int viewId) {
                         switch (viewId) {
                             case 1 :
-                                verify(mockedView).setContentDescription(eq(TestOnBindAction.class.getSimpleName()));
+                                verify(mockedView).setContentDescription(eq(TestOnBind.class.getSimpleName()));
                                 break;
                             case 2 :
-                                verify(mockedView).setContentDescription(eq(TestOnPreBindAction.class.getSimpleName()));
-                                verify(mockedView).setContentDescription(eq(TestOnBindAction.class.getSimpleName()));
-                                verify(mockedView).setContentDescription(eq(TestOnPostBindAction.class.getSimpleName()));
+                                verify(mockedView, times(3)).setContentDescription(eq(TestOnBind.class.getSimpleName()));
                                 break;
                         }
                     }
