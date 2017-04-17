@@ -10,7 +10,7 @@ import android.widget.EditText;
 
 import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
 
-public class EditTextValidOnBind extends SyncOnBind<EditText,Boolean> {
+class EditTextValidOnBind extends SyncOnBind<EditText,Boolean> {
 
     @Override
     public void onBind(EditText view, Boolean isValid) {

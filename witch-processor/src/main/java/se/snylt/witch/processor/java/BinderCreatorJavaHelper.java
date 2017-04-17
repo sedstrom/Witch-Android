@@ -118,7 +118,7 @@ public class BinderCreatorJavaHelper {
                 .addStatement("return $L", viewBindingDef.isAlwaysBind())
                 .build();
 
-        TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $S, $N", viewId, accessor.viewHolderFieldName(), VAR_BINDER)
+        TypeSpec anonymous = TypeSpec.anonymousClassBuilder("$L, $N", viewId, VAR_BINDER)
                 .addSuperinterface(VIEW_BINDER)
                 .addMethod(setView)
                 .addMethod(getView)

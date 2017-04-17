@@ -4,7 +4,6 @@ import com.example.witch.alwaysbind.AlwaysBindFragment;
 import com.example.witch.animations.AnimationsFragment;
 import com.example.witch.customview.CustomViewFragment;
 import com.example.witch.login.LoginFragment;
-import com.example.witch.mod.ModsFragment;
 import com.example.witch.picasso.PicassoFragment;
 import com.example.witch.recyclerview.RecyclerViewFragment;
 import com.example.witch.responsemodel.ResponseModelFragment;
@@ -43,7 +42,6 @@ public class ExampleListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         if(context instanceof OnExampleFragmentSelected) {
             listener = (OnExampleFragmentSelected) context;
         }
@@ -68,7 +66,6 @@ public class ExampleListFragment extends Fragment {
         items.add(newItem(TextViewFragment.class.getName(), "@BindToTextView", "TextView binding" ));
         items.add(newItem(AlwaysBindFragment.class.getName(), "@AlwaysBind", "Example of how to use @AlwaysBind to skip value diffing"));
         items.add(newItem(CustomViewFragment.class.getName(), "CustomView", "Bind values to a custom view class"));
-        items.add(newItem(ModsFragment.class.getName(), "Mods", "Add one or more mods to an existing binding."));
         items.add(newItem(AnimationsFragment.class.getName(), "Animations", "Example of how animations can be added to binding"));
         items.add(newItem(PicassoFragment.class.getName(), "Picasso", "Example of how picasso can be used in binding"));
         items.add(newItem(ResponseModelFragment.class.getName(), "ResponseModel", "Combine response model and view model."));

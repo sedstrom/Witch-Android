@@ -2,14 +2,14 @@ package com.example.witch.login;
 
 import android.os.Handler;
 
-public class Login {
+class Login {
 
-    public interface LoginListener {
+    interface LoginListener {
         void loginSuccessful();
         void loginFailed();
     }
 
-    public static void login(final String username, final String password, final LoginListener loginListener) {
+    static void login(final String username, final String password, final LoginListener loginListener) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

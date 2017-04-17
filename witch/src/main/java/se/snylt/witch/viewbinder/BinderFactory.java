@@ -1,10 +1,6 @@
 package se.snylt.witch.viewbinder;
 
-import android.util.Log;
-
 import se.snylt.witch.ClassUtils;
-
-import static se.snylt.witch.viewbinder.WitchCore.TAG;
 
 public class BinderFactory {
 
@@ -18,7 +14,6 @@ public class BinderFactory {
             Class clazz = ClassUtils.findBinder(target);
             return ((TargetViewBinderFactory) clazz.newInstance()).createBinder();
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
             throw new BinderNotFoundException("Could not find binder for " + target.getClass().getName());
         }
     }

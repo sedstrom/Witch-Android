@@ -1,15 +1,8 @@
 package com.example.witch.utils;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.view.View;
-
-import se.snylt.witch.viewbinder.bindaction.OnPostBindAction;
-import se.snylt.witch.viewbinder.bindaction.OnPreBindAction;
-import se.snylt.witch.viewbinder.bindaction.PreBindDone;
-
-public class FadeInIfVisible implements OnPreBindAction<View, Integer>, OnPostBindAction<View, Integer> {
+public class FadeInIfVisible {
+    /*
+    implements OnPreBindAction<View, Integer>, OnPostBindAction<View, Integer> {
 
     @Override
     public void onPostBind(View view, Integer visibility) {
@@ -35,5 +28,5 @@ public class FadeInIfVisible implements OnPreBindAction<View, Integer>, OnPostBi
         } else {
             preBindDone.done();
         }
-    }
+    }*/
 }

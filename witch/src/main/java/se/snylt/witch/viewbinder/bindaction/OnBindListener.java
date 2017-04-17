@@ -1,5 +1,5 @@
 package se.snylt.witch.viewbinder.bindaction;
 
-interface OnBindListener {
+public interface OnBindListener {
     void onBindDone();
 }

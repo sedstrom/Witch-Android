@@ -60,7 +60,7 @@ class LoginViewModel {
 
     @BindToView(id = R.id.login_fragment_button, view = View.class, set = "enabled")
     Boolean loginButtonEnabled() {
-        return isLoggingIn ? false : true;
+        return isLoggingIn;
     }
 
     @BindTo(R.id.login_fragment_username)

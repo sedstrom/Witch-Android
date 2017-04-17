@@ -7,7 +7,6 @@ import org.mockito.MockitoAnnotations;
 
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
-import static junit.framework.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
@@ -17,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 public class WitchCoreTest {
 
-    WitchCore core;
+    private WitchCore core;
 
     @Mock
     ViewHolderFactory viewHolderFactory;
@@ -96,18 +95,6 @@ public class WitchCoreTest {
         // Then
         verify(viewFinder, never()).putBinder(any(Class.class), any(TargetViewBinder.class));
         verify(targetViewBinder).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
-    }
-
-    @Test
-    public void doBind_With_Mods_Should_PassInModsToBinder() {
-        // When
-        Object mod1 = new Object();
-        Object mod2 = new Object();
-        core.doBind(target, viewFinder);
-
-        // Then
-        verify(targetViewBinderFromFactory).bind(same(viewHolderFromFactory), same(viewFinder), same(target));
-        fail();
     }
 
     private void viewBinderForKey(ViewFinder viewFinder, Class<?> key, TargetViewBinder viewTargetViewBinder) {

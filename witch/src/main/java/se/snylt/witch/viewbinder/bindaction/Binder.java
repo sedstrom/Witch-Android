@@ -1,80 +1,113 @@
 package se.snylt.witch.viewbinder.bindaction;
 
+import java.util.LinkedList;
+
 /**
  * Binds a generic value to a generic target with one ore more chained {@link OnBind} actions.
  *
  * @param <Target> target to be bound with value.
- * @param <Value> value to be bound to target.
+ * @param <Value>  value to be bound to target.
  */
 public class Binder<Target, Value> {
 
     /**
-     * Starting point for chain of bind actions.
+     * List of bind actions
      */
-    protected OnBind<Target, Value> onBind;
+    private final LinkedList<OnBind<Target, Value>> onBinds;
 
-    protected Binder(OnBind<Target, Value> onBind) {
-        this.onBind = onBind;
+    private Binder(OnBind<Target, Value> ...onBind) {
+        this();
+        onBinds.add(parallelMerge(onBind));
+    }
+
+    private Binder() {
+        this.onBinds = new LinkedList<>();
+    }
+
+    private Binder(LinkedList<OnBind<Target, Value>> onBinds) {
+        this.onBinds = onBinds;
     }
 
     /**
-     * Creates a new {@link Binder} with provided {@param onBind} as only bind action in chain.
+     * Creates a new {@link Binder} with provided {@param onBindHead} as only bind action in chain.
      *
-     * @param onBind initial bind action
+     * @param onBind   initial bind action
      * @param <Target> target type to be bound with value.
-     * @param <Value> value type to be bound to target.
+     * @param <Value>  value type to be bound to target.
      * @return Binder with provided bind action.
      */
-    public static <Target, Value> Binder<Target, Value> create(OnBind<Target, Value> onBind) {
+    @SafeVarargs
+    public static <Target, Value> Binder<Target, Value> create(OnBind<Target, Value> ...onBind) {
         return new Binder<>(onBind);
     }
 
+    public static <Target, Value> Binder<Target, Value> create(LinkedList<OnBind<Target, Value>> onBinds) {
+        return new Binder<>(onBinds);
+    }
+
     public static <Target, Value> Binder<Target, Value> create() {
-        return new Binder<>(null);
+        return new Binder<>();
     }
 
     /**
      * Bind {@param value} to {@param target}.
      *
      * @param target target to be bound with value.
-     * @param value value to be bound to target.
+     * @param value  value to be bound to target.
      */
     public void bind(Target target, Value value) {
-        // Start bind chain with onBind as root action.
-        doBind(target, value, onBind);
+        if(!onBinds.isEmpty()) {
+            doBind(target, value, onBinds.getFirst());
+        }
     }
 
     /**
      * Recursively run chain of bind actions.
+     *
      * @param target binder target
-     * @param value binder value
-     * @param onBind current bind action to run
+     * @param value  binder value
+     * @param node current bind action node to run
      */
-    private void doBind(final Target target, final Value value, final OnBind<Target, Value> onBind) {
-        if(onBind != null) {
-            onBind.bind(target, value, new OnBindListener() {
-                @Override
-                public void onBindDone() {
-                    // Run until setNextOnBind action is null.
-                    doBind(target, value, onBind.getNextOnBind());
-                }
-            });
+    private void doBind(final Target target, final Value value, final OnBind<Target, Value> node) {
+        node.bind(target, value, new OnBindListener() {
+            @Override
+            public void onBindDone() {
+                Binder.this.onBindDone(target, value, node);
+            }
+        });
+    }
+
+    private void onBindDone(Target target, Value value, OnBind<Target, Value> node) {
+        int next = onBinds.indexOf(node) + 1;
+        if(next < onBinds.size()) {
+            doBind(target, value, onBinds.get(next));
         }
     }
 
     /**
-     * Add a {@link OnBind} action to chain of bind actions.
+     * Add one or many {@link OnBind} actions to chain of bind actions.
+     * Next node in chain won't run until all actions in {@param onBindNext} are done.
      *
-     * @param onBind bind action to run next in chain.
+     * @param onBindNext bind actions to run next in chain.
      * @return new {@link Binder} with bind action added last in chain.
      */
-    public Binder<Target, Value> next(OnBind<Target, Value> onBind) {
-        if(this.onBind != null) {
-            this.onBind.setNextOnBind(onBind);
-        } else {
-            this.onBind = onBind;
+    @SafeVarargs
+    public final Binder<Target, Value> next(OnBind<Target, Value> ...onBindNext) {
+        LinkedList<OnBind<Target, Value>> l = (LinkedList<OnBind<Target, Value>>) onBinds.clone();
+        l.addLast(parallelMerge(onBindNext));
+        return Binder.create(l);
+    }
+
+    /**
+     * Put bind actions in {@link ParallelOnBind} if > 1.
+     * @param onBinds one or more {@link OnBind}
+     * @return bind action that runs parallel bind actions
+     */
+    private OnBind<Target, Value> parallelMerge(OnBind<Target, Value>[] onBinds) {
+        if(onBinds.length == 1) {
+            return onBinds[0];
         }
 
-        return Binder.create(this.onBind);
+        return new ParallelOnBind<>(onBinds);
     }
 }

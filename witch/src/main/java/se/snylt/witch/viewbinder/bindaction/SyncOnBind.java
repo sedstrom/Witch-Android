@@ -1,6 +1,6 @@
 package se.snylt.witch.viewbinder.bindaction;
 
-public abstract class SyncOnBind<Target, Value> extends OnBind<Target, Value> {
+public abstract class SyncOnBind<Target, Value> implements OnBind<Target, Value> {
 
     public abstract void onBind(Target target, Value value);
 
