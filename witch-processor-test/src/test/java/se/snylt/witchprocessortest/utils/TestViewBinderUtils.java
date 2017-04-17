@@ -35,7 +35,6 @@ public class TestViewBinderUtils {
             ViewFinder viewFinder = viewFinderWithView(view);
             binder.bind(viewHolder, viewFinder, viewModel);
             verifyPostBind.onPostBind(view, viewModel, binder.viewId);
-            break;
         }
     }
 
@@ -49,7 +48,7 @@ public class TestViewBinderUtils {
 
         Class<? extends View> viewClass;
 
-        public DefaultViewMocker(Class<? extends View> viewClass) {
+        DefaultViewMocker(Class<? extends View> viewClass) {
             this.viewClass = viewClass;
         }
 
