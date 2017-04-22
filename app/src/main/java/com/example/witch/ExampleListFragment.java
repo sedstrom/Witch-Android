@@ -79,12 +79,11 @@ public class ExampleListFragment extends Fragment {
     }
 
     private ExampleItem newItem(final String name, final String title, String subtitle) {
-        ExampleItem item = new ExampleItem(new View.OnClickListener() {
+        return new ExampleItem(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listener.onExampleFragmentSelected(name, title);
             }
         }, title, subtitle);
-        return item;
     }
 }

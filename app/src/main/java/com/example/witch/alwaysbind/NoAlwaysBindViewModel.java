@@ -6,12 +6,12 @@ import android.widget.SeekBar;
 
 import se.snylt.witch.annotations.BindToView;
 
-public class NoAlwaysBindViewModel {
+class NoAlwaysBindViewModel {
 
     @BindToView(id = R.id.always_bind_fragment_seek_bar, view = SeekBar.class, set = "progress")
-    public final Integer progress;
+    final Integer progress;
 
-    public NoAlwaysBindViewModel(int progress) {
+    NoAlwaysBindViewModel(int progress) {
         this.progress = progress;
     }
 }

@@ -179,21 +179,20 @@ class SupportedAnnotations {
     }
 
     // OnBind
-    @Deprecated
     public final static class OnBind {
         final static String name = "se.snylt.witch.annotations.OnBind";
+    }
+
+    // OnBindEach
+    final static class OnBindEach {
+        final static String name = "se.snylt.witch.annotations.OnBindEach";
     }
 
     // AlwaysBind
     final static class AlwaysBind {
         final static String name = "se.snylt.witch.annotations.AlwaysBind";
-    }
 
-    @Deprecated
-    final static class OnBindEach {
-        final static String name = "se.snylt.witch.annotations.OnBindEach";
     }
-
 
     // All annotations that bind to a view id
     final static HasViewId[] ALL_BIND_VIEW = new HasViewId[] {

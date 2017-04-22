@@ -1,10 +1,5 @@
 package com.example.witch.value;
 
-/**
- * Created by sied on 2017-04-15.
- */
-
-
 import com.example.witch.R;
 
 import android.widget.TextView;
@@ -27,7 +22,7 @@ class ValueFragmentViewModel {
         return ValueBinder.create(text, Binder.create(new SyncOnBind<TextView, String>() {
             @Override
             public void onBind(TextView textView, String s) {
-                textView.setText(s + "(" + s.length() + ")");
+                textView.setText(s);
             }
         }));
     }

@@ -1,7 +1,5 @@
 package com.example.witch;
 
-import com.example.witch.R;
-
 import java.util.List;
 
 import se.snylt.witch.annotations.BindTo;

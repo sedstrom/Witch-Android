@@ -3,30 +3,49 @@
 An attempt at making an easy to use view-model-binding framework for Android.
 
 ### Basic concept
-Represent a views state with a view model. 
+Represent a views state with a view model.
 
 ### How to use:
 Define view model
 ```java
 public class MyViewModel {
 
-  @BindTextView(id = R.id.text_view_title)
+  @BindTextView(id = R.id.title_tv)
   public String title;
-
-  @BindTextView(id = R.id.text_view_subtitle)
-  public String subTitle;
-
   ...
-
 }
 ```
+
 Bind view model to view
 ```java
 MyViewModel model = new MyViewModel("The title", "The sub-title"));
 Witch.bind(model, activity); // Binds to anything that contains the views defined in view model.
 ```
+
+### Set custom properties
+Each specific bind-view-annotation sets a default property. For example, @BindTextView sets text by default.
+```java
+@BindTextView(id = R.id.text_view_title)
+// Generates =>
+((TextView)view).setText(property);
+```
+To set a property different from default one, use ```set=<property>```:
+```java
+@BindTextView(id = R.id.text_view_title, set="color")
+// Generates =>
+((TextView)view).setColor(property);
+```
+
+### Bind to any view type
+Views not backed up by a specific annotation is supported by the @BindToView
+```java
+@BindToView(id = R.id.my_view, class = UnknownView.class, set = "myProperty")
+// Generates =>
+((UnknownView)view).setMyProperty(property)
+```
+
 ### ViewHolders built in
-A view model will have its own view holder which eliminates the need for defining view holders in adapters:
+Each view model will have its own view holder which eliminates the need for defining view holders in adapters:
 
 ```java
    @Override
@@ -58,27 +77,83 @@ Direct view binding
 // More to come!
 ```
 
-Bind to not yet supported views
+### Custom bind composition with Binder
+One or more bind actions can be chained for more advanced bindings:
+
 ```java
-@BindToView(id = R.id.my_view, class = UnknownView.class, set = "myProperty")
+Binder b = Binder.create(
+    new SyncOnBind<TextView, String>(){
+      @Override
+      void onBind(TextView view, String text) {
+        view.setText(text);
+      }
+    })
+  .next(
+    new SyncOnBind<TextView, String>(){
+      @Override
+      void onBind(TextView view, String text) {
+        text.setVisibility(text == null ? View.INVISIBLE : View.VISIBLE);
+      }
+    });
+
+    b.bind(view, "Hello world");
 ```
 
-Custom bind function
+Use ValueBinder with @BindTo annotation
 
 ```java
-// Must have empty constructor
-public class MyOnBind implements OnBindAction<TextView, String> {
+class ViewModel {
 
-  void onBind(TextView view, String text) {
-    view.setText("Prefix all texts: " + text);
+  private final String amount;
+
+  @BindTo(R.id.amount_tv)
+  public ValueBinder<TextView, String> amount(){
+    // Binds amount and adds "dollars"
+    return ValueBinder.create(amount,  Binder.create(
+      new SyncOnBind<TextView, String> {
+        @Override
+        public void onBind(TextView textView, String amount) {
+          textView.setText(amount + " dollars");
+        }
+      }
+    ));
   }
 }
+```
+Define actions in separate classes for better re-use:
+```java
+Binder.create(new SetText<TextView, String())
+.next(new AppendText<TextView, String>("dollars"));
+.next(new InvisibleIfNull<TextView, String>());
+```
 
-public class MyViewModel {
-  @BindTo(R.id.my_id) // View
-  @OnBind(MyOnBind.class) // Bind action
-  public String text;
-}
+### AsyncOnBind
+Bind actions that has async dependencies, like animations, can delay bind chain with a callback.
+
+```java
+  Binder.create(
+    new AsyncOnBind<TextView, String>(){
+      @Override
+      void onBind(TextView view, String text, final OnBindListener listener) {
+        ObjectAnimator a = ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f);
+        a.setDuration(300);
+        a.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                listener.onBindDone();
+            }
+        });
+        a.start();
+      }
+    })
+  .next(
+    new SyncOnBind<TextView, String>(){
+      @Override
+      void onBind(TextView view, String text) {
+        view.setText(text);
+      }
+    })
+    .bind(view, "Hello world!");
 ```
 
 ### @AlwaysBind
@@ -92,42 +167,3 @@ public class MyViewModel {
 }
 ```
 ![](./assets/alwaysbind.gif)
-
-### Mods
-
-Add additional actions to view model binding with @Mod
-```java
-@Mod(ViewModel.class)
-public class ViewModelMod {
-  // Same field name as in view model
-  public List<BindAction> title = Arrays.asList(new MyMod());
-}
-
-public class MyMod implements OnPostBindAction<TextView, String> {
-
-    @Override
-    public void onPostBind(TextView view, String text) {
-        if(text == null) {
-          view.setVisibility(View.INVISIBLE);
-        } else {
-          view.setVisibility(View.VISIBLE);
-        }
-    }
-}
-
-public class ViewModel {
-
-  @BindTextView(id = R.id.text_view_title)
-  public String title;
-}
-```
-Use in .bind() call
-```java
-Witch.bind(model, activity, mod);
-Witch.bind(model, activity, mod1, mod2, mod3); // Use several mods
-```
-Mods can be used to vary binding behaviour at runtime without changing view model. One example could be to add animations.
-
-![](./assets/mods.gif)
-## Goals
-TODO

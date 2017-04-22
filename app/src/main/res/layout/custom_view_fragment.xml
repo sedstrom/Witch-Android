@@ -7,10 +7,9 @@
 
     <com.example.witch.customview.CustomView
             android:id="@+id/custom_view_fragment_custom_view"
-            android:gravity="center|left"
-            android:textSize="14sp"
+            android:gravity="center"
+            android:textSize="20sp"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"/>
-
 
 </LinearLayout>

@@ -6,12 +6,12 @@ import java.util.List;
 
 import se.snylt.witch.annotations.BindToRecyclerView;
 
-public class RecyclerViewViewModel {
+class RecyclerViewViewModel {
 
     @BindToRecyclerView(id= R.id.recycler_view_fragment_recycler_view, adapter = MyRecyclerViewAdapter.class, set = "items")
     public final List<MyRecyclerViewAdapter.MyItem> items;
 
-    public RecyclerViewViewModel(List<MyRecyclerViewAdapter.MyItem> items) {
+    RecyclerViewViewModel(List<MyRecyclerViewAdapter.MyItem> items) {
         this.items = items;
     }
 }

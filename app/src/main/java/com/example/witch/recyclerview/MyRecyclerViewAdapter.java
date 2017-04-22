@@ -13,7 +13,7 @@ import se.snylt.witch.annotations.BindToTextView;
 import se.snylt.witch.annotations.BindToView;
 import se.snylt.witch.viewbinder.Witch;
 
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
+class MyRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private List<MyItem> items;
 
@@ -45,9 +45,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter {
         public final String subtitle;
 
         @BindToView(id = R.id.my_item_container, view = View.class, set = "onClickListener")
-        public final View.OnClickListener listener;
+        final View.OnClickListener listener;
 
-        public MyItem(String title, String subtitle, View.OnClickListener listener) {
+        MyItem(String title, String subtitle, View.OnClickListener listener) {
             this.title = title;
             this.subtitle = subtitle;
             this.listener = listener;

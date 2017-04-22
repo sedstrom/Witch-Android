@@ -12,13 +12,11 @@ import java.util.Stack;
 
 import se.snylt.witch.annotations.BindTo;
 import se.snylt.witch.annotations.BindToView;
-import se.snylt.witch.annotations.Mod;
 import se.snylt.witch.viewbinder.Witch;
 import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
 import se.snylt.witch.viewbinder.bindaction.ValueBinder;
 
-@Mod(MainViewModel.class)
 public class MainActivity extends AppCompatActivity implements OnExampleFragmentSelected {
 
     // Fragments back stack

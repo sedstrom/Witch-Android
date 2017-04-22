@@ -46,9 +46,9 @@ public class AlwaysBindFragment extends Fragment {
 
     private void bind(Integer number) {
         if(switchCompat.isChecked()) {
-            Witch.bind(new AlwaysBindViewModel(number), getView());
+            Witch.spellBind(new AlwaysBindViewModel(number), getView());
         } else {
-            Witch.bind(new NoAlwaysBindViewModel(number), getView());
+            Witch.spellBind(new NoAlwaysBindViewModel(number), getView());
         }
     }
 

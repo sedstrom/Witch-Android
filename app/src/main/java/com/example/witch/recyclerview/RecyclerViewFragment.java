@@ -16,9 +16,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.snylt.witch.annotations.BindToRecyclerView;
 import se.snylt.witch.viewbinder.Witch;
 
 public class RecyclerViewFragment extends Fragment implements View.OnClickListener {
+
+    final List<MyRecyclerViewAdapter.MyItem> items = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,16 +41,21 @@ public class RecyclerViewFragment extends Fragment implements View.OnClickListen
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Witch.bind(createModel(), view);
+        generateItems();
+        Witch.bind(this, view);
     }
 
-    private RecyclerViewViewModel createModel() {
-        List<MyRecyclerViewAdapter.MyItem> items = new ArrayList<>();
+    private void generateItems() {
+        items.clear();
         for(int i = 0; i < 100; i++) {
             MyRecyclerViewAdapter.MyItem item = createItem("Jane Doe", "User id: " + i, this);
             items.add(item);
         }
-        return new RecyclerViewViewModel(items);
+    }
+
+    @BindToRecyclerView(id=R.id.recycler_view_fragment_recycler_view, adapter = MyRecyclerViewAdapter.class, set = "items")
+    public List<MyRecyclerViewAdapter.MyItem> getItems() {
+        return items;
     }
 
     private MyRecyclerViewAdapter.MyItem createItem(String title, String subtitle, View.OnClickListener listener) {

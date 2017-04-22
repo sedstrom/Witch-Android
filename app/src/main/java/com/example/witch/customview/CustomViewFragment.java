@@ -23,8 +23,8 @@ public class CustomViewFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        CustomViewModel model = new CustomViewModel("@BindView\nid = R.id.123, view = CustomView.class, set = \"property\"");
-        Witch.bind(model, view);
+        CustomViewModel model = new CustomViewModel("This is a custom view");
+        Witch.spellBind(model, view);
     }
 
     @Override
@@ -32,12 +32,12 @@ public class CustomViewFragment extends Fragment {
         super.onDestroyView();
     }
 
-    public static class CustomViewModel {
+    static class CustomViewModel {
 
         @BindToView(id=R.id.custom_view_fragment_custom_view, view = CustomView.class, set = "myData")
-        public final String data;
+        final String data;
 
-        public CustomViewModel(String data) {
+        CustomViewModel(String data) {
             this.data = data;
         }
     }

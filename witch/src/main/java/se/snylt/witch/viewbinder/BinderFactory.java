@@ -7,7 +7,7 @@ public class BinderFactory {
     /**
      * Creates a binding from annotated target view model
      * @param target the view model
-     * @return binding
+     * @return binder
      */
     public TargetViewBinder createBinder(Object target) {
         try {

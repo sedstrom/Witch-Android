@@ -103,7 +103,6 @@ public class WitchProcessor extends AbstractProcessor {
         throw new WitchException(message);
     }
 
-
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         HashMap<Element, List<ViewBindingDef>> binders = new HashMap<>();
@@ -197,12 +196,12 @@ public class WitchProcessor extends AbstractProcessor {
                 TypeMirror valueType = viewAndValueType.get(1);
 
                 TypeMirror valueBinderType =
-                        typeUtils.getDeclaredType(elementUtils.getTypeElement(TypeUtils.VALUE_BINDER.toString()),
-                        viewType, valueType);
+                        typeUtils.getDeclaredType(
+                                elementUtils.getTypeElement(TypeUtils.VALUE_BINDER.toString()), viewType, valueType);
 
                 TypeMirror binderType =
-                        typeUtils.getDeclaredType(elementUtils.getTypeElement(TypeUtils.BINDER.toString()),
-                                viewType, valueType);
+                        typeUtils.getDeclaredType(
+                                elementUtils.getTypeElement(TypeUtils.BINDER.toString()), viewType, valueType);
 
                 ValueBinderOnBindDef valueBindingOnBind = new ValueBinderOnBindDef(
                         TypeName.get(viewType),
@@ -266,22 +265,20 @@ public class WitchProcessor extends AbstractProcessor {
         }
 
         // BindToRecyclerView
-        for (Element bindAction : roundEnv
-                .getElementsAnnotatedWith(se.snylt.witch.annotations.BindToRecyclerView.class)) {
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.BindToRecyclerView.class)) {
             String property = bindAction.getAnnotation(se.snylt.witch.annotations.BindToRecyclerView.class).set();
             TypeName viewType = ClassName.get("android.support.v7.widget", "RecyclerView");
-            TypeName valueType = ClassName.get(bindAction.asType());
+            TypeName valueType = ClassName.get(getType(bindAction));
             TypeName adapterType = getOnBindToRecyclerViewAdapterClass(bindAction);
             OnBindDef actionDef = new OnOnBindGetAdapterViewDef(property, viewType, adapterType, valueType);
             addOnBindAction(bindAction, actionDef, binders);
         }
 
         // BindToRecyclerView
-        for (Element bindAction : roundEnv
-                .getElementsAnnotatedWith(se.snylt.witch.annotations.BindToViewPager.class)) {
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.BindToViewPager.class)) {
             String property = bindAction.getAnnotation(se.snylt.witch.annotations.BindToViewPager.class).set();
             TypeName viewType = ClassName.get("android.support.v4.view", "ViewPager");
-            TypeName valueType = ClassName.get(bindAction.asType());
+            TypeName valueType = ClassName.get(getType(bindAction));
             TypeName adapterType = getOnBindToViewPagerAdapterClass(bindAction);
             OnBindDef actionDef = new OnOnBindGetAdapterViewDef(property, viewType, adapterType, valueType);
             addOnBindAction(bindAction, actionDef, binders);

@@ -1,6 +1,5 @@
 package com.example.witch;
 
-import com.example.witch.R;
 import com.example.witch.recyclerview.SimpleViewHolder;
 
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +10,7 @@ import java.util.List;
 
 import se.snylt.witch.viewbinder.Witch;
 
-public class ExampleListRecyclerViewAdapter extends RecyclerView.Adapter<SimpleViewHolder> {
+class ExampleListRecyclerViewAdapter extends RecyclerView.Adapter<SimpleViewHolder> {
 
     private List<ExampleItem> items;
 
