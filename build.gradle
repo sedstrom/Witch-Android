@@ -2,34 +2,68 @@
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
+}
+
+
+def rootDir = project.rootDir
+def localProperties = new File(rootDir, "local.properties")
+def sdkDir
+if (localProperties.exists()) {
+    Properties properties = new Properties()
+    localProperties.withInputStream { instr ->
+        properties.load(instr)
+    }
+    sdkDir = properties.getProperty('sdk.dir')
 }
 
 allprojects {
     repositories {
         mavenCentral()
-        def androidHome = System.getenv("ANDROID_HOME")
-        maven { url "/Users/sied/Android/sdk/extras/android/m2repository/" }
-        // Local maven
-        /*
-        def logger = new com.android.build.gradle.internal.LoggerWrapper(project.logger)
-        def sdkHandler = new com.android.build.gradle.internal.SdkHandler(project, logger)
-        for (File file : sdkHandler.sdkLoader.repositories) {
-            repositories.maven {
-                url = file.toURI()
-            }
-        }*/
-
-
+        maven { url "${sdkDir}/extras/android/m2repository/" }
     }
 }
+
+ext {
+    minSdkVersion = 15
+    targetSdkVersion = 25
+    compileSdkVersion = 25
+    buildToolsVersion = '25.0.2'
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_7
+    targetCompatibilityVersion = JavaVersion.VERSION_1_7
+    witchVersion = '0.0.1'
+}
+
+def supportLibraryVersion = '25.3.1'
+def witchLatestReleaseVersion = '0.0.1'
+
+
+ext.deps = [
+        // Android
+        supportCompat:          "com.android.support:support-compat:$supportLibraryVersion",
+        supportAppCompat:       "com.android.support:appcompat-v7:$supportLibraryVersion",
+        supportDesign:          "com.android.support:recyclerview-v7:$supportLibraryVersion",
+        supportRecyclerView:    "com.android.support:design:$supportLibraryVersion",
+        supportAnnotations:     "com.android.support:support-annotations:$supportLibraryVersion",
+        googleAutoService:      "com.google.auto.service:auto-service:1.0-rc2",
+
+        // Square
+        javapoet: 'com.squareup:javapoet:1.8.0',
+
+        // Apache
+        commonsLang: 'org.apache.commons:commons-lang3:3.4',
+
+        // Test dependencies
+        junit: 'junit:junit:4.12',
+        mockitoCore: 'org.mockito:mockito-core:2.7.12',
+
+        witch: "com.jakewharton:butterknife:$witchLatestReleaseVersion",
+        witchProcessor: "com.jakewharton:butterknife-compiler:$witchLatestReleaseVersion"
+]
 
 task clean(type: Delete) {
     delete rootProject.buildDir

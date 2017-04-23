@@ -162,7 +162,7 @@ public class MyViewModel {
 
   @BindToView(R.id.my_seek_bar, class = SeekBar.class, set = "progress")
   @AlwaysBind
-  public Integer progess;
+  public Integer progress;
 }
 ```
 ![](./assets/alwaysbind.gif)

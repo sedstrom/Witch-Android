@@ -1,26 +1,25 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
 }
 
 dependencies {
-    // zipper
+    // Witch
     compile project(path: ':witch')
     annotationProcessor project(':witch-processor')
 
+    compile rootProject.ext.deps.supportRecyclerView
+
     testCompile project(path: ':witch-commons')
-    testCompile 'org.mockito:mockito-core:2.7.12'
-    testCompile 'junit:junit:4.12'
-
-
-    compile 'com.android.support:recyclerview-v7:25.1.0'
+    testCompile rootProject.ext.deps.mockitoCore
+    testCompile rootProject.ext.deps.junit
 }
