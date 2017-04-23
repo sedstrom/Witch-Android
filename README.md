@@ -1,9 +1,8 @@
-![](./assets/witch-logo-black.png)
+![](./assets/witch-logo-green.png)
 
-An attempt at making an easy to use view-model-binding framework for Android.
+### Witch for Android
 
-### Basic concept
-Represent a views state with a view model.
+Functional view data binding.
 
 ### How to use:
 Define view model
