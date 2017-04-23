@@ -9,7 +9,6 @@ buildscript {
     }
 }
 
-
 def rootDir = project.rootDir
 def localProperties = new File(rootDir, "local.properties")
 def sdkDir
@@ -40,7 +39,6 @@ ext {
 
 def supportLibraryVersion = '25.3.1'
 def witchLatestReleaseVersion = '0.0.1'
-
 
 ext.deps = [
         // Android
