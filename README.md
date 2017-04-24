@@ -91,7 +91,7 @@ Binder b = Binder.create(
     new SyncOnBind<TextView, String>(){
       @Override
       void onBind(TextView view, String text) {
-        text.setVisibility(text == null ? View.INVISIBLE : View.VISIBLE);
+        view.setVisibility(text == null ? View.INVISIBLE : View.VISIBLE);
       }
     });
 
@@ -111,8 +111,8 @@ class ViewModel {
     return ValueBinder.create(amount,  Binder.create(
       new SyncOnBind<TextView, String> {
         @Override
-        public void onBind(TextView textView, String amount) {
-          textView.setText(amount + " dollars");
+        public void onBind(TextView view, String amount) {
+          view.setText(amount + " dollars");
         }
       }
     ));
@@ -122,7 +122,7 @@ class ViewModel {
 Define actions in separate classes for better re-use:
 ```java
 Binder.create(new SetText<TextView, String())
-.next(new AppendText<TextView, String>("dollars"));
+.next(new AppendText<TextView, String>("dollars"))
 .next(new InvisibleIfNull<TextView, String>());
 ```
 
