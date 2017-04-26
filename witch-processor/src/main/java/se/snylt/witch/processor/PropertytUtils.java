@@ -1,4 +1,4 @@
-package se.snylt.witch;
+package se.snylt.witch.processor;
 
 public class PropertytUtils {
 

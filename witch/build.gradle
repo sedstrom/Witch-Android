@@ -20,9 +20,7 @@ android {
 
 dependencies {
     compile project(':witch-annotations')
-    compile project(path: ':witch-commons')
     compile rootProject.ext.deps.commonsLang
-
     testCompile rootProject.ext.deps.mockitoCore
     testCompile rootProject.ext.deps.junit
 }

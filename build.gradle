@@ -42,25 +42,25 @@ def witchLatestReleaseVersion = '0.0.1'
 
 ext.deps = [
         // Android
-        supportCompat:          "com.android.support:support-compat:$supportLibraryVersion",
-        supportAppCompat:       "com.android.support:appcompat-v7:$supportLibraryVersion",
-        supportDesign:          "com.android.support:recyclerview-v7:$supportLibraryVersion",
-        supportRecyclerView:    "com.android.support:design:$supportLibraryVersion",
-        supportAnnotations:     "com.android.support:support-annotations:$supportLibraryVersion",
-        googleAutoService:      "com.google.auto.service:auto-service:1.0-rc2",
+        supportCompat      : "com.android.support:support-compat:$supportLibraryVersion",
+        supportAppCompat   : "com.android.support:appcompat-v7:$supportLibraryVersion",
+        supportDesign      : "com.android.support:recyclerview-v7:$supportLibraryVersion",
+        supportRecyclerView: "com.android.support:design:$supportLibraryVersion",
+        supportAnnotations : "com.android.support:support-annotations:$supportLibraryVersion",
+        googleAutoService  : "com.google.auto.service:auto-service:1.0-rc2",
 
         // Square
-        javapoet: 'com.squareup:javapoet:1.8.0',
+        javapoet           : 'com.squareup:javapoet:1.8.0',
 
         // Apache
-        commonsLang: 'org.apache.commons:commons-lang3:3.4',
+        commonsLang        : 'org.apache.commons:commons-lang3:3.4',
 
         // Test dependencies
-        junit: 'junit:junit:4.12',
-        mockitoCore: 'org.mockito:mockito-core:2.7.12',
+        junit              : 'junit:junit:4.12',
+        mockitoCore        : 'org.mockito:mockito-core:2.7.12',
 
-        witch: "com.jakewharton:butterknife:$witchLatestReleaseVersion",
-        witchProcessor: "com.jakewharton:butterknife-compiler:$witchLatestReleaseVersion"
+        witch              : "com.jakewharton:butterknife:$witchLatestReleaseVersion",
+        witchProcessor     : "com.jakewharton:butterknife-compiler:$witchLatestReleaseVersion"
 ]
 
 task clean(type: Delete) {

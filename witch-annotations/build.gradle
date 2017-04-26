@@ -5,5 +5,4 @@ targetCompatibility = rootProject.ext.targetCompatibilityVersion
 
 dependencies {
     compile rootProject.ext.deps.supportAnnotations
-    compile project(path: ':witch-commons')
 }

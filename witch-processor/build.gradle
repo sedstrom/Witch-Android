@@ -2,7 +2,6 @@ apply plugin: 'java'
 
 dependencies {
     compile project(':witch-annotations')
-    compile project(path: ':witch-commons')
     compile rootProject.ext.deps.googleAutoService
     compile rootProject.ext.deps.javapoet
     compile rootProject.ext.deps.junit

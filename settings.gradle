@@ -1,2 +1,2 @@
 
-include ':app', ':witch', ':witch-annotations', ':witch-processor', ':witch-commons', ':witch-processor-test'
+include ':app', ':witch', ':witch-annotations', ':witch-processor', ':witch-processor-test'

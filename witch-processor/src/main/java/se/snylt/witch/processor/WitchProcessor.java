@@ -38,7 +38,6 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
-import se.snylt.witch.ClassUtils;
 import se.snylt.witch.processor.binding.NewInstanceDef;
 import se.snylt.witch.processor.binding.OnBindDef;
 import se.snylt.witch.processor.binding.OnOnBindGetAdapterViewDef;

@@ -18,8 +18,6 @@ dependencies {
     annotationProcessor project(':witch-processor')
 
     compile rootProject.ext.deps.supportRecyclerView
-
-    testCompile project(path: ':witch-commons')
     testCompile rootProject.ext.deps.mockitoCore
     testCompile rootProject.ext.deps.junit
 }

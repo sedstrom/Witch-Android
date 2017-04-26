@@ -1,8 +1,6 @@
 package se.snylt.witch.viewbinder;
 
-import se.snylt.witch.ClassUtils;
-
-public class BinderFactory {
+class BinderFactory {
 
     /**
      * Creates a binding from annotated target view model
