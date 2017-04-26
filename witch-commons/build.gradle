@@ -1,8 +1,0 @@
-apply plugin: 'java'
-
-dependencies {
-
-}
-
-sourceCompatibility = rootProject.ext.sourceCompatibilityVersion
-targetCompatibility = rootProject.ext.targetCompatibilityVersion
