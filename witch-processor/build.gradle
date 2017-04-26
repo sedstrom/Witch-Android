@@ -6,3 +6,5 @@ dependencies {
     compile rootProject.ext.deps.javapoet
     compile rootProject.ext.deps.junit
 }
+
+apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
