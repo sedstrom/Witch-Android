@@ -17,7 +17,7 @@ public class MyViewModel {
 
 Bind view model to view
 ```java
-MyViewModel model = new MyViewModel("The title", "The sub-title"));
+MyViewModel model = new MyViewModel("Hello Witch!"));
 Witch.bind(model, activity); // Binds to anything that contains the views defined in view model.
 ```
 
@@ -95,7 +95,7 @@ Binder b = Binder.create(
       }
     });
 
-    b.bind(view, "Hello world");
+    b.bind(view, "Hello Witch!");
 ```
 
 Use ValueBinder with @BindTo annotation
@@ -121,7 +121,7 @@ class ViewModel {
 ```
 Define actions in separate classes for better re-use:
 ```java
-Binder.create(new SetText<TextView, String())
+Binder.create(new SetText<TextView, String>())
 .next(new AppendText<TextView, String>("dollars"))
 .next(new InvisibleIfNull<TextView, String>());
 ```
