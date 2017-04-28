@@ -4,6 +4,23 @@
 
 Functional view data binding.
 
+### Getting started
+
+```groovy
+    compile 'se.snylt:witch:0.0.1-SNAPSHOT'
+    annotationProcessor "se.snylt:witch-processor:0.0.1-SNAPSHOT"
+```
+Add snapshot repository
+
+```groovy
+  repositories {
+    mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+  }
+```
+
 ### How to use:
 Define view model
 ```java

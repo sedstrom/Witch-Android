@@ -23,6 +23,9 @@ if (localProperties.exists()) {
 allprojects {
     repositories {
         mavenCentral()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
         maven { url "${sdkDir}/extras/android/m2repository/" }
     }
 }
@@ -34,7 +37,6 @@ ext {
     buildToolsVersion = '25.0.2'
     sourceCompatibilityVersion = JavaVersion.VERSION_1_7
     targetCompatibilityVersion = JavaVersion.VERSION_1_7
-    witchVersion = '0.0.1'
 }
 
 def supportLibraryVersion = '25.3.1'
