@@ -1,0 +1,62 @@
+$background-color: #F2F2F2;
+$background-color-secondary: #EBEBEB;
+$primary-color: #D17795;
+$secondary-color: #DD9BB1;
+$text-color: #3C3C3C;
+$text-sise-sub-title: 28px;
+$text-size-content: 18px;
+
+p {
+  color: $text-color;
+  font-size: $text-size-content;
+  font-family: 'Domine', serif;
+}
+
+ul {
+  list-style-type: none;
+}
+
+h4 {
+  color: $text-color;
+  font-family: 'Domine', serif;
+  font-size: $text-sise-sub-title;
+}
+
+span.primarty-font {
+  font-family: 'Cherry Swash', cursive;
+}
+
+body {
+  background-color: $background-color;
+}
+
+.section {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  width: 100%;
+  background-color: $background-color;
+
+}
+
+.section.secondary {
+  background-color: $background-color-secondary;
+}
+
+.logo {
+  margin-top: 30px;
+
+  img {
+    width: 100%;
+    height: 288px;
+  }
+  p {
+    font-size: 22px;
+    text-align: center;
+  }
+}
+
+.intro {
+  p {
+    margin-bottom: 2px;
+  }
+}

@@ -1,0 +1,41 @@
+p {
+  color: #3C3C3C;
+  font-size: 18px;
+  font-family: 'Domine', serif; }
+
+ul {
+  list-style-type: none; }
+
+h4 {
+  color: #3C3C3C;
+  font-family: 'Domine', serif;
+  font-size: 28px; }
+
+span.primarty-font {
+  font-family: 'Cherry Swash', cursive; }
+
+body {
+  background-color: #F2F2F2; }
+
+.section {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  width: 100%;
+  background-color: #F2F2F2; }
+
+.section.secondary {
+  background-color: #EBEBEB; }
+
+.logo {
+  margin-top: 30px; }
+  .logo img {
+    width: 100%;
+    height: 288px; }
+  .logo p {
+    font-size: 22px;
+    text-align: center; }
+
+.intro p {
+  margin-bottom: 2px; }
+
+/*# sourceMappingURL=witch.css.map */

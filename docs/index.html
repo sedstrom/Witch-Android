@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Witch for Android</title>
+  <meta name="description" content="View data binding for Android">
+  <meta name="author" content="Simon Edström">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Cherry+Swash|Domine" rel="stylesheet">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/witch.css">
+
+  <!-- Rainbow.js-->
+  <link rel="stylesheet" href="css/code.css">
+  <script src="js/rainbow-custom.min.js"></script>
+
+</head>
+<body>
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <ul class="twelve columns logo">
+          <li>
+            <img src="./img/logo.svg"/>
+          </li>
+          <li>
+            <p>Spellbind your Android views</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="section secondary">
+    <div class="container">
+      <div class="row">
+        <div class="twelve columns intro">
+          <h4>
+            <span class="primarty-font">
+              <b>Witch</b></span> is a flexible view-data binding library for <b>Android</b>.
+            </h4>
+            <ul>
+              <li>
+                <p>- Bind data to views with <b>@annotations</b>.</p>
+              </li>
+              <li>
+                <p>- Compose functional bind flows.</p>
+              </li>
+              <li>
+                <p>- View holders built in.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simple -->
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="twelve columns">
+            <h4>
+              <span class="primarty-font">
+                <b>Simple</b>
+              </span>
+            </h4>
+            <p>
+              Bind values directly to views without any lookup.
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <pre data-language="java">
+            <code>
+@BindToTextview(id=R.id.title)
+String title = “Hellow Witch”;
+            </code>
+          </pre>
+        </div>
+        <div class="row">
+          <pre data-language="java">
+            <code>
+// Bind all data in one go!
+Witch.bind(model, activity);
+            </code>
+          </pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flexible -->
+    <div class="section secondary">
+      <div class="container">
+        <div class="row">
+          <div class="twelve columns">
+            <h4>
+              <span class="primarty-font">
+                <b>Flexible</b>
+              </span>
+            </h4>
+            <p>
+              More advanced bindings can be create with Binder.
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <pre>
+            <code data-language="java">
+Binder binder = Binder.create(new SyncOnBind&lt;ImageView&#44; String&gt;() {
+  @Override 
+  void onBind(ImageView view, String url) {
+    Picasso
+    .with(view.getContext())
+    .load(url)
+    .into(imageView);
+  }
+});
+  
+@BindTo(R.id.image)
+ValueBinder kitten = ValueBinder.create(“www.snylt.se/kitten.png”, binder);
+            </code>
+          </pre>
+        </div>
+        <div class="row">
+          <div class="twelve columns">
+            <p>
+              Compute values in methods upon bind
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <pre>
+            <code data-language="java">
+@BindToTextView(R.id.name)
+void name() {
+  if(user == null) {
+    return "John Doe";
+  }
+
+  return user.givenName + " " + user.familyName;
+}
+            </code>
+          </pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic -->
+    <div class="section">
+      <div class="container">
+        <div class="row">
+          <div class="twelve columns intro">
+            <h4>
+              <span class="primarty-font">
+                <b>Dynamic</b>
+              </span>
+            </h4>
+            <p>
+              Bind functions can be re-used and composed in chains.
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <pre>
+            <code data-language="java">
+Binder
+  .create(new PicassoLoadOnBind&lt;ImageView&#44; String&gt;()) 
+  .next(new InvisibleIfNull&lt;ImageView&#44; String&gt;());
+            </code>
+          </pre>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
