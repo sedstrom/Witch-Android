@@ -1,3 +1,7 @@
+@charset "UTF-8";
+body {
+  background-color: #F2F2F2; }
+
 p {
   color: #3C3C3C;
   font-size: 18px;
@@ -11,11 +15,17 @@ h4 {
   font-family: 'Domine', serif;
   font-size: 26px; }
 
+.row a {
+  color: #3C3C3C;
+  font-weight: bold;
+  line-height: 40px;
+  font-size: 18px;
+  text-decoration: none; }
+  .row a:hover  {
+    color: #D17795; }
+
 span.primary-font {
   font-family: 'Cherry Swash', cursive; }
-
-body {
-  background-color: #F2F2F2; }
 
 .section {
   padding-top: 50px;
