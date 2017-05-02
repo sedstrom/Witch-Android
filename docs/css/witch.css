@@ -28,8 +28,8 @@ span.primary-font {
   font-family: 'Cherry Swash', cursive; }
 
 .section {
-  padding-top: 50px;
-  padding-bottom: 50px;
+  padding-top: 40px;
+  padding-bottom: 0px;
   width: 100%;
   background-color: #F2F2F2; }
 

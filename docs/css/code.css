@@ -83,7 +83,7 @@ pre, code {
 pre {
   background-color: transparent;
   color: #3C3C3C;
-  margin-bottom: 0px;
+  margin: 0px;
   padding: 0px; }
   pre .comment {
     color: #555555; }
