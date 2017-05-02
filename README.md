@@ -1,4 +1,4 @@
-![](./assets/witch-logo-green.png)
+![](./assets/witch-logo.png)
 
 ### Witch for Android
 
