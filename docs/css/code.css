@@ -88,7 +88,7 @@ pre {
   pre .comment {
     color: #555555; }
   pre .variable.global, pre .variable.class, pre .variable.instance {
-    color: #990000; }
+    color: #555599; }
   pre .constant.numeric, pre .constant.language, pre .constant.hex-color, pre .keyword.unit {
     color: #D17795; }
   pre .entity, pre .entity.class, pre .support {

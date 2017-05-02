@@ -73,15 +73,10 @@
         <div class="row">
           <pre data-language="java">
             <code>
-@BindToTextview(id=R.id.title)
-String title = “Hellow Witch”;
-            </code>
-          </pre>
-        </div>
-        <div class="row">
-          <pre data-language="java">
-            <code>
-// Bind all data in one go!
+@BindToTextView(id= R.id.title)
+String title = “Hello Witch!”;
+...
+
 Witch.bind(model, activity);
             </code>
           </pre>
@@ -99,6 +94,21 @@ Witch.bind(model, activity);
                 <b>Flexible</b>
               </span>
             </h4>
+            <p>
+              Views not backed up by an annotation, can be bound with custom view class.
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <pre>
+            <code data-language="java">
+@BindToView(id= R.id.address, class= AddressView.class, set= "address")
+String address= "Misty mountain";
+            </code>
+          </pre>
+        </div>
+        <div class="row">
+          <div class="twelve columns">
             <p>
               More advanced bindings can be create with Binder.
             </p>
@@ -137,7 +147,6 @@ void name() {
   if(user == null) {
     return "John Doe";
   }
-
   return user.givenName + " " + user.familyName;
 }
             </code>
@@ -150,7 +159,7 @@ void name() {
     <div class="section">
       <div class="container">
         <div class="row">
-          <div class="twelve columns intro">
+          <div class="twelve columns">
             <h4>
               <span class="primarty-font">
                 <b>Dynamic</b>
