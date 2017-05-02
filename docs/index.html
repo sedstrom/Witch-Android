@@ -36,7 +36,7 @@
       <div class="row">
         <div class="twelve columns intro">
           <h4>
-            <span class="primarty-font">
+            <span class="primary-font">
               <b>Witch</b></span> is a flexible view-data binding library for <b>Android</b>.
             </h4>
             <ul>
@@ -61,7 +61,7 @@
         <div class="row">
           <div class="twelve columns">
             <h4>
-              <span class="primarty-font">
+              <span class="primary-font">
                 <b>Simple</b>
               </span>
             </h4>
@@ -90,7 +90,7 @@ Witch.bind(model, activity);
         <div class="row">
           <div class="twelve columns">
             <h4>
-              <span class="primarty-font">
+              <span class="primary-font">
                 <b>Flexible</b>
               </span>
             </h4>
@@ -102,8 +102,28 @@ Witch.bind(model, activity);
         <div class="row">
           <pre>
             <code data-language="java">
-@BindToView(id= R.id.address, class= AddressView.class, set= "address")
-String address= "Misty mountain";
+@BindToView(id = R.id.address, class = AddressView.class, set= "address")
+String address = "Misty mountains";
+            </code>
+          </pre>
+        </div>
+        <div class="row">
+          <div class="twelve columns">
+            <p>
+              Annotate methods for dynamic values
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <pre>
+            <code data-language="java">
+@BindToTextView(R.id.name)
+void name() {
+  if(user == null) {
+    return "Magica de Hex";
+  }
+  return user.givenName + " " + user.familyName;
+}
             </code>
           </pre>
         </div>
@@ -126,29 +146,10 @@ Binder binder = Binder.create(new SyncOnBind&lt;ImageView&#44; String&gt;() {
     .into(imageView);
   }
 });
-  
+
+// Use ValueBinder to use binder with annotation
 @BindTo(R.id.image)
 ValueBinder kitten = ValueBinder.create(“www.snylt.se/kitten.png”, binder);
-            </code>
-          </pre>
-        </div>
-        <div class="row">
-          <div class="twelve columns">
-            <p>
-              Compute values in methods upon bind
-            </p>
-          </div>
-        </div>
-        <div class="row">
-          <pre>
-            <code data-language="java">
-@BindToTextView(R.id.name)
-void name() {
-  if(user == null) {
-    return "John Doe";
-  }
-  return user.givenName + " " + user.familyName;
-}
             </code>
           </pre>
         </div>
@@ -161,7 +162,7 @@ void name() {
         <div class="row">
           <div class="twelve columns">
             <h4>
-              <span class="primarty-font">
+              <span class="primary-font">
                 <b>Dynamic</b>
               </span>
             </h4>
@@ -174,12 +175,12 @@ void name() {
           <pre>
             <code data-language="java">
 Binder
-  .create(new PicassoLoadOnBind&lt;ImageView&#44; String&gt;()) 
-  .next(new InvisibleIfNull&lt;ImageView&#44; String&gt;());
+.create(new PicassoLoadOnBind&lt;ImageView&#44; String&gt;()) 
+.next(new InvisibleIfNull&lt;ImageView&#44; String&gt;());
             </code>
           </pre>
         </div>
       </div>
     </div>
   </body>
-</html>
+  </html>

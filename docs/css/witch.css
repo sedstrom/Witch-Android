@@ -11,7 +11,7 @@ h4 {
   font-family: 'Domine', serif;
   font-size: 26px; }
 
-span.primarty-font {
+span.primary-font {
   font-family: 'Cherry Swash', cursive; }
 
 body {
@@ -34,8 +34,5 @@ body {
   .logo p {
     font-size: 22px;
     text-align: center; }
-
-.intro p {
-  margin-bottom: 2px; }
 
 /*# sourceMappingURL=witch.css.map */
