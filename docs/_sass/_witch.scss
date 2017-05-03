@@ -26,6 +26,16 @@ h4 {
   font-size: $text-sise-sub-title;
 }
 
+code {
+  table, pre {
+    margin-bottom: 0;
+  }
+  td {
+    border-bottom: 0;
+    padding: 0;
+  }
+}
+
 .row a {
   color: $text-color;
   font-weight: bold;
