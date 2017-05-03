@@ -1,194 +1,160 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Witch for Android</title>
-  <meta name="description" content="View data binding for Android">
-  <meta name="author" content="Simon Edström">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=Cherry+Swash|Domine" rel="stylesheet">
-
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
-  <link rel="stylesheet" href="css/witch.css">
-
-  <!-- Rainbow.js -->
-  <link rel="stylesheet" href="css/code.css">
-  <script src="js/rainbow-custom.min.js"></script>
-
-</head>
-<body>
+---
+layout: main
+---
+<div class="container">
+  <div class="row">
+    <a class="u-pull-right" href="http://www.github.com/sedstrom/Witch-Android">
+      <span class="primary-font">GitHub</span>
+    </a>
+  </div>
+</div>
+<div class="section">
   <div class="container">
     <div class="row">
-      <a class="u-pull-right" href="http://www.github.com/sedstrom/Witch-Android">
-        <span class="primary-font">GitHub</span>
-      </a>
+      <ul class="twelve columns logo">
+        <li>
+          <img src="{{ "assets/img/logo.svg" | relative_url }}"/>
+        </li>
+        <li>
+          <p>Spellbind your Android views</p>
+        </li>
+      </ul>
     </div>
   </div>
+</div>
+<div class="section secondary">
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns intro">
+        <h4>
+          <span class="primary-font">
+            <b>Witch</b></span> is a flexible view-data binding library for <b>Android</b>.
+          </h4>
+          <ul>
+            <li>
+              <p>- Bind data to views with <b>@annotations</b>.</p>
+            </li>
+            <li>
+              <p>- Compose functional bind flows.</p>
+            </li>
+            <li>
+              <p>- View holders built in.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simple -->
   <div class="section">
     <div class="container">
       <div class="row">
-        <ul class="twelve columns logo">
-          <li>
-            <img src="./img/logo.svg"/>
-          </li>
-          <li>
-            <p>Spellbind your Android views</p>
-          </li>
-        </ul>
+        <div class="twelve columns">
+          <h4>
+            <span class="primary-font">
+              <b>Simple</b>
+            </span>
+          </h4>
+          <p>
+Bind values directly to views without any lookup.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+{% highlight java linenos %}
+{% include snippets/1.java %}
+{% endhighlight %}
       </div>
     </div>
   </div>
+
+  <!-- Flexible -->
   <div class="section secondary">
     <div class="container">
       <div class="row">
-        <div class="twelve columns intro">
+        <div class="twelve columns">
           <h4>
             <span class="primary-font">
-              <b>Witch</b></span> is a flexible view-data binding library for <b>Android</b>.
-            </h4>
-            <ul>
-              <li>
-                <p>- Bind data to views with <b>@annotations</b>.</p>
-              </li>
-              <li>
-                <p>- Compose functional bind flows.</p>
-              </li>
-              <li>
-                <p>- View holders built in.</p>
-              </li>
-            </ul>
-          </div>
+              <b>Flexible</b>
+            </span>
+          </h4>
+          <p>
+            Views not backed up by an annotation, can be bound with custom view class.
+          </p>
         </div>
       </div>
-    </div>
-
-    <!-- Simple -->
-    <div class="section">
-      <div class="container">
-        <div class="row">
-          <div class="twelve columns">
-            <h4>
-              <span class="primary-font">
-                <b>Simple</b>
-              </span>
-            </h4>
-            <p>
-Bind values directly to views without any lookup.
-            </p>
-          </div>
-        </div>
-        <div class="row">
-          <pre data-language="java">
-            <code>
-@BindToTextView(id= R.id.title)
-String title = “Hello Witch!”;
-...
-
-Witch.bind(model, activity);
-            </code>
-          </pre>
+      <div class="row">
+{% highlight java linenos %}
+{% include snippets/2.java %}
+{% endhighlight %}
+      </div>
+      <div class="row">
+        <div class="twelve columns">
+          <p>
+            Annotate methods for dynamic values
+          </p>
         </div>
       </div>
-    </div>
-
-    <!-- Flexible -->
-    <div class="section secondary">
-      <div class="container">
-        <div class="row">
-          <div class="twelve columns">
-            <h4>
-              <span class="primary-font">
-                <b>Flexible</b>
-              </span>
-            </h4>
-            <p>
-              Views not backed up by an annotation, can be bound with custom view class.
-            </p>
-          </div>
+      <div class="row">
+        <div class="column">
+{% highlight java linenos %}
+{% include snippets/3.java %}
+{% endhighlight %}
         </div>
-        <div class="row">
-          <pre>
-            <code data-language="java">
-@BindToView(id = R.id.address, class = AddressView.class, set = "address")
-String address = "Misty mountains";
-            </code>
-          </pre>
+      </div>
+      <div class="row">
+        <div class="twelve columns">
+          <p>
+            More advanced bindings can be create with Binder.
+          </p>
         </div>
-        <div class="row">
-          <div class="twelve columns">
-            <p>
-              Annotate methods for dynamic values
-            </p>
-          </div>
-        </div>
-        <div class="row">
-          <pre>
-            <code data-language="java">
-@BindToTextView(R.id.name)
-void name() {
-  if(user == null) {
-    return "Magica de Hex";
-  }
-  return user.givenName + " " + user.familyName;
-}
-            </code>
-          </pre>
-        </div>
-        <div class="row">
-          <div class="twelve columns">
-            <p>
-              More advanced bindings can be create with Binder.
-            </p>
-          </div>
-        </div>
-        <div class="row">
-          <pre>
-            <code data-language="java">
+      </div>
+      <div class="row">
+        <pre>
+          <code data-language="java">
 Binder binder = Binder.create(new SyncOnBind&lt;ImageView&#44; String&gt;() {
-  @Override 
-  void onBind(ImageView view, String url) {
-    Picasso
-    .with(view.getContext())
-    .load(url)
-    .into(imageView);
-  }
+@Override 
+void onBind(ImageView view, String url) {
+  Picasso
+  .with(view.getContext())
+  .load(url)
+  .into(imageView);
+}
 });
 
 // Use ValueBinder to use binder with annotation
 @BindTo(R.id.image)
 ValueBinder kitten = ValueBinder.create(“www.snylt.se/kitten.png”, binder);
-            </code>
-          </pre>
-        </div>
+          </code>
+        </pre>
       </div>
     </div>
+  </div>
 
-    <!-- Dynamic -->
-    <div class="section">
-      <div class="container">
-        <div class="row">
-          <div class="twelve columns">
-            <h4>
-              <span class="primary-font">
-                <b>Dynamic</b>
-              </span>
-            </h4>
-            <p>
-              Bind functions can be re-used and composed in chains.
-            </p>
-          </div>
+  <!-- Dynamic -->
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <div class="twelve columns">
+          <h4>
+            <span class="primary-font">
+              <b>Dynamic</b>
+            </span>
+          </h4>
+          <p>
+            Bind functions can be re-used and composed in chains.
+          </p>
         </div>
-        <div class="row">
-          <pre>
-            <code data-language="java">
+      </div>
+      <div class="row">
+        <pre>
+          <code data-language="java">
 Binder
 .create(new PicassoLoadOnBind&lt;ImageView&#44; String&gt;()) 
 .next(new InvisibleIfNull&lt;ImageView&#44; String&gt;());
-            </code>
-          </pre>
-        </div>
+          </code>
+        </pre>
       </div>
     </div>
-  </body>
-</html>
+  </div>
