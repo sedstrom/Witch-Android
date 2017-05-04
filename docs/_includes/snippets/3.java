@@ -3,5 +3,5 @@ void name() {
   if(user == null) {
     return "Magica de Hex";
   }
-return user.givenName + " " + user.familyName;
+  return user.givenName + " " + user.familyName;
 }
