@@ -13,7 +13,7 @@ layout: main
     <div class="row">
       <ul class="twelve columns logo">
         <li>
-          <img src="{{ "assets/img/logo.svg" | relative_url }}"/>
+          <img src="assets/img/logo.svg"/>
         </li>
         <li>
           <p>Spellbind your Android views</p>
@@ -89,7 +89,7 @@ Bind values directly to views without any lookup.
 {% include snippets/2.java %}
 {% endhighlight %}
       </div>
-      <div class="row">
+      <div class="row top-30">
         <div class="twelve columns">
           <p>
             Annotate methods for dynamic values
@@ -97,41 +97,24 @@ Bind values directly to views without any lookup.
         </div>
       </div>
       <div class="row">
-        <div class="column">
 {% highlight java linenos %}
 {% include snippets/3.java %}
 {% endhighlight %}
-        </div>
       </div>
-      <div class="row">
+      <div class="row top-30">
         <div class="twelve columns">
           <p>
             More advanced bindings can be create with Binder.
           </p>
         </div>
       </div>
-      <div class="row">
-        <pre>
-          <code data-language="java">
-Binder binder = Binder.create(new SyncOnBind&lt;ImageView&#44; String&gt;() {
-@Override 
-void onBind(ImageView view, String url) {
-  Picasso
-  .with(view.getContext())
-  .load(url)
-  .into(imageView);
-}
-});
-
-// Use ValueBinder to use binder with annotation
-@BindTo(R.id.image)
-ValueBinder kitten = ValueBinder.create(“www.snylt.se/kitten.png”, binder);
-          </code>
-        </pre>
-      </div>
+      <div class="row spacing-small">
+{% highlight java linenos %}
+{% include snippets/4.java %}
+{% endhighlight %}
     </div>
   </div>
-
+</div>
   <!-- Dynamic -->
   <div class="section">
     <div class="container">
@@ -147,14 +130,11 @@ ValueBinder kitten = ValueBinder.create(“www.snylt.se/kitten.png”, binder);
           </p>
         </div>
       </div>
-      <div class="row">
-        <pre>
-          <code data-language="java">
-Binder
-.create(new PicassoLoadOnBind&lt;ImageView&#44; String&gt;()) 
-.next(new InvisibleIfNull&lt;ImageView&#44; String&gt;());
-          </code>
-        </pre>
+      <div class="row spacing-small">
+{% highlight java linenos %}
+{% include snippets/5.java %}
+{% endhighlight %}
       </div>
     </div>
   </div>
+</div>

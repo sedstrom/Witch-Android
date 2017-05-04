@@ -4,7 +4,7 @@ $primary-color: #D17795;
 $secondary-color: #DD9BB1;
 $text-color: #3C3C3C;
 $text-sise-sub-title: 26px;
-$text-size-content: 18px;
+$text-size-content: 16px;
 
 body {
   background-color: $background-color;
@@ -14,10 +14,12 @@ p {
   color: $text-color;
   font-size: $text-size-content;
   font-family: 'Domine', serif;
+  margin-bottom: 10px;
 }
 
 ul {
   list-style-type: none;
+  margin: 0;
 }
 
 h4 {
@@ -26,15 +28,9 @@ h4 {
   font-size: $text-sise-sub-title;
 }
 
-code {
-  table, pre {
-    margin-bottom: 0;
-  }
-  td {
-    border-bottom: 0;
-    padding: 0;
-  }
-}
+.top-10 { margin-top: 10px; }
+.top-20 { margin-top: 20px; }
+.top-30 { margin-top: 30px; }
 
 .row a {
   color: $text-color;
@@ -53,12 +49,12 @@ span.primary-font {
 
 .section {
   padding-top: 40px;
-  padding-bottom: 0px;
+  padding-bottom: 40px;
   width: 100%;
   background-color: $background-color;
 }
 
-.section.secondary {
+.secondary {
   background-color: $background-color-secondary;
 }
 

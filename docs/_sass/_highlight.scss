@@ -1,0 +1,50 @@
+
+$lineno-text-color: #999;
+$code-border-color: #ccc;
+$code-background-color: #fff;
+$transparent: rgba(0,0,0,0);
+$witch-primary-color: #D17795;
+
+.highlight {
+  margin: 0;
+  padding: 0;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
+  background-color: $transparent;
+  border: none;
+  font-size: 14px;
+
+  code {
+    border-style: solid;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: $code-border-color;
+    margin: 0;
+    padding: 0;
+    background-color: $code-background-color;
+
+    table, pre {
+      margin-bottom: 0;
+    }
+    td {
+      border-bottom: 0;
+      padding: 0;
+    }
+
+  }
+
+  .lineno {
+    padding: 10px 10px;
+    text-align: right;
+    border-radius: 0;
+    border-right: 1px solid $code-border-color;
+    color: $witch-primary-color;
+  }
+
+  .code {
+    padding: 10px;
+  }
+}
