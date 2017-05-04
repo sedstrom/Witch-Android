@@ -10,4 +10,4 @@ Binder binder = Binder.create(new SyncOnBind<ImageView, String>() {
 
 // Use ValueBinder to use binder with annotation
 @BindTo(R.id.image)
-ValueBinder kitten = ValueBinder.create(“www.snylt.se/kitten.png”, binder);
+ValueBinder kitten = ValueBinder.create("www.snylt.se/kitten.png", binder);
