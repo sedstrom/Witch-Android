@@ -1,9 +1,9 @@
+@import "_base";
 
 $lineno-text-color: #999;
 $code-border-color: #ccc;
 $code-background-color: #fff;
 $transparent: rgba(0,0,0,0);
-$witch-primary-color: #D17795;
 
 .highlight {
   margin: 0;
@@ -41,7 +41,7 @@ pre {
     text-align: right;
     border-radius: 0;
     border-right: 1px solid $code-border-color;
-    color: $witch-primary-color;
+    color: $primary-color;
   }
 
   .code {
