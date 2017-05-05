@@ -13,41 +13,42 @@ layout: main
     <div class="row">
       <ul class="twelve columns logo">
         <li>
-          <img src="assets/img/logo.svg"/>
+          <img src="assets/img/logo-no-text.svg"/>
         </li>
-        <li>
-          <p>Spellbind your Android views</p>
+        <li class="top-30">
+          <h3>
+            <span class="primary-font"><b>Witch</b></span> is a flexible view-data binding<br/>library for <b>Android</b>
+          </h3>
+        </li>
+        <li class="top-20">
+            <ul id="features">
+              <li>
+                <p>Bind data to views with <b><span class="primary-text-color">@annotations</span></b>.</p>
+              </li>
+              <li>
+                <p>Compose functional bind flows.</p>
+              </li>
+              <li>
+                <p>View holders built in.</p>
+              </li>
+            </ul>
         </li>
       </ul>
     </div>
-  </div>
-</div>
-<div class="section secondary">
-  <div class="container">
-    <div class="row">
-      <div class="twelve columns intro">
-        <h4>
-          <span class="primary-font">
-            <b>Witch</b></span> is a flexible view-data binding library for <b>Android</b>.
-          </h4>
-          <ul>
-            <li>
-              <p>- Bind data to views with <b>@annotations</b>.</p>
-            </li>
-            <li>
-              <p>- Compose functional bind flows.</p>
-            </li>
-            <li>
-              <p>- View holders built in.</p>
-            </li>
-          </ul>
-        </div>
+    <div class="row top-30">
+      <div class="offset-by-three three columns">
+        <button class="witch-version">0.0.1</button>
       </div>
+      <form method="get" class="three columns" action="http://www.github.com/sedstrom/Witch-Android">
+        <button type="submit">
+            Get started
+        </button>
+      </form>
     </div>
   </div>
-
+</div>
   <!-- Simple -->
-  <div class="section">
+  <div class="section secondary">
     <div class="container">
       <div class="row">
         <div class="twelve columns">
@@ -57,7 +58,7 @@ layout: main
             </span>
           </h4>
           <p>
-Bind values directly to views without any lookup.
+  Bind values directly to views without any lookup.
           </p>
         </div>
       </div>
@@ -70,7 +71,7 @@ Bind values directly to views without any lookup.
   </div>
 
   <!-- Flexible -->
-  <div class="section secondary">
+  <div class="section">
     <div class="container">
       <div class="row">
         <div class="twelve columns">
@@ -112,11 +113,11 @@ Bind values directly to views without any lookup.
 {% highlight java linenos %}
 {% include snippets/4.java %}
 {% endhighlight %}
+      </div>
     </div>
   </div>
-</div>
   <!-- Dynamic -->
-  <div class="section">
+  <div class="section secondary">
     <div class="container">
       <div class="row">
         <div class="twelve columns">
@@ -131,9 +132,9 @@ Bind values directly to views without any lookup.
         </div>
       </div>
       <div class="row spacing-small">
-{% highlight java linenos %}
-{% include snippets/5.java %}
-{% endhighlight %}
+  {% highlight java linenos %}
+  {% include snippets/5.java %}
+  {% endhighlight %}
       </div>
     </div>
   </div>
