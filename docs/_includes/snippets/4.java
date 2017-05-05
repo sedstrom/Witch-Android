@@ -1,6 +1,6 @@
 Binder binder = Binder.create(new SyncOnBind<ImageView, String>() {
-  @Override 
-  void onBind(ImageView view, String url) {
+  @Override
+  public void onBind(ImageView view, String url) {
     Picasso
     .with(view.getContext())
     .load(url)
