@@ -7,7 +7,7 @@ Functional view data binding.
 ### Getting started
 
 ```groovy
-    compile 'se.snylt:witch:0.0.1-SNAPSHOT'
+    compile "se.snylt:witch:0.0.1"
     annotationProcessor "se.snylt:witch-processor:0.0.1-SNAPSHOT"
 ```
 Add snapshot repository
