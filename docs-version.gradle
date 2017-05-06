@@ -1,0 +1,17 @@
+/* Writes version to docs */
+task update() << {
+    if(VERSION_NAME.contains("SNAPSHOT")) {
+        println("Current version is SNAPHOT.")
+        println("Don't update version in docs.")
+        return;
+    }
+    File outputFile = new File("./docs/_includes", "version.txt");
+    if(outputFile.exists()) {
+        outputFile.delete();
+    }
+    outputFile.createNewFile();
+    FileWriter fileWriter = new FileWriter(outputFile, true);
+    fileWriter.write(VERSION_NAME);
+    fileWriter.close();
+    println("Updated version ${VERSION_NAME} in docs")
+}
