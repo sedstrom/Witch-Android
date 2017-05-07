@@ -30,7 +30,7 @@ public class RecyclerViewFragment extends Fragment implements View.OnClickListen
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         // Provide one binder per model type
-        RecyclerViewBinderAdapter adapter = new RecyclerViewBinderAdapter<>(
+        RecyclerViewBinderAdapter<Post> adapter = new RecyclerViewBinderAdapter<>(
                 posts(),
                 new Post.Binder(),
                 new PostWithPicture.Binder());
