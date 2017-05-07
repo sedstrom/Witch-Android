@@ -35,12 +35,11 @@ import static org.mockito.Mockito.when;
 
 public class RecyclerViewBinderAdapterTest {
 
-    private RecyclerViewBinderAdapter adapter;
+    private RecyclerViewBinderAdapter<Object> adapter;
 
     private final static int EXISTING_BINDER_ITEM_POSITION = 0;
 
     private final static int NON_EXISTING_BINDER_ITEM_POSITION = 1;
-
 
     private Object itemWithBinder = new Object();
 
@@ -115,6 +114,23 @@ public class RecyclerViewBinderAdapterTest {
 
         // Then
         assertSame(itemBinder.getLayoutId(), viewType);
+    }
+
+    @Test
+    public void getItems() {
+        assertSame(items, adapter.getItems());
+    }
+
+    @Test
+    public void setItems() {
+        List<Object> newItems = new ArrayList<>();
+        adapter.setItems(newItems);
+        assertSame(newItems, adapter.getItems());
+    }
+
+    @Test
+    public void getItemCount() {
+        assertSame(items.size(), adapter.getItemCount());
     }
 
     private class ItemBinder extends RecyclerViewBinderAdapter.Binder<Object> {
