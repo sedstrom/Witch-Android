@@ -2,7 +2,7 @@ package se.snylt.witch.viewbinder;
 
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
-class WitchCore {
+public class WitchCore {
 
     final static String TAG = "witch";
 
@@ -15,7 +15,7 @@ class WitchCore {
         this.binderFactory = binderFactory;
     }
 
-    void doBind(Object target, ViewFinder viewFinder) {
+    public void doBind(Object target, ViewFinder viewFinder) {
         Object viewHolder = getOrCreateViewHolder(target, viewFinder);
         TargetViewBinder targetViewBinder = getOrCreateBinder(target, viewFinder);
         targetViewBinder.bind(viewHolder, viewFinder, target);

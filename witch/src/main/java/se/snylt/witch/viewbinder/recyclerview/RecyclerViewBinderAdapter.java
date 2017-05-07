@@ -1,5 +1,6 @@
 package se.snylt.witch.viewbinder.recyclerview;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -40,7 +41,8 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
 
     @Override
     public EmptyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        return new EmptyViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(viewType, viewGroup, false));
+        LayoutInflater inflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        return new EmptyViewHolder(inflater.inflate(viewType, viewGroup, false));
     }
 
     private Binder<? extends Item> getBinder(Item item) {
@@ -50,7 +52,7 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
             }
         }
         String itemType = item.getClass().getSimpleName();
-        throw new IllegalStateException("No binder for found for " + itemType + ". Make sure binder for " + itemType
+        throw new IllegalArgumentException("No binder for found for " + itemType + ". Make sure binder for " + itemType
                 + " is provided to adapter");
     }
 
