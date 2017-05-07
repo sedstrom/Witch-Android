@@ -25,12 +25,14 @@ android {
 
 dependencies {
     // Witch
-    compile 'se.snylt:witch:0.0.1'
-    annotationProcessor "se.snylt:witch-processor:0.0.1"
+    // compile 'se.snylt:witch:0.0.1'
+    // annotationProcessor "se.snylt:witch-processor:0.0.1"
+
+    compile project(path: ':witch')
+    annotationProcessor project(path: ':witch-processor')
 
     // Support
     compile rootProject.ext.deps.supportAppCompat
-    compile rootProject.ext.deps.supportRecyclerView
     compile rootProject.ext.deps.supportDesign
 
     // Square
@@ -40,4 +42,5 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
 
     testCompile rootProject.ext.deps.junit
+
 }

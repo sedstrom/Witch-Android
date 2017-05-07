@@ -21,6 +21,8 @@ android {
 dependencies {
     compile project(':witch-annotations')
     compile rootProject.ext.deps.commonsLang
+    compile rootProject.ext.deps.supportRecyclerView
+
     testCompile rootProject.ext.deps.mockitoCore
     testCompile rootProject.ext.deps.junit
 }

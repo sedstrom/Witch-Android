@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.snylt.witch.viewbinder.Witch;
+import se.snylt.witch.viewbinder.recyclerview.RecyclerViewBinderAdapter;
 
 public class ExampleListFragment extends Fragment {
 
@@ -52,7 +53,7 @@ public class ExampleListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.example_list_fragment, container, false);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
-        recyclerView.setAdapter(new ExampleListRecyclerViewAdapter());
+        recyclerView.setAdapter(new RecyclerViewBinderAdapter<>(new ExampleItem.Binder()));
         return recyclerView;
     }
 
@@ -68,7 +69,7 @@ public class ExampleListFragment extends Fragment {
         items.add(newItem(CustomViewFragment.class.getName(), "CustomView", "Bind values to a custom view class"));
         items.add(newItem(AnimationsFragment.class.getName(), "Animations", "Example of how animations can be added to binding"));
         items.add(newItem(PicassoFragment.class.getName(), "Picasso", "Example of how picasso can be used in binding"));
-        items.add(newItem(ResponseModelFragment.class.getName(), "ResponseModel", "Combine response model and view model."));
+        items.add(newItem(ResponseModelFragment.class.getName(), "ResponseModel", "Combine response item and view item."));
         items.add(newItem(LoginFragment.class.getName(), "Login", "Example how view states can be handled for a login view"));
         items.add(newItem(UndoFragment.class.getName(), "Undo", "Example how stack fo view can be used for view history"));
         items.add(newItem(ValueFragment.class.getName(), "ValueBinder", "Use a ValueBinder to chain bind actions"));
