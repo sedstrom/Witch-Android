@@ -26,7 +26,7 @@ Define view model
 ```java
 public class MyViewModel {
 
-  @BindTextView(id = R.id.title_tv)
+  @BindToTextView(id = R.id.title_tv)
   public String title;
   ...
 }
@@ -41,13 +41,13 @@ Witch.bind(model, activity); // Binds to anything that contains the views define
 ### Set custom properties
 Each specific bind-view-annotation sets a default property. For example, @BindTextView sets text by default.
 ```java
-@BindTextView(id = R.id.text_view_title)
+@BindToTextView(id = R.id.text_view_title)
 // Generates =>
 ((TextView)view).setText(property);
 ```
 To set a property different from default one, use ```set=<property>```:
 ```java
-@BindTextView(id = R.id.text_view_title, set="color")
+@BindToTextView(id = R.id.text_view_title, set="color")
 // Generates =>
 ((TextView)view).setColor(property);
 ```
