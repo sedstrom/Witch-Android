@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import se.snylt.witch.viewbinder.Witch;
@@ -23,14 +23,12 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
 
     private final List<Binder<? extends Item>> binders;
 
-    @SafeVarargs
-    public RecyclerViewBinderAdapter(List<Item> items, Binder<? extends Item> ...binders) {
+    public RecyclerViewBinderAdapter(List<Item> items, List<Binder<? extends Item>> binders) {
         this.items = items;
-        this.binders = Arrays.asList(binders);
+        this.binders = binders;
     }
 
-    @SafeVarargs
-    public RecyclerViewBinderAdapter(Binder<? extends Item> ...binders) {
+    public RecyclerViewBinderAdapter(List<Binder<? extends Item>> binders) {
         this(null, binders);
     }
 
@@ -73,6 +71,35 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    /**
+     * Builder
+     * @param <Item>
+     */
+    public static final class Builder<Item> {
+
+        private final List<Item> items;
+
+        private List<RecyclerViewBinderAdapter.Binder<? extends Item>> binders = new ArrayList<>();
+
+        public Builder(List<Item> items) {
+            this.items = items;
+        }
+
+        public Builder(){
+            this(null);
+        }
+
+        public Builder<Item> binder(RecyclerViewBinderAdapter.Binder<? extends Item> binder) {
+            this.binders.add(binder);
+            return this;
+        }
+
+        public final RecyclerViewBinderAdapter<Item> build() {
+            return new RecyclerViewBinderAdapter<>(items, binders);
+        }
+
     }
 
     /**

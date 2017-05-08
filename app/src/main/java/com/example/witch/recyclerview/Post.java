@@ -22,7 +22,7 @@ class Post {
         Binder() {super(R.layout.recycler_view_item_2);}
 
         @BindToTextView(id = R.id.my_item_title)
-        String title(){
+        String title() {
             return item.title;
         }
 

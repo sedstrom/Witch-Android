@@ -77,7 +77,9 @@ public class RecyclerViewBinderAdapterTest {
         when(context.getSystemService(eq(Service.LAYOUT_INFLATER_SERVICE))).thenReturn(inflater);
         when(parent.getContext()).thenReturn(context);
 
-        adapter = new RecyclerViewBinderAdapter<>(items, itemBinder);
+        List<RecyclerViewBinderAdapter.Binder<?>> binders = new ArrayList<>();
+        binders.add(itemBinder);
+        adapter = new RecyclerViewBinderAdapter<>(items, binders);
     }
 
     @Test

@@ -30,10 +30,11 @@ public class RecyclerViewFragment extends Fragment implements View.OnClickListen
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         // Provide one binder per model type
-        RecyclerViewBinderAdapter<Post> adapter = new RecyclerViewBinderAdapter<>(
-                posts(),
-                new Post.Binder(),
-                new PostWithPicture.Binder());
+        RecyclerViewBinderAdapter<Post> adapter =
+                new RecyclerViewBinderAdapter.Builder<>(posts())
+                        .binder(new PostWithPicture.Binder())
+                        .binder(new Post.Binder())
+                        .build();
 
         recyclerView.setAdapter(adapter);
         return view;
@@ -46,9 +47,10 @@ public class RecyclerViewFragment extends Fragment implements View.OnClickListen
 
     private List<Post> posts() {
         List<Post> items = new ArrayList<>();
-        for(int i = 0; i < 100; i++) {
-            if(i % 2 == 0) {
-                items.add(new PostWithPicture("Title" + i, "Subtitle" + i, this, "http://lorempixel.com/200/200/sports/" + i));
+        for (int i = 0; i < 100; i++) {
+            if (i % 2 == 0) {
+                items.add(new PostWithPicture("Title" + i, "Subtitle" + i, this,
+                        "http://lorempixel.com/200/200/sports/" + i));
             } else {
                 items.add(new Post("Title" + i, "Subtitle" + i));
             }
