@@ -8,6 +8,10 @@ class Post {
 
   static class Binder extends RecyclerViewBinderAdapter.Binder<Post> {
 
+    Binder() {
+      super(R.layout.post);
+    }
+
     @BindToTextView(id = R.id.title)
     String title() {
       return item.title;
