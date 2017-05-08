@@ -138,4 +138,43 @@ layout: main
       </div>
     </div>
   </div>
+  <!-- View holders -->
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <div class="twelve columns">
+          <h4>
+              <span class="primary-font">
+                <b>View holders built in</b>
+              </span>
+          </h4>
+          <p>
+            Witch will create view holders for all annotated views. This eliminates the need for creating additional
+            view holders for adapter views. Simply use the RecyclerViewBinderAdapter that requires no implementation besides
+            the actual data binding. Simply provide a binder for each item type in adapter.
+          </p>
+        </div>
+      </div>
+      <div class="row">
+{% highlight java linenos %}
+{% include snippets/6.java %}
+{% endhighlight %}
+      </div>
+      <div class="row top-30">
+        <div class="twelve columns">
+          <p>
+            Since binder will handle binding of <b><i>all items of type Post</i></b> in adapter, it's important to separate
+            binder from item. Binder will be updated with a new item before each bind.
+            This happens under the hood and is handled entirely by Witch.
+          </p>
+        </div>
+      </div>
+      <div class="row spacing-small">
+{% highlight java linenos %}
+{% include snippets/7.java %}
+{% endhighlight %}
+      </div>
+    </div>
+    </div>
+  </div>
 </div>

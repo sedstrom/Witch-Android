@@ -1,7 +1,7 @@
 package se.snylt.witch.viewbinder.bindaction;
 
 /**
- * Container for a {@link Binder} and a {@link Value}.
+ * Container for a {@link Binder} and a {@param Value}.
  *
  * @param <Target> target to be bound to.
  * @param <Value> value to be bound.
