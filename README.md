@@ -10,7 +10,8 @@ Functional view data binding.
     compile "se.snylt:witch:0.0.1"
     annotationProcessor "se.snylt:witch-processor:0.0.1"
 ```
-Add snapshot repository
+
+#### SNAPSHOTS
 
 ```groovy
   repositories {
@@ -19,6 +20,11 @@ Add snapshot repository
         url "https://oss.sonatype.org/content/repositories/snapshots/"
     }
   }
+```
+
+```groovy
+    compile "se.snylt:witch:0.1.0-SNAPSHOT"
+    annotationProcessor "se.snylt:witch-processor:0.1.0-SNAPSHOT"
 ```
 
 ### How to use:

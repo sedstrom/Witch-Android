@@ -8,11 +8,11 @@ import se.snylt.witch.viewbinder.recyclerview.RecyclerViewBinderAdapter;
 
 class ExampleItem {
 
-    final View.OnClickListener clickListener;
+    private final View.OnClickListener clickListener;
 
-    final String title;
+    private final String title;
 
-    final String subTitle;
+    private final String subTitle;
 
     ExampleItem(View.OnClickListener clickListener, String title, String subTitle) {
         this.clickListener = clickListener;
@@ -42,8 +42,8 @@ class ExampleItem {
         }
 
         @Override
-        public Class getItemType() {
-            return ExampleItem.class;
+        public boolean bindsItem(Object item) {
+            return item.getClass() == ExampleItem.class;
         }
     }
 }

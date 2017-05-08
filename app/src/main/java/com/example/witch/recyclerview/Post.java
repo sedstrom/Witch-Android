@@ -32,8 +32,8 @@ class Post {
         }
 
         @Override
-        public Class getItemType() {
-            return Post.class;
+        public boolean bindsItem(Object item) {
+            return item.getClass() == Post.class;
         }
     }
 

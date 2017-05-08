@@ -45,7 +45,7 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
 
     private Binder<? extends Item> getBinder(Item item) {
         for(Binder<? extends Item> binder: binders) {
-            if(binder.getItemType() == item.getClass()) {
+            if(binder.bindsItem(item)) {
                 return binder;
             }
         }
@@ -74,8 +74,8 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
     }
 
     /**
-     * Builder
-     * @param <Item>
+     * Builder for {@link RecyclerViewBinderAdapter}
+     * @param <Item> item type for adapter.
      */
     public static final class Builder<Item> {
 
@@ -109,7 +109,8 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
     public static abstract class Binder<Item> {
 
         /**
-         * Item to be bound.
+         * Item to be bound. This is a live object that will be updated prior to each
+         * binding with this binder. Updated in {@link #take(Object)}.
          */
         protected Item item;
 
@@ -132,10 +133,20 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
             return this;
         }
 
+        /**
+         * Layout id for view to be inflated.
+         * @return layout id.
+         */
         int getLayoutId() {
             return layoutId;
         }
 
-        public abstract Class getItemType();
+        /**
+         * Check if binder is for {@param item}. If binder binds item, item will be provided
+         * in {@link #take(Object)}
+         * @param item to be bound in adapter.
+         * @return true if binder binds item, otherwise false;
+         */
+        public abstract boolean bindsItem(Object item);
     }
 }

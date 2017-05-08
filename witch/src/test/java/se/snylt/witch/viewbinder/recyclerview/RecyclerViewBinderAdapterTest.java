@@ -142,8 +142,8 @@ public class RecyclerViewBinderAdapterTest {
         }
 
         @Override
-        public Class getItemType() {
-            return Object.class;
+        public boolean bindsItem(Object item) {
+            return item.getClass() == Object.class;
         }
     }
 

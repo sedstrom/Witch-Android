@@ -65,8 +65,8 @@ class PostWithPicture extends Post {
         }
 
         @Override
-        public Class getItemType() {
-            return PostWithPicture.class;
+        public boolean bindsItem(Object item) {
+            return item.getClass() == PostWithPicture.class;
         }
     }
 
