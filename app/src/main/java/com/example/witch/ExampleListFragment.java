@@ -53,7 +53,11 @@ public class ExampleListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.example_list_fragment, container, false);
         recyclerView.setLayoutManager(new LinearLayoutManager(inflater.getContext()));
-        recyclerView.setAdapter(new RecyclerViewBinderAdapter<>(new ExampleItem.Binder()));
+        RecyclerViewBinderAdapter<ExampleItem> adapter =
+                new RecyclerViewBinderAdapter.Builder<ExampleItem>()
+                .binder(new ExampleItem.Binder())
+                .build();
+        recyclerView.setAdapter(adapter);
         return recyclerView;
     }
 

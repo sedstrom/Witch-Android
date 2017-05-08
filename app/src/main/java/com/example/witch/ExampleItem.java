@@ -4,7 +4,7 @@ import android.view.View;
 
 import se.snylt.witch.annotations.BindToTextView;
 import se.snylt.witch.annotations.BindToView;
-import se.snylt.witch.viewbinder.recyclerview.RecyclerViewBinder;
+import se.snylt.witch.viewbinder.recyclerview.RecyclerViewBinderAdapter;
 
 class ExampleItem {
 
@@ -20,7 +20,7 @@ class ExampleItem {
         this.subTitle = subTitle;
     }
 
-    static class Binder extends RecyclerViewBinder<ExampleItem> {
+    static class Binder extends RecyclerViewBinderAdapter.Binder<ExampleItem> {
 
         protected Binder() {
             super(R.layout.example_list_item);
