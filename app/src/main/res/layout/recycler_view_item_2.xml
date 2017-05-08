@@ -3,6 +3,7 @@
               android:orientation="vertical"
               android:paddingLeft="@dimen/activity_horizontal_margin"
               android:paddingRight="@dimen/activity_horizontal_margin"
+              android:background="#22FFFFFF"
               android:id="@+id/my_item_container"
               android:paddingTop="8dp"
               android:paddingBottom="8dp"
@@ -20,11 +21,5 @@
             android:id="@+id/my_item_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-
-    <ImageView
-            android:id="@+id/my_item_image"
-            android:scaleType="centerCrop"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"/>
 
 </LinearLayout>

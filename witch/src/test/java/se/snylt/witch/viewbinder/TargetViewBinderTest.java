@@ -20,11 +20,9 @@ public class TargetViewBinderTest {
     @Mock
     ViewBinder viewBinderTwo;
 
-    Object viewHolder = new Object();
+    private Object viewHolder = new Object();
 
-    Object target = new Object();
-
-    Object mod = new Object();
+    private Object target = new Object();
 
     @Mock
     ViewFinder viewFinder;

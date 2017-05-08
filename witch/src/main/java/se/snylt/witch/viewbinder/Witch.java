@@ -20,7 +20,7 @@ public class Witch {
     }
 
     // Test
-    protected static WitchCore witch(WitchCore witchCore) {
+    public static WitchCore witch(WitchCore witchCore) {
         INSTANCE = witchCore;
         return witch();
     }

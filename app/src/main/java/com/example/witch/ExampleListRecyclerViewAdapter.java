@@ -1,6 +1,5 @@
 package com.example.witch;
 
-import com.example.witch.recyclerview.SimpleViewHolder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,18 +8,19 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import se.snylt.witch.viewbinder.Witch;
+import se.snylt.witch.viewbinder.recyclerview.EmptyViewHolder;
 
-class ExampleListRecyclerViewAdapter extends RecyclerView.Adapter<SimpleViewHolder> {
+class ExampleListRecyclerViewAdapter extends RecyclerView.Adapter<EmptyViewHolder> {
 
     private List<ExampleItem> items;
 
     @Override
-    public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SimpleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_item, parent, false));
+    public EmptyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new EmptyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.example_list_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(SimpleViewHolder holder, int position) {
+    public void onBindViewHolder(EmptyViewHolder holder, int position) {
         Witch.bind(items.get(position), holder.itemView);
     }
 
