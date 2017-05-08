@@ -58,6 +58,7 @@ public class ExampleListFragment extends Fragment {
                 .binder(new ExampleItem.Binder())
                 .build();
         recyclerView.setAdapter(adapter);
+
         return recyclerView;
     }
 

@@ -21,17 +21,17 @@ layout: main
           </h3>
         </li>
         <li class="top-20">
-            <ul id="features">
-              <li>
-                <p>Bind data to views with <b><span class="primary-text-color">@annotations</span></b>.</p>
-              </li>
-              <li>
-                <p>Compose functional bind flows.</p>
-              </li>
-              <li>
-                <p>View holders built in.</p>
-              </li>
-            </ul>
+          <ul id="features">
+            <li>
+              <p>Bind data to views with <b><span class="primary-text-color">@annotations</span></b>.</p>
+            </li>
+            <li>
+              <p>Compose functional bind flows.</p>
+            </li>
+            <li>
+              <p>View holders built in.</p>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
@@ -41,140 +41,151 @@ layout: main
       </div>
       <form method="get" class="three columns" action="http://www.github.com/sedstrom/Witch-Android">
         <button type="submit">
-            Get started
+          Get started
         </button>
       </form>
     </div>
   </div>
 </div>
-  <!-- Simple -->
-  <div class="section secondary">
-    <div class="container">
-      <div class="row">
-        <div class="twelve columns">
-          <h4>
-            <span class="primary-font">
-              <b>Simple</b>
-            </span>
-          </h4>
-          <p>
-  Bind values directly to views without any lookup.
-          </p>
-        </div>
+<!-- Simple -->
+<div class="section secondary">
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns">
+        <h4>
+          <span class="primary-font">
+            <b>Simple</b>
+          </span>
+        </h4>
+        <p>
+          Bind values directly to views without any lookup.
+        </p>
       </div>
-      <div class="row">
+    </div>
+    <div class="row">
 {% highlight java linenos %}
 {% include snippets/1.java %}
 {% endhighlight %}
-      </div>
     </div>
   </div>
+</div>
 
-  <!-- Flexible -->
-  <div class="section">
-    <div class="container">
-      <div class="row">
-        <div class="twelve columns">
-          <h4>
-            <span class="primary-font">
-              <b>Flexible</b>
-            </span>
-          </h4>
-          <p>
-            Views not backed up by an annotation, can be bound with custom view class.
-          </p>
-        </div>
+<!-- Flexible -->
+<div class="section">
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns">
+        <h4>
+          <span class="primary-font">
+            <b>Flexible</b>
+          </span>
+        </h4>
+        <p>
+          Views not backed up by an annotation, can be bound with custom view class.
+        </p>
       </div>
-      <div class="row">
+    </div>
+    <div class="row">
 {% highlight java linenos %}
 {% include snippets/2.java %}
 {% endhighlight %}
+    </div>
+    <div class="row top-30">
+      <div class="twelve columns">
+        <p>
+          Annotate methods for dynamic values
+        </p>
       </div>
-      <div class="row top-30">
-        <div class="twelve columns">
-          <p>
-            Annotate methods for dynamic values
-          </p>
-        </div>
-      </div>
-      <div class="row">
+    </div>
+    <div class="row">
 {% highlight java linenos %}
 {% include snippets/3.java %}
 {% endhighlight %}
+    </div>
+    <div class="row top-30">
+      <div class="twelve columns">
+        <p>
+          More advanced bindings can be create with Binder.
+        </p>
       </div>
-      <div class="row top-30">
-        <div class="twelve columns">
-          <p>
-            More advanced bindings can be create with Binder.
-          </p>
-        </div>
-      </div>
-      <div class="row spacing-small">
+    </div>
+    <div class="row spacing-small">
 {% highlight java linenos %}
 {% include snippets/4.java %}
 {% endhighlight %}
-      </div>
     </div>
   </div>
-  <!-- Dynamic -->
-  <div class="section secondary">
-    <div class="container">
-      <div class="row">
-        <div class="twelve columns">
-          <h4>
-            <span class="primary-font">
-              <b>Dynamic</b>
-            </span>
-          </h4>
-          <p>
-            Bind functions can be re-used and composed in chains.
-          </p>
-        </div>
+</div>
+<!-- Dynamic -->
+<div class="section secondary">
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns">
+        <h4>
+          <span class="primary-font">
+            <b>Dynamic</b>
+          </span>
+        </h4>
+        <p>
+          Bind functions can be re-used and composed in chains.
+        </p>
       </div>
-      <div class="row">
+    </div>
+    <div class="row">
 {% highlight java linenos %}
 {% include snippets/5.java %}
 {% endhighlight %}
-      </div>
     </div>
   </div>
-  <!-- View holders -->
-  <div class="section">
-    <div class="container">
-      <div class="row">
-        <div class="twelve columns">
-          <h4>
-              <span class="primary-font">
-                <b>View holders built in</b>
-              </span>
-          </h4>
-          <p>
-            Witch will create view holders for all annotated views. This eliminates the need for creating additional
-            view holders for adapter views. Simply use the RecyclerViewBinderAdapter that requires no implementation besides
-            the actual data binding. Simply provide a binder for each item type in adapter.
-          </p>
-        </div>
+</div>
+<!-- View holders -->
+<div class="section">
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns">
+        <h4>
+          <span class="primary-font">
+            <b>View holders built in</b>
+          </span>
+        </h4>
+        <p>
+          Witch will create view holders for all annotated views. This eliminates the need for creating additional
+          view holders for adapter views. Simply use the RecyclerViewBinderAdapter that requires no implementation besides
+          the actual data binding. Simply provide a binder for each item type in adapter.
+        </p>
       </div>
-      <div class="row">
+    </div>
+    <div class="row">
 {% highlight java linenos %}
 {% include snippets/6.java %}
 {% endhighlight %}
+    </div>
+    <div class="row top-30">
+      <div class="twelve columns">
+        <p>
+          Since binder will handle binding of <b><i>all items of type Post</i></b> in adapter, it's important to separate
+          binder from item. Binder will be updated with a new item before each bind.
+          This happens under the hood and is handled entirely by Witch.
+        </p>
       </div>
-      <div class="row top-30">
-        <div class="twelve columns">
-          <p>
-            Since binder will handle binding of <b><i>all items of type Post</i></b> in adapter, it's important to separate
-            binder from item. Binder will be updated with a new item before each bind.
-            This happens under the hood and is handled entirely by Witch.
-          </p>
-        </div>
-      </div>
-      <div class="row spacing-small">
+    </div>
+    <div class="row spacing-small">
 {% highlight java linenos %}
 {% include snippets/7.java %}
 {% endhighlight %}
+    </div>
+    <div class="row top-30">
+      <div class="twelve columns">
+        <p>
+          If your data set consists of multiple types, simply provide multiple
+          binders to adapter.
+        </p>
       </div>
     </div>
+    <div class="row spacing-small">
+{% highlight java linenos %}
+{% include snippets/8.java %}
+{% endhighlight %}
     </div>
   </div>
 </div>

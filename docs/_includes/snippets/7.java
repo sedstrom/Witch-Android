@@ -1,21 +1,21 @@
 class Post {
 
-    private final String title;
+  private final String title;
 
-    Post(String title) {
-        this.title = title;
+  Post(String title) {
+    this.title = title;
+  }
+
+  static class Binder extends RecyclerViewBinderAdapter.Binder<Post> {
+
+    @BindToTextView(id = R.id.title)
+    String title() {
+      return item.title;
     }
 
-    static class Binder extends RecyclerViewBinderAdapter.Binder<Post> {
-
-        @BindToTextView(id = R.id.title)
-        String title() {
-            return item.title;
-        }
-
-        @Override
-        public boolean bindsItem(Object item) {
-            return item.getClass() == Post.class;
-        }
+    @Override
+    public boolean bindsItem(Object item) {
+      return item.getClass() == Post.class;
     }
+  }
 }
