@@ -71,6 +71,10 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    // Test
+    protected void doNotifyDataSetChanged(){
         notifyDataSetChanged();
     }
 
