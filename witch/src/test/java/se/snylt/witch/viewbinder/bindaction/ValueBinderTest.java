@@ -5,8 +5,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertNotEquals;
 
 public class ValueBinderTest {
 
@@ -41,5 +43,18 @@ public class ValueBinderTest {
         assertSame(value, valueBinder.getValue());
         valueBinder.setValue(newValue);
         assertSame(newValue, valueBinder.getValue());
+    }
+
+    @Test
+    public void equals_Should_CompareValues() {
+        assertEquals(valueBinder(null), valueBinder(null));
+        assertEquals(valueBinder("123"), valueBinder("123"));
+        assertNotEquals(valueBinder("123"), valueBinder("456"));
+        assertNotEquals(valueBinder(null), valueBinder("123"));
+        assertNotEquals(valueBinder("123"), "123");
+    }
+
+    private ValueBinder valueBinder(Object value){
+        return ValueBinder.create(value, null);
     }
 }

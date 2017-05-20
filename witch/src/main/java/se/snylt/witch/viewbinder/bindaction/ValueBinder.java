@@ -48,4 +48,28 @@ public class ValueBinder<Target, Value> {
     public Binder<Target, Value> getBinder() {
         return binder;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ValueBinder) {
+            Object value = ((ValueBinder) obj).getValue();
+
+            if(value != null && this.value == null) {
+                return false;
+            }
+
+            if(value == null && this.value != null) {
+                return false;
+            }
+
+            if(value == null) {
+                return true;
+            }
+
+            return value.equals(this.value);
+        }
+
+        return super.equals(obj);
+
+    }
 }
