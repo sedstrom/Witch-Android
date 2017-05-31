@@ -9,20 +9,19 @@ public abstract class DefaultViewBinder extends ViewBinder {
 
     private final static Object NO_HISTORY = new Object();
 
-    private Object historyValue = NO_HISTORY;
+    Object historyValue = NO_HISTORY;
 
     public DefaultViewBinder(int viewId, Binder binder) {
         super(viewId);
         this.binder = binder;
     }
 
-    public void bind(Object viewHolder, ViewFinder viewFinder, Object target) {
-        super.bind(viewHolder, viewFinder, target);
-        historyValue = getValue(target);
-    }
-
-    public Binder getBinder(Object value) {
-        return binder;
+    public boolean bind(Object viewHolder, ViewFinder viewFinder, Object target) {
+        if(super.bind(viewHolder, viewFinder, target)){
+            historyValue = getValue(target);
+            return true;
+        }
+        return false;
     }
 
     /**
