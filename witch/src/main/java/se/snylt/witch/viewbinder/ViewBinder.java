@@ -9,38 +9,14 @@ public abstract class ViewBinder {
 
     public final int viewId;
 
-    public final Binder binder;
-
-    private final static Object NO_HISTORY = new Object();
-
-    private Object historyValue = NO_HISTORY;
-
-    public ViewBinder(int viewId, Binder binder) {
+    public ViewBinder(int viewId) {
         this.viewId = viewId;
-        this.binder = binder;
     }
 
     public void bind(Object viewHolder, ViewFinder viewFinder, Object target) {
-        Object value = getValue(target);
-        if(isAlwaysBind() || isNewValue(value, historyValue)) {
-            historyValue = value;
+        if (isDirty(target) || isAlwaysBind()) {
             View view = findView(viewHolder, viewFinder);
-            // TODO check types
-            binder.bind(view, value);
-        }
-    }
-
-    private static boolean isNewValue(Object newValue, Object oldValue) {
-        if(oldValue == NO_HISTORY) {
-            return true;
-        } else if(newValue == null && oldValue != null) {
-            return true;
-        } else if(newValue != null && oldValue == null) {
-            return true;
-        } else if(newValue == null) {
-            return false;
-        } else {
-            return !newValue.equals(oldValue);
+            getBinder(target).bind(view, getValue(target));
         }
     }
 
@@ -59,5 +35,15 @@ public abstract class ViewBinder {
 
     public abstract Object getView(Object viewHolder);
 
+    public abstract boolean isDirty(Object target);
+
     public abstract boolean isAlwaysBind();
+
+    /**
+     * Extract binder if {@param target} is a binder container.
+     *
+     * @param value that might have a binder
+     * @return binder
+     */
+    public abstract Binder getBinder(Object target);
 }

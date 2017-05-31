@@ -42,13 +42,16 @@ import se.snylt.witch.processor.binding.NewInstanceDef;
 import se.snylt.witch.processor.binding.OnBindDef;
 import se.snylt.witch.processor.binding.OnOnBindGetAdapterViewDef;
 import se.snylt.witch.processor.binding.OnOnBindViewDef;
-import se.snylt.witch.processor.binding.ValueBinderOnBindDef;
 import se.snylt.witch.processor.binding.ViewBindingDef;
 import se.snylt.witch.processor.java.BinderCreatorJavaHelper;
 import se.snylt.witch.processor.java.ViewHolderJavaHelper;
 import se.snylt.witch.processor.valueaccessor.FieldAccessor;
 import se.snylt.witch.processor.valueaccessor.MethodAccessor;
 import se.snylt.witch.processor.valueaccessor.ValueAccessor;
+import se.snylt.witch.processor.viewbinder.DefaultViewBinder;
+import se.snylt.witch.processor.viewbinder.ValueBinderViewBinder;
+import se.snylt.witch.processor.viewbinder.ValueViewBinder;
+import se.snylt.witch.processor.viewbinder.ViewBinder;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
@@ -139,10 +142,32 @@ public class WitchProcessor extends AbstractProcessor {
                 if (!viewActionses.contains(value)) {
                     int viewId = hasViewIdAnnotation.getViewId(value);
                     ValueAccessor valueAccessor = getValueAccessor(value);
-                    viewActionses.add(new ViewBindingDef(viewId, valueAccessor));
+                    ClassName viewHolderClassName = getBindingViewHolderName(target);
+                    ClassName targetClassName = getElementClassName(target);
+
+                    ViewBinder viewBinder;
+                    if(isValueBinder(value)) {
+                        viewBinder = new ValueBinderViewBinder(viewHolderClassName, valueAccessor, targetClassName, viewId);
+                    } else if(isValue(value)) {
+                        viewBinder = new ValueViewBinder(viewHolderClassName, valueAccessor, targetClassName, viewId);
+                    } else {
+                        viewBinder = new DefaultViewBinder(viewHolderClassName, valueAccessor, targetClassName, viewId);
+                    }
+
+                    viewActionses.add(new ViewBindingDef(viewBinder));
                 }
             }
         }
+    }
+
+    private boolean isValue(Element value) {
+        TypeMirror valueBinder = TypeUtils.typeMirror(typeUtils, elementUtils, TypeUtils.VALUE);
+        return typeUtils.isAssignable(getType(value), valueBinder);
+    }
+
+    private boolean isValueBinder(Element value) {
+        TypeMirror valueBinder = TypeUtils.typeMirror(typeUtils, elementUtils, TypeUtils.VALUE_BINDER);
+        return typeUtils.isAssignable(getType(value), valueBinder);
     }
 
     private ValueAccessor getValueAccessor(Element value) {
@@ -163,18 +188,13 @@ public class WitchProcessor extends AbstractProcessor {
 
     private TypeMirror getType(Element value) {
         TypeMirror valueType;
-        if(value.getKind() == ElementKind.METHOD) {
+        if (value.getKind() == ElementKind.METHOD) {
             ExecutableElement executableElement = (ExecutableElement) value;
             valueType = executableElement.getReturnType();
         } else {
             valueType = value.asType();
         }
         return valueType;
-    }
-
-    private boolean isValueBinder(Element value) {
-        TypeMirror valueBinder = TypeUtils.typeMirror(typeUtils, elementUtils, TypeUtils.VALUE_BINDER);
-        return typeUtils.isAssignable(getType(value), valueBinder);
     }
 
     private boolean notPrivateOrProtected(Element e) {
@@ -185,10 +205,11 @@ public class WitchProcessor extends AbstractProcessor {
     private void addOnBindActions(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
 
         // BindTo with ValueBinder
+        /*
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.BindTo.class)) {
-            if(isValueBinder(bindAction)) {
+            if (isValueBinder(bindAction)) {
                 ViewBindingDef viewBindingDef = getViewBindingDef(bindAction, binders);
-                TypeMirror elementType = getType(bindAction);
+                /*TypeMirror elementType = getType(bindAction);
                 DeclaredType dt = (DeclaredType) elementType;
                 List<? extends TypeMirror> viewAndValueType = dt.getTypeArguments();
                 TypeMirror viewType = viewAndValueType.get(0);
@@ -210,7 +231,7 @@ public class WitchProcessor extends AbstractProcessor {
 
                 viewBindingDef.addOnBind(valueBindingOnBind);
             }
-        }
+        }*/
 
         // OnBind
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.OnBind.class)) {
@@ -264,7 +285,8 @@ public class WitchProcessor extends AbstractProcessor {
         }
 
         // BindToRecyclerView
-        for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.BindToRecyclerView.class)) {
+        for (Element bindAction : roundEnv
+                .getElementsAnnotatedWith(se.snylt.witch.annotations.BindToRecyclerView.class)) {
             String property = bindAction.getAnnotation(se.snylt.witch.annotations.BindToRecyclerView.class).set();
             TypeName viewType = ClassName.get("android.support.v7.widget", "RecyclerView");
             TypeName valueType = ClassName.get(getType(bindAction));
@@ -299,7 +321,8 @@ public class WitchProcessor extends AbstractProcessor {
         boolean match = false;
 
         TypeName typeName = TypeName.get(bindTypeMirror);
-        DeclaredType bindingDeclaredType = typeUtils.getDeclaredType(elementUtils.getTypeElement(bindTypeMirror.toString()));
+        DeclaredType bindingDeclaredType = typeUtils
+                .getDeclaredType(elementUtils.getTypeElement(bindTypeMirror.toString()));
         OnBindDef actionDef = new NewInstanceDef(typeName);
 
         // OnBind
@@ -341,7 +364,8 @@ public class WitchProcessor extends AbstractProcessor {
         return null;
     }
 
-    private void addOnBindAction(Element bindAction, OnBindDef onBindDef, HashMap<Element, List<ViewBindingDef>> binders) {
+    private void addOnBindAction(Element bindAction, OnBindDef onBindDef,
+            HashMap<Element, List<ViewBindingDef>> binders) {
         ViewBindingDef viewViewBindingDef = getViewBindingDef(bindAction, binders);
         viewViewBindingDef.addOnBind(onBindDef);
     }
@@ -372,11 +396,8 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private void createBindingSpec(Element target, HashMap<Element, List<ViewBindingDef>> binders) {
-        ClassName viewHolderClassName = getBindingViewHolderName(target);
         ClassName bindingClassName = getBindingClassName(target);
-        ClassName targetClassName = getElementClassName(target);
-        TypeSpec bindingTypeSpec = BinderCreatorJavaHelper
-                .toJava(targetClassName, binders.get(target), bindingClassName, viewHolderClassName);
+        TypeSpec bindingTypeSpec = BinderCreatorJavaHelper.toJava(binders.get(target), bindingClassName);
         JavaFile bindingJavaFile = JavaFile.builder(bindingClassName.packageName(), bindingTypeSpec).build();
         try {
             bindingJavaFile.writeTo(filer);

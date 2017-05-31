@@ -19,7 +19,7 @@ public class ViewHolderJavaHelper {
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         for (ViewBindingDef viewBindingDef : viewActionses) {
-            viewHolder.addField(ANDROID_VIEW, viewBindingDef.value.viewHolderFieldName(), Modifier.PUBLIC);
+            viewHolder.addField(ANDROID_VIEW, viewBindingDef.getViewBinder().valueAccessor.viewHolderFieldName(), Modifier.PUBLIC);
         }
 
         return viewHolder.build();

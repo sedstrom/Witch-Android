@@ -60,7 +60,7 @@ class PostWithPicture extends Post {
 
         @BindTo(R.id.my_item_image)
         ValueBinder<ImageView, String> image(){
-            image.setValue(item.imageUrl);
+            image.set(item.imageUrl);
             return image;
         }
 

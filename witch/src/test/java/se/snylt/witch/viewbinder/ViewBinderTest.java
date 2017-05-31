@@ -165,8 +165,11 @@ public class ViewBinderTest {
 
         private boolean alwaysBind;
 
+        private Binder binder;
+
         TestViewBinder(int viewId, Binder binder) {
-            super(viewId, binder);
+            super(viewId);
+            this.binder = binder;
         }
 
         @Override
@@ -189,10 +192,19 @@ public class ViewBinderTest {
         }
 
         @Override
+        public boolean isDirty(Object value) {
+            return false;
+        }
+
+        @Override
         public boolean isAlwaysBind() {
             return alwaysBind;
         }
 
+        @Override
+        public Binder getBinder(Object value) {
+            return binder;
+        }
 
         void setAlwaysBind(boolean alwaysBind) {
             this.alwaysBind = alwaysBind;
