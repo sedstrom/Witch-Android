@@ -14,6 +14,8 @@ import static se.snylt.witch.processor.TypeUtils.VALUE_BINDER_VIEW_BINDER;
 
 public class ValueBinderViewBinder extends ValueViewBinder {
 
+    private MethodSpec valueBinder;
+
     public ValueBinderViewBinder(ClassName viewHolderClassName, ValueAccessor accessor,
             ClassName targetTypeName, int viewId) {
         super(viewHolderClassName, accessor, targetTypeName, viewId);
@@ -25,10 +27,9 @@ public class ValueBinderViewBinder extends ValueViewBinder {
                 .addSuperinterface(VALUE_BINDER_VIEW_BINDER)
                 .addMethod(setView())
                 .addMethod(getView())
-                .addMethod(getValue())
                 .addMethod(isAlwaysBind())
                 .addMethod(isDirty())
-                .addMethod(getBinder())
+                .addMethod(getValueBinder())
                 .build();
     }
 
@@ -49,6 +50,15 @@ public class ValueBinderViewBinder extends ValueViewBinder {
                 .addParameter(Object.class, "target")
                 .returns(BINDER)
                 .addStatement("return (($T)(($T)target).$N).getBinder()", VALUE_BINDER, targetTypeName, valueAccessor.accessValueString())
+                .build();
+    }
+
+    MethodSpec getValueBinder() {
+        return MethodSpec.methodBuilder("getValueBinder")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(Object.class, "target")
+                .returns(VALUE_BINDER)
+                .addStatement("return ($T)(($T)target).$N", VALUE_BINDER, targetTypeName, valueAccessor.accessValueString())
                 .build();
     }
 }
