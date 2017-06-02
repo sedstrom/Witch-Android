@@ -40,7 +40,6 @@ ext {
 }
 
 def supportLibraryVersion = '25.3.1'
-def witchLatestReleaseVersion = '0.0.1'
 
 ext.deps = [
         // Android
@@ -60,9 +59,6 @@ ext.deps = [
         // Test dependencies
         junit              : 'junit:junit:4.12',
         mockitoCore        : 'org.mockito:mockito-core:2.7.12',
-
-        witch              : "com.jakewharton:butterknife:$witchLatestReleaseVersion",
-        witchProcessor     : "com.jakewharton:butterknife-compiler:$witchLatestReleaseVersion"
 ]
 
 task clean(type: Delete) {

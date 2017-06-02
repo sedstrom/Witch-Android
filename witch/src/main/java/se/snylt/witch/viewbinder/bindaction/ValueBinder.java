@@ -1,20 +1,20 @@
 package se.snylt.witch.viewbinder.bindaction;
 
+import se.snylt.witch.viewbinder.Value;
+
 /**
- * Container for a {@link Binder} and a {@param Value}.
+ * Container for a {@link Binder} and a {@param V}.
  *
  * @param <Target> target to be bound to.
- * @param <Value> value to be bound.
+ * @param <V> value to be bound.
  */
-public class ValueBinder<Target, Value> {
+public class ValueBinder<Target, V> extends Value<V> {
 
-    private final Binder<Target, Value> binder;
+    private final Binder<Target, V> binder;
 
-    private Value value;
-
-    private ValueBinder(Value value, Binder<Target, Value> binder) {
+    private ValueBinder(V value, Binder<Target, V> binder) {
+        super(value);
         this.binder = binder;
-        this.value = value;
     }
 
     public static <Target, Value> ValueBinder<Target, Value> create(Value value, Binder<Target, Value> binder) {
@@ -26,26 +26,10 @@ public class ValueBinder<Target, Value> {
     }
 
     /**
-     * Get stored value
-     * @return stored value
-     */
-    public Value getValue() {
-        return value;
-    }
-
-    /**
-     * Set stored value
-     * @param value value to be stored
-     */
-    public void setValue(Value value) {
-        this.value = value;
-    }
-
-    /**
      * Get binder for binding value to target
      * @return binder that binds value to target.
      */
-    public Binder<Target, Value> getBinder() {
+    public Binder<Target, V> getBinder() {
         return binder;
     }
 }

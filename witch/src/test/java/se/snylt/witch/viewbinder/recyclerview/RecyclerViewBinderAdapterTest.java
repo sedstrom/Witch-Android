@@ -79,7 +79,8 @@ public class RecyclerViewBinderAdapterTest {
 
         List<RecyclerViewBinderAdapter.Binder<?>> binders = new ArrayList<>();
         binders.add(itemBinder);
-        adapter = new RecyclerViewBinderAdapter<>(items, binders);
+        adapter = new TestRecyclerViewBinderAdapter<>(items, binders);
+
     }
 
     @Test
@@ -147,4 +148,15 @@ public class RecyclerViewBinderAdapterTest {
         }
     }
 
+    private class TestRecyclerViewBinderAdapter<T> extends RecyclerViewBinderAdapter<T> {
+
+        public TestRecyclerViewBinderAdapter(List<T> items, List<Binder<? extends T>> binders) {
+            super(items, binders);
+        }
+
+        @Override
+        protected void doNotifyDataSetChanged() {
+            // Avoid call to notifyDataSetChanged()
+        }
+    }
 }

@@ -4,6 +4,11 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <EditText
+            android:id="@+id/value_view_fragment_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     <TextView
             android:id="@+id/value_view_fragment_text"
             android:layout_width="wrap_content"
