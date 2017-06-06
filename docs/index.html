@@ -138,8 +138,66 @@ layout: main
     </div>
   </div>
 </div>
-<!-- View holders -->
+<!-- Value diffing -->
 <div class="section">
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns">
+        <h4>
+          <span class="primary-font">
+            <b>Value diffing</b>
+          </span>
+        </h4>
+        <p>
+          By default, only new values (instances) will be bound to its view.
+          I.e. changing the inner properties of an instance won't qualify it to
+          be bound in upcoming bind pass. A value will only be bound if it is:
+          <ul>
+            <li><p>1. <b>Not the same</b> instance as currently bound value</p></li>
+            <li><p>2. <b>Not equal</b> to currently bound value</p></li>
+          </ul>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+{% highlight java linenos %}
+{% include snippets/9.java %}
+{% endhighlight %}
+    </div>
+    <div class="row top-30">
+      <div class="twelve columns">
+        <p>
+          If the value to be bound cannot (or should not) be re-created, it can be
+          wrapped in a <b>Value</b> container. The Value container gives control
+          over when a value should be bound or not. Calling Value.set() or
+          Value.update() will flag the value as dirty and will then be part of
+          next bind pass, regardless of if value is new or different from before.
+        </p>
+      </div>
+    </div>
+    <div class="row top-10">
+{% highlight java linenos %}
+{% include snippets/10.java %}
+{% endhighlight %}
+    </div>
+    <div class="row top-30">
+      <div class="twelve columns">
+        <p>
+          If value should always be bound, without any value diffing, the
+          <b>@AlwaysBind</b> annotation can be used.
+        </p>
+      </div>
+    </div>
+    <div class="row top-10">
+{% highlight java linenos %}
+{% include snippets/11.java %}
+{% endhighlight %}
+    </div>
+  </div>
+</div>
+
+<!-- View holders -->
+<div class="section secondary">
   <div class="container">
     <div class="row">
       <div class="twelve columns">
