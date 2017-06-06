@@ -4,22 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.snylt.witch.processor.valueaccessor.ValueAccessor;
+import se.snylt.witch.processor.viewbinder.ViewBinder;
 
 public class ViewBindingDef {
 
-    public final Integer viewId;
-
-    // Value
-    public final ValueAccessor value;
-
-    // Flag always bind
-    private boolean alwaysBind = false;
-
     private final List<OnBindDef> onBinds;
 
-    public ViewBindingDef(Integer viewId, ValueAccessor value) {
-        this.viewId = viewId;
-        this.value = value;
+    private final ViewBinder viewBinder;
+
+    public ViewBindingDef(ViewBinder viewBinder) {
+        this.viewBinder = viewBinder;
         this.onBinds = new ArrayList<>();
     }
 
@@ -34,20 +28,24 @@ public class ViewBindingDef {
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof ViewBindingDef) {
-            return ((ViewBindingDef) obj).value.equals(value);
+            return ((ViewBindingDef) obj).getValue().equals(getValue());
         }
         if(obj instanceof ValueAccessor) {
-            return obj.equals(value);
+            return obj.equals(getValue());
         }
         return super.equals(obj);
     }
 
-    public boolean isAlwaysBind() {
-        return alwaysBind;
+    public void setAlwaysBind(boolean alwaysBind) {
+        viewBinder.isAlwaysBind = alwaysBind;
     }
 
-    public void setAlwaysBind(boolean alwaysBind) {
-        this.alwaysBind = alwaysBind;
+    ValueAccessor getValue(){
+        return viewBinder.valueAccessor;
+    }
+
+    public ViewBinder getViewBinder() {
+        return viewBinder;
     }
 }
 

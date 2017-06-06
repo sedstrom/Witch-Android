@@ -5,10 +5,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertSame;
-import static org.junit.Assert.assertNotEquals;
 
 public class ValueBinderTest {
 
@@ -24,7 +22,7 @@ public class ValueBinderTest {
     public void create_With_Binder_Should_HaveBinderAndNullValue() {
         ValueBinder valueBinder = ValueBinder.create(binder);
         assertSame(binder, valueBinder.getBinder());
-        assertNull(valueBinder.getValue());
+        assertNull(valueBinder.get());
     }
 
     @Test
@@ -32,7 +30,7 @@ public class ValueBinderTest {
         Object value = new Object();
         ValueBinder valueBinder = ValueBinder.create(value, binder);
         assertSame(binder, valueBinder.getBinder());
-        assertSame(value, valueBinder.getValue());
+        assertSame(value, valueBinder.get());
     }
 
     @Test
@@ -40,21 +38,8 @@ public class ValueBinderTest {
         Object value = new Object();
         Object newValue = new Object();
         ValueBinder<Object, Object> valueBinder = ValueBinder.create(value, binder);
-        assertSame(value, valueBinder.getValue());
-        valueBinder.setValue(newValue);
-        assertSame(newValue, valueBinder.getValue());
-    }
-
-    @Test
-    public void equals_Should_CompareValues() {
-        assertEquals(valueBinder(null), valueBinder(null));
-        assertEquals(valueBinder("123"), valueBinder("123"));
-        assertNotEquals(valueBinder("123"), valueBinder("456"));
-        assertNotEquals(valueBinder(null), valueBinder("123"));
-        assertNotEquals(valueBinder("123"), "123");
-    }
-
-    private ValueBinder valueBinder(Object value){
-        return ValueBinder.create(value, null);
+        assertSame(value, valueBinder.get());
+        valueBinder.set(newValue);
+        assertSame(newValue, valueBinder.get());
     }
 }

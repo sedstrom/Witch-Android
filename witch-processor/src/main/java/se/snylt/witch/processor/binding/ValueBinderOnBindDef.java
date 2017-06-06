@@ -11,35 +11,19 @@ import se.snylt.witch.processor.TypeUtils;
 
 public class ValueBinderOnBindDef extends OnBindDef {
 
-    private final TypeName viewType;
-
-    private final TypeName valueType;
-
-    private final TypeName valueBinderType;
-
-    private final TypeName binderType;
-
-    public ValueBinderOnBindDef(TypeName viewType, TypeName valueType, TypeName binderType, TypeName valueBinderType) {
-        this.viewType = viewType;
-        this.valueType = valueType;
-        this.binderType = binderType;
-        this.valueBinderType = valueBinderType;
-    }
+    public ValueBinderOnBindDef(){}
 
     @Override
     public String getNewInstanceJava() {
         MethodSpec method = MethodSpec.methodBuilder("onBind")
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(viewType, "target")
-                .addParameter(valueBinderType, "valueBinder")
+                .addParameter(TypeName.OBJECT, "target")
+                .addParameter(TypeName.OBJECT, "value")
                 .returns(void.class)
-                .addStatement("$T binder = valueBinder.getBinder()", binderType)
-                .addStatement("$T value = valueBinder.getValue()", valueType)
-                .addStatement("binder.bind(target, value)")
                 .build();
 
         TypeSpec anonymous = TypeSpec.anonymousClassBuilder("")
-                .addSuperinterface(ParameterizedTypeName.get(TypeUtils.SYNC_ON_BIND, viewType, valueBinderType))
+                .addSuperinterface(ParameterizedTypeName.get(TypeUtils.SYNC_ON_BIND, TypeName.OBJECT, TypeName.OBJECT))
                 .addMethod(method)
                 .build();
 

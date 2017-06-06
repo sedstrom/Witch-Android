@@ -10,11 +10,15 @@ import org.mockito.MockitoAnnotations;
 
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -25,7 +29,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class ViewBinderTest {
+public class DefaultViewBinderTest {
 
     private final static int VIEW_ID = 666;
 
@@ -145,6 +149,25 @@ public class ViewBinderTest {
         verify(viewFinder, never()).findViewById(anyInt());
     }
 
+    @Test
+    public void bind_With_SameValue_Should_NotKeepAsHistoryReference(){
+        Binder<View, Object> binder = Binder.create();
+        viewBinder = spy(new TestViewBinder(VIEW_ID, binder));
+        Object value = new ArrayList<>();
+        Object otherEqualValue = new ArrayList<>();
+
+        // When
+        viewBinder.setValue(value);
+        viewBinder.bind(viewHolder, viewFinder, target);
+        viewBinder.setValue(otherEqualValue);
+        viewBinder.bind(viewHolder, viewFinder, target);
+
+        // Then
+        assertEquals(value, otherEqualValue);
+        assertNotSame(otherEqualValue, viewBinder.getHistoryValue());
+        assertSame(value, viewBinder.getHistoryValue());
+    }
+
     private class TestViewHolder {
 
         private Object view;
@@ -159,7 +182,7 @@ public class ViewBinderTest {
     }
 
 
-    private class TestViewBinder extends ViewBinder {
+    private class TestViewBinder extends DefaultViewBinder {
 
         private Object value;
 
@@ -193,9 +216,17 @@ public class ViewBinderTest {
             return alwaysBind;
         }
 
+        @Override
+        public Binder getBinder(Object value) {
+            return binder;
+        }
 
         void setAlwaysBind(boolean alwaysBind) {
             this.alwaysBind = alwaysBind;
+        }
+
+        public Object getHistoryValue() {
+            return historyValue;
         }
     }
 

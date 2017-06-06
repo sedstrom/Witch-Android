@@ -10,14 +10,8 @@ import se.snylt.witch.viewbinder.ViewBinder;
 
 public abstract class TestBase {
 
-    private TargetViewBinder targetViewBinder;
-
-    private Object viewHolder;
-
     @Before
     public void setup(){
-        targetViewBinder = getTargetViewBinder();
-        viewHolder = getViewHolder();
     }
 
     @Test
