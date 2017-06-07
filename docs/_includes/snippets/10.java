@@ -1,4 +1,4 @@
-@BindTo(R.id.my_view)
+@BindToView(id = R.id.user_view, view = UserView.class, set = "user")
 Value<User> user;
 ...
 
