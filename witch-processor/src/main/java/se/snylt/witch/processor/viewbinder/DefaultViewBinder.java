@@ -28,7 +28,6 @@ public class DefaultViewBinder extends ViewBinderBase {
                 .addMethod(setView())
                 .addMethod(getView())
                 .addMethod(getValue())
-                .addMethod(isAlwaysBind())
                 .addMethod(isDirty())
                 .addMethod(getBinder())
                 .build();
@@ -60,7 +59,7 @@ public class DefaultViewBinder extends ViewBinderBase {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "target")
                 .returns(boolean.class)
-                .addStatement("return super.isDirty(target)")
+                .addStatement("return $N", isDirty.isDirty())
                 .build();
     }
 }

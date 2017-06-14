@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import se.snylt.witch.viewbinder.bindaction.Binder;
+import se.snylt.witch.viewbinder.viewbinder.DefaultViewBinder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
 import static junit.framework.Assert.assertEquals;
@@ -115,6 +116,7 @@ public class DefaultViewBinderTest {
         verify(binder, never()).bind(any(View.class), anyString());
     }
 
+    /*
     @Test
     public void bind_When_IsNotNewValue_IsAlwaysBind_Should_RunBindWithValueAndView() {
         viewBinder.setValue("123");
@@ -133,6 +135,7 @@ public class DefaultViewBinderTest {
     private void isAlwaysBind(boolean alwaysBind) {
         viewBinder.setAlwaysBind(alwaysBind);
     }
+    */
 
     @Test
     public void bind_With_ViewSetInViewHolder_Should_Not_FindView_Or_SetViewInViewHolder(){
@@ -186,10 +189,13 @@ public class DefaultViewBinderTest {
 
         private Object value;
 
-        private boolean alwaysBind;
-
         TestViewBinder(int viewId, Binder binder) {
             super(viewId, binder);
+        }
+
+        @Override
+        public boolean isDirty(Object target) {
+            return true;
         }
 
         @Override
@@ -212,17 +218,8 @@ public class DefaultViewBinderTest {
         }
 
         @Override
-        public boolean isAlwaysBind() {
-            return alwaysBind;
-        }
-
-        @Override
         public Binder getBinder(Object value) {
             return binder;
-        }
-
-        void setAlwaysBind(boolean alwaysBind) {
-            this.alwaysBind = alwaysBind;
         }
 
         public Object getHistoryValue() {

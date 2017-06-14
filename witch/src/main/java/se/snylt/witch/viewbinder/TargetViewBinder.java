@@ -2,6 +2,7 @@ package se.snylt.witch.viewbinder;
 
 import java.util.List;
 
+import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
 public class TargetViewBinder {

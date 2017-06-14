@@ -5,6 +5,7 @@ import java.util.List;
 
 import se.snylt.witch.processor.valueaccessor.ValueAccessor;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
+import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
 
 public class ViewBindingDef {
 
@@ -36,8 +37,8 @@ public class ViewBindingDef {
         return super.equals(obj);
     }
 
-    public void setAlwaysBind(boolean alwaysBind) {
-        viewBinder.isAlwaysBind = alwaysBind;
+    public void setIsDirty(IsDirty isDirty) {
+        viewBinder.isDirty = isDirty;
     }
 
     ValueAccessor getValue(){

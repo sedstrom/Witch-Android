@@ -7,6 +7,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 
+import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
 import static org.mockito.ArgumentMatchers.same;

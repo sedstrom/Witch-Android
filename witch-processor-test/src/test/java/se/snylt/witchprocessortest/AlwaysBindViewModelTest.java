@@ -4,7 +4,7 @@ package se.snylt.witchprocessortest;
 import java.util.List;
 
 import se.snylt.witch.viewbinder.TargetViewBinder;
-import se.snylt.witch.viewbinder.ViewBinder;
+import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -12,7 +12,7 @@ public class AlwaysBindViewModelTest extends TestBase {
 
     @Override
     protected void testBind(List<ViewBinder> binder, Object viewHolder) {
-        assertTrue(binder.get(0).isAlwaysBind());
+        assertTrue(binder.get(0).isDirty(null));
     }
 
     @Override

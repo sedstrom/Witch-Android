@@ -45,15 +45,4 @@ public abstract class ViewBinderBase extends ViewBinder {
                 .build();
         return setView;
     }
-
-    @Override
-    MethodSpec isAlwaysBind() {
-        MethodSpec alwaysBind = MethodSpec.methodBuilder("isAlwaysBind")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(boolean.class)
-                .addStatement("return $L", isAlwaysBind)
-                .build();
-
-        return alwaysBind;
-    }
 }

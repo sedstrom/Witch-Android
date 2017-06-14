@@ -4,7 +4,7 @@ import android.view.View;
 
 import java.util.List;
 
-import se.snylt.witch.viewbinder.ViewBinder;
+import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 import se.snylt.witchprocessortest.TestViewModel;
 

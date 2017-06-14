@@ -1,4 +1,4 @@
-package se.snylt.witch.viewbinder;
+package se.snylt.witch.viewbinder.viewbinder;
 
 import android.view.View;
 
@@ -14,7 +14,7 @@ public abstract class ViewBinder {
     }
 
     public boolean bind(Object viewHolder, ViewFinder viewFinder, Object target) {
-        if (isDirty(target) || isAlwaysBind()) {
+        if (isDirty(target)) {
             View view = findView(viewHolder, viewFinder);
             getBinder(target).bind(view, getValue(target));
             return true;
@@ -65,12 +65,6 @@ public abstract class ViewBinder {
      * @return true if value is dirty and should be bound, otherwise false.
      */
     public abstract boolean isDirty(Object target);
-
-    /**
-     * Check if binging should always bind and skip value diff.
-     * @return true if binding should always bind, otherwise false.
-     */
-    public abstract boolean isAlwaysBind();
 
     /**
      * Get binder for this view binder.

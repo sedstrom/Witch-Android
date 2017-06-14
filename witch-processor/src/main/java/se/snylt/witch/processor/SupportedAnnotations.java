@@ -189,10 +189,16 @@ class SupportedAnnotations {
     }
 
     // AlwaysBind
+    @Deprecated
     final static class AlwaysBind {
         final static String name = "se.snylt.witch.annotations.AlwaysBind";
-
     }
+
+    final static class BindWhen {
+        final static String name = "se.snylt.witch.annotations.BindWhen";
+    }
+
+    // BindIfNotSame
 
     // All annotations that bind to a view id
     final static HasViewId[] ALL_BIND_VIEW = new HasViewId[] {

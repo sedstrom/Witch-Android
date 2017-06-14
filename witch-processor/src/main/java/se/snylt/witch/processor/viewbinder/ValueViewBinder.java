@@ -25,7 +25,6 @@ public class ValueViewBinder extends DefaultViewBinder {
                 .addMethod(setView())
                 .addMethod(getView())
                 .addMethod(getValue())
-                .addMethod(isAlwaysBind())
                 .addMethod(isDirty())
                 .addMethod(getBinder())
                 .build();

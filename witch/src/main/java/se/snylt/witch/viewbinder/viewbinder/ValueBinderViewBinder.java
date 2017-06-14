@@ -1,4 +1,4 @@
-package se.snylt.witch.viewbinder;
+package se.snylt.witch.viewbinder.viewbinder;
 
 import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.bindaction.ValueBinder;

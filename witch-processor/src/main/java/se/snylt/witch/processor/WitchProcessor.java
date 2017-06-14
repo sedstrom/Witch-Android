@@ -38,6 +38,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
+import se.snylt.witch.annotations.BindWhen;
 import se.snylt.witch.processor.binding.NewInstanceDef;
 import se.snylt.witch.processor.binding.OnBindDef;
 import se.snylt.witch.processor.binding.OnOnBindGetAdapterViewDef;
@@ -52,6 +53,9 @@ import se.snylt.witch.processor.viewbinder.DefaultViewBinder;
 import se.snylt.witch.processor.viewbinder.ValueBinderViewBinder;
 import se.snylt.witch.processor.viewbinder.ValueViewBinder;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
+import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyAlways;
+import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
+import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotSame;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
@@ -112,6 +116,7 @@ public class WitchProcessor extends AbstractProcessor {
         addBindingTargets(binders, roundEnv, SupportedAnnotations.ALL_BIND_VIEW);
         addOnBindActions(binders, roundEnv);
         addAlwaysBind(binders, roundEnv);
+        addBindWhen(binders, roundEnv);
 
         // Generate java
         buildJava(binders);
@@ -119,10 +124,28 @@ public class WitchProcessor extends AbstractProcessor {
         return true;
     }
 
+    private void addBindWhen(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
+        for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.BindWhen.class)) {
+            String bindWhen =  bindAction.getAnnotation(se.snylt.witch.annotations.BindWhen.class).value();
+            if(bindWhen.equals(BindWhen.ALWAYS)) {
+                getViewBindingDef(bindAction, binders).setIsDirty(new IsDirtyAlways());
+                continue;
+            } else if(bindWhen.equals(BindWhen.NOT_EQUALS)) {
+                getViewBindingDef(bindAction, binders).setIsDirty(new IsDirtyIfNotEquals());
+                continue;
+            } else if (bindWhen.equals(BindWhen.NOT_SAME)) {
+                getViewBindingDef(bindAction, binders).setIsDirty(new IsDirtyIfNotSame());
+                continue;
+            }
+
+            logAndThrowError("Illegal value [" + bindWhen + "] for @" + BindWhen.class.getSimpleName());
+        }
+    }
+
     private void addAlwaysBind(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
         // OnBind
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.AlwaysBind.class)) {
-            getViewBindingDef(bindAction, binders).setAlwaysBind(true);
+            getViewBindingDef(bindAction, binders).setIsDirty(new IsDirtyAlways());
         }
     }
 
@@ -203,35 +226,6 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private void addOnBindActions(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
-
-        // BindTo with ValueBinder
-        /*
-        for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.BindTo.class)) {
-            if (isValueBinder(bindAction)) {
-                ViewBindingDef viewBindingDef = getViewBindingDef(bindAction, binders);
-                /*TypeMirror elementType = getType(bindAction);
-                DeclaredType dt = (DeclaredType) elementType;
-                List<? extends TypeMirror> viewAndValueType = dt.getTypeArguments();
-                TypeMirror viewType = viewAndValueType.get(0);
-                TypeMirror valueType = viewAndValueType.get(1);
-
-                TypeMirror valueBinderType =
-                        typeUtils.getDeclaredType(
-                                elementUtils.getTypeElement(TypeUtils.VALUE_BINDER.toString()), viewType, valueType);
-
-                TypeMirror binderType =
-                        typeUtils.getDeclaredType(
-                                elementUtils.getTypeElement(TypeUtils.BINDER.toString()), viewType, valueType);
-
-                ValueBinderOnBindDef valueBindingOnBind = new ValueBinderOnBindDef(
-                        TypeName.get(viewType),
-                        TypeName.get(valueType),
-                        TypeName.get(binderType),
-                        TypeName.get(valueBinderType));
-
-                viewBindingDef.addOnBind(valueBindingOnBind);
-            }
-        }*/
 
         // OnBind
         for (Element bindAction : roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.OnBind.class)) {

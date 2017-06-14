@@ -2,6 +2,8 @@ package se.snylt.witch.viewbinder;
 
 import java.util.List;
 
+import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
+
 public class TestViewModel_ViewBinder implements TargetViewBinderFactory {
 
     public final TestTargetViewBinder binder = new TestTargetViewBinder(null);

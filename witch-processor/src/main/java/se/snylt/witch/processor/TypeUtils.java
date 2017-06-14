@@ -14,21 +14,25 @@ public class TypeUtils {
 
     private final static String LIBRARY_PACKAGE = "se.snylt.witch.viewbinder";
 
+    private final static String LIBRARY_VIEW_BINDER_PACKAGE = "se.snylt.witch.viewbinder.viewbinder";
+
     private final static String LIBRARY_BIND_ACTIONS_PACKAGE = "se.snylt.witch.viewbinder.bindaction";
 
     public static final ClassName LIST = ClassName.get(List.class);
 
     public static final TypeName ARRAY_LIST = TypeName.get(ArrayList.class);
 
-    public final static TypeName VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "ViewBinder");
+    public final static TypeName VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "ViewBinder");
 
-    public final static TypeName DEFAULT_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "DefaultViewBinder");
+    public final static TypeName DEFAULT_VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DefaultViewBinder");
 
-    public final static TypeName VALUE_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "ValueViewBinder");
+    public final static TypeName VALUE_VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "ValueViewBinder");
 
-    public final static TypeName VALUE_BINDER_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "ValueBinderViewBinder");
+    public final static TypeName VALUE_BINDER_VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "ValueBinderViewBinder");
 
     public final static TypeName VALUE = ClassName.get(LIBRARY_PACKAGE, "Value");
+
+    public final static TypeName DIFF_VALUE = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue");
 
     public static final TypeName TARGET_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinder");
 

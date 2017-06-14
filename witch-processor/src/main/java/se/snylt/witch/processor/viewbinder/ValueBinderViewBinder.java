@@ -27,7 +27,6 @@ public class ValueBinderViewBinder extends ValueViewBinder {
                 .addSuperinterface(VALUE_BINDER_VIEW_BINDER)
                 .addMethod(setView())
                 .addMethod(getView())
-                .addMethod(isAlwaysBind())
                 .addMethod(isDirty())
                 .addMethod(getValueBinder())
                 .build();
