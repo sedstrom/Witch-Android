@@ -1,4 +1,4 @@
-![](./docs/assets/img/logo-icon-font.svg)
+![](https://cdn.rawgit.com/sedstrom/Witch-Android/master/docs/assets/img/logo-icon-font.svg)
 
 ##### View-data binding on Android.
 
