@@ -5,13 +5,19 @@ task update() << {
         println("Don't update version in docs.")
         return;
     }
-    File outputFile = new File("./docs/_includes", "version.txt");
+
+    // Gradle
+    def compile = "compile 'se.snylt:witch:${VERSION_NAME}'";
+    def apt = "annotationProcessor 'se.snylt:witch-processor:${VERSION_NAME}'";
+    File outputFile = new File("./docs/_includes/snippets", "download.gradle");
     if(outputFile.exists()) {
         outputFile.delete();
     }
     outputFile.createNewFile();
     FileWriter fileWriter = new FileWriter(outputFile, true);
-    fileWriter.write(VERSION_NAME);
+    fileWriter.write(compile);
+    fileWriter.write("\n");
+    fileWriter.write(apt);
     fileWriter.close();
     println("Updated version ${VERSION_NAME} in docs")
 }

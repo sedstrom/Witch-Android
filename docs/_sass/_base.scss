@@ -1,6 +1,15 @@
 $background-color: #F7F7F7;
-$background-color-secondary: #F2F2F2;
-$primary-color: #D17795;
-$secondary-color: #DD9BB1;
-$text-color: #3C3C3C;
-$text-secondary-color: #666666;
+$primary-color: #353535;
+$accent-color: #02C98C;
+$text-color: $primary-color;
+$text-color-light: #cccccc;
+$white: #ffffff;
+$transparent: rgba(0,0,0,0);
+
+.primary-color {
+  color: $primary-color;
+}
+
+.accent-color {
+  color: $accent-color;
+}

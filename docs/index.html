@@ -3,9 +3,11 @@ layout: main
 ---
 <div class="container">
   <div class="row">
-    <a class="u-pull-right" href="http://www.github.com/sedstrom/Witch-Android">
-      <span class="primary-font">GitHub</span>
-    </a>
+    <form method="get" class="u-pull-right" action="http://www.github.com/sedstrom/Witch-Android">
+      <button class="plain" type="submit">
+        GITHUB
+      </button>
+    </form>
   </div>
 </div>
 <div class="section">
@@ -13,49 +15,40 @@ layout: main
     <div class="row">
       <ul class="twelve columns logo">
         <li>
-          <img src="assets/img/logo-no-text.svg"/>
+          <img src="assets/img/logo-icon-font.svg"/>
         </li>
-        <li class="top-30">
-          <h3>
-            <span class="primary-font"><b>Witch</b></span> is a flexible view-data binding<br/>library for <b>Android</b>
-          </h3>
-        </li>
-        <li class="top-20">
-          <ul id="features">
-            <li>
-              <p>Bind data to views with <b><span class="primary-text-color">@annotations</span></b>.</p>
-            </li>
-            <li>
-              <p>Compose functional bind flows.</p>
-            </li>
-            <li>
-              <p>View holders built in.</p>
-            </li>
-          </ul>
+        <li class="top-90">
+          <h1 id="headline">
+            View-data binding on <span class="accent-color">Android</span>
+          </h1>
         </li>
       </ul>
     </div>
-    <div class="row top-30">
-      <div class="offset-by-three three columns">
-        <button class="witch-version">{% include version.txt %}</button>
+    <div class="row">
+      <div class="twelve columns">
+          <p id="introduction">
+            Use annotations to hook up data with views and skip any view lookup.
+            Sync all view data in one go and keep view states up to date with
+            application state at all times. View holders are bulit in.
+          </p>
       </div>
-      <form method="get" class="three columns" action="http://www.github.com/sedstrom/Witch-Android">
+    </div>
+    <div class="row top-30">
+      <form method="get" class="offset-by-four four columns" action="#install">
         <button type="submit">
-          Get started
+          Get started!
         </button>
       </form>
     </div>
   </div>
 </div>
 <!-- Simple -->
-<div class="section secondary">
-  <div class="container">
+<div class="section divider-top">
+  <div class="container top-30">
     <div class="row">
       <div class="twelve columns">
         <h4>
-          <span class="primary-font">
-            <b>Simple</b>
-          </span>
+          Simple
         </h4>
         <p>
           Bind values directly to views without any lookup.
@@ -76,9 +69,7 @@ layout: main
     <div class="row">
       <div class="twelve columns">
         <h4>
-          <span class="primary-font">
-            <b>Flexible</b>
-          </span>
+          Flexible
         </h4>
         <p>
           Views not backed up by an annotation, can be bound with custom view class.
@@ -122,9 +113,7 @@ layout: main
     <div class="row">
       <div class="twelve columns">
         <h4>
-          <span class="primary-font">
-            <b>Dynamic</b>
-          </span>
+          Dynamic
         </h4>
         <p>
           Bind functions can be re-used and composed in chains.
@@ -144,9 +133,7 @@ layout: main
     <div class="row">
       <div class="twelve columns">
         <h4>
-          <span class="primary-font">
-            <b>Value diffing</b>
-          </span>
+          Value diffing
         </h4>
         <p>
           By default, only new values (instances) will be bound to its view.
@@ -201,9 +188,7 @@ layout: main
     <div class="row">
       <div class="twelve columns">
         <h4>
-          <span class="primary-font">
-            <b>View holders built in</b>
-          </span>
+          View holders built in
         </h4>
         <p>
           Witch will create view holders for all annotated views. This eliminates the need for creating additional
@@ -242,6 +227,24 @@ layout: main
     <div class="row spacing-small">
 {% highlight java linenos %}
 {% include snippets/8.java %}
+{% endhighlight %}
+    </div>
+  </div>
+</div>
+
+<!-- Install -->
+<div class="section" id="install">
+  <div class="container">
+    <div class="row">
+      <div class="twelve columns">
+        <h4>
+          Gradle
+        </h4>
+      </div>
+    </div>
+    <div class="row top-10">
+{% highlight gradle linenos %}
+{% include snippets/download.gradle %}
 {% endhighlight %}
     </div>
   </div>

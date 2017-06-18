@@ -1,4 +1,4 @@
-@BindToTextView(id= R.id.title)
+@BindToTextView(id = R.id.title)
 String title = "Hello Witch!";
 ...
 

@@ -1,55 +1,105 @@
 @import "_base";
 
-$text-size-title: 38px;
+$text-size-title: 22px;
 $text-size-sub-title: 26px;
 $text-size-content: 16px;
 $button-height: 44px;
+$half-button-height: 22px;
+
+// Utils
+.top-10 { margin-top: 10px; }
+.top-20 { margin-top: 20px; }
+.top-30 { margin-top: 30px; }
+.top-50 { margin-top: 50px; }
+.top-70 { margin-top: 70px; }
+.top-90 { margin-top: 90px; }
+
+.width-50 { width: 50%; }
+.width-70 { width: 70%; }
+.width-100 { width: 700%; }
 
 body {
   background-color: $background-color;
-}
-
-div .witch-version {
-  pointer-events: none;
-  background-color: #fff;
-  color: $text-color;
-  height: $button-height;
-  border-radius: 0;
-  width: 100%;
-  border-radius: 2px;
-  border: 1px solid #D2D2D2;
-  font-family: monospace;
-  font-size: 14px;
-}
-
-button {
-  font-family: 'Domine', serif;
-  font-weight: bold;
-  background-color: $text-color;
-  color: #fff;
-  height: $button-height;
-  width: 100%;
-  border: none;
-  border-radius: 2px;
-  &:hover {
-    background-color: $primary-color;
-    color: #fff;
-  }
-  &:focus {
-    background-color: $text-color;
-    color: #fff;
-  }
-  &:active {
-    background-color: $primary-color;
-    color: #fff;
-  }
+  font-family: 'Roboto';
+  font-weight: 400;
+  color: $primary-color;
 }
 
 p {
-  color: $text-color;
-  font-size: $text-size-content;
-  font-family: 'Domine', serif;
-  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.logo {
+  margin-top: 30px;
+  img {
+    width: 100%;
+    height: 216px;
+  }
+}
+
+#headline {
+  font-size: $text-size-title;
+  text-align: center;
+}
+
+#introduction {
+    text-align: center;
+    width: 100%;
+    margin: auto;
+    @media (min-width: 550px) {
+        width: 75%;
+    }
+
+    @media (min-width: 860px) {
+        width: 50%;
+    }
+}
+
+button {
+  font-family: 'Roboto';
+  font-weight: 700;
+  font-size: 13px;
+  padding: 0;
+  color: $primary-color;
+  background-color: $white;
+  height: $button-height;
+  width: 100%;
+  border: 2px solid $primary-color;
+  border-radius: $half-button-height;
+  &:hover {
+    border-color: $accent-color;
+    color: $accent-color;
+  }
+  &:active {
+    border-color: $accent-color;
+    background-color: $accent-color;
+    color: #fff;
+  }
+
+  -webkit-transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+}
+
+button.plain {
+  background-color: $transparent;
+  border: 0px;
+  border-radius: 0;
+  border-bottom: 0px solid $accent-color;
+  padding-top: 0px;
+  font-size: 16px;
+  &:hover {
+    color: $accent-color;
+    padding-top: 3px;
+    border-bottom: 3px solid $accent-color;
+  }
+  &:active {
+    color: $accent-color;
+    padding-top: 3px;
+    border-bottom: 6px solid $accent-color;
+  }
+
+  -webkit-transition: border-bottom 0.15s, padding 0.15s;
+  transition: border-bottom 0.15s, padding 0.15s;
 }
 
 div ul {
@@ -58,63 +108,38 @@ div ul {
   padding: 0px;
 }
 
-#features {
-  p {
-    font-size: 18px;
-    color: $text-secondary-color;
-  }
-}
-
-h3 {
-  color: $text-color;
-  font-family: 'Domine', serif;
-  font-size: $text-size-title;
-  text-align: center;
-}
-
-.top-10 { margin-top: 10px; }
-.top-20 { margin-top: 20px; }
-.top-30 { margin-top: 30px; }
-
-.row a {
-  color: $text-color;
-  font-weight: bold;
-  line-height: 40px;
-  font-size: 18px;
-  text-decoration: none;
-  &:hover {
-    color: $primary-color;
-  }
-}
-
-span.primary-font {
-  font-family: 'Cherry Swash', cursive;
-}
-
-span.primary-text-color {
-  color: $text-color;
-}
-
 .section {
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   width: 100%;
-  background-color: $background-color;
-}
-
-.secondary {
-  background-color: $background-color-secondary;
-}
-
-.logo {
-  margin-top: 30px;
-
-  img {
-    width: 100%;
-    height: 215px;
+  h4 {
+    font-weight: 700;
+    font-size: 18px;
+    text-transform: uppercase;
+    margin-bottom: 0px;
   }
+
   p {
-    font-size: 22px;
-    text-align: center;
+    padding-top: 8px;
   }
+}
+
+.section.divider-top {
+  border-top: 1px solid #cccccc;
+}
+
+.foot {
+    color: $text-color-light;
+    background-color: $primary-color;
+    img {
+      height: 20px;
+    }
+
+    a {
+      color: $text-color-light;
+      text-decoration: underline;
+      &:hover {
+        color: $accent-color;
+      }
+    }
 }
