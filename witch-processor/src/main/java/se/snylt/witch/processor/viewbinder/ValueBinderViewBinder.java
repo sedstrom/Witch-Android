@@ -14,8 +14,6 @@ import static se.snylt.witch.processor.TypeUtils.VALUE_BINDER_VIEW_BINDER;
 
 public class ValueBinderViewBinder extends ValueViewBinder {
 
-    private MethodSpec valueBinder;
-
     public ValueBinderViewBinder(ClassName viewHolderClassName, ValueAccessor accessor,
             ClassName targetTypeName, int viewId) {
         super(viewHolderClassName, accessor, targetTypeName, viewId);

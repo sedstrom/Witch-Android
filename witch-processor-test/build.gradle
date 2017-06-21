@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -13,11 +15,17 @@ android {
 }
 
 dependencies {
+
     // Witch
     compile project(path: ':witch')
-    annotationProcessor project(':witch-processor')
+    kapt project(':witch-processor')
 
     compile rootProject.ext.deps.supportRecyclerView
     testCompile rootProject.ext.deps.mockitoCore
     testCompile rootProject.ext.deps.junit
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

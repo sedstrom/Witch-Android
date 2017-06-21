@@ -33,6 +33,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
+import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -195,12 +196,12 @@ public class WitchProcessor extends AbstractProcessor {
 
     private ValueAccessor getValueAccessor(Element value) {
 
-        if (value.getKind().isField() && notPrivateOrProtected(value)) {
-            return new FieldAccessor(value.getSimpleName().toString());
-        }
-
         if (value.getKind() == ElementKind.METHOD && notPrivateOrProtected(value)) {
             return new MethodAccessor(value.getSimpleName().toString());
+        }
+
+        if (value.getKind().isField() && notPrivateOrProtected(value)) {
+            return new FieldAccessor(value.getSimpleName().toString());
         }
 
         logAndThrowError("Can't access " + value.getEnclosingElement().getSimpleName() + "." + value.getSimpleName()
@@ -348,14 +349,25 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private TypeName getValueType(Element bindAction) {
+
+        TypeMirror type;
         if (bindAction.getKind().isField()) {
-            return ClassName.get(bindAction.asType());
+            type = bindAction.asType();
         } else if (bindAction.getKind() == ElementKind.METHOD) {
-            ExecutableType type = (ExecutableType) bindAction.asType();
-            return ClassName.get(type.getReturnType());
+            ExecutableType ext = (ExecutableType) bindAction.asType();
+            type = ext.getReturnType();
+        } else {
+            logAndThrowError("Could not get value type for: " + bindAction.getSimpleName());
+            return null;
         }
-        logAndThrowError("Could not get value type for: " + bindAction.getSimpleName());
-        return null;
+
+        // If primitive
+        logNote("Type: " + bindAction.toString() + " : " + type);
+        if(type.getKind() != null && type.getKind().isPrimitive()) {
+            type = typeUtils.boxedClass((PrimitiveType) type).asType();
+        }
+
+        return TypeName.get(type);
     }
 
     private void addOnBindAction(Element bindAction, OnBindDef onBindDef,

@@ -11,7 +11,7 @@ class AlwaysBindViewModel {
 
     @AlwaysBind // Ignores binding history
     @BindToView(id = R.id.always_bind_fragment_seek_bar, view = SeekBar.class, set = "progress")
-    final Integer progress;
+    final int progress;
 
     AlwaysBindViewModel(int progress) {
         this.progress = progress;
