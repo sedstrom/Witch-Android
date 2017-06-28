@@ -55,10 +55,17 @@ layout: main
         </p>
       </div>
     </div>
-    <div class="row">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/1.java %}
 {% endhighlight %}
+      </div>
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/1.kotlin %}
+{% endhighlight %}
+      </div>
     </div>
   </div>
 </div>
@@ -76,39 +83,45 @@ layout: main
         </p>
       </div>
     </div>
-    <div class="row">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/2.java %}
 {% endhighlight %}
+      </div>
     </div>
-    <div class="row top-30">
+    <div class="row top-10">
       <div class="twelve columns">
         <p>
           Annotate methods for dynamic values
         </p>
       </div>
     </div>
-    <div class="row">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/3.java %}
 {% endhighlight %}
+      </div>
     </div>
-    <div class="row top-30">
+    <div class="row top-10">
       <div class="twelve columns">
         <p>
           More advanced bindings can be create with Binder.
         </p>
       </div>
     </div>
-    <div class="row spacing-small">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/4.java %}
 {% endhighlight %}
+      </div>
     </div>
   </div>
 </div>
 <!-- Dynamic -->
-<div class="section secondary">
+<div class="section">
   <div class="container">
     <div class="row">
       <div class="twelve columns">
@@ -120,10 +133,12 @@ layout: main
         </p>
       </div>
     </div>
-    <div class="row">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/5.java %}
 {% endhighlight %}
+      </div>
     </div>
   </div>
 </div>
@@ -146,12 +161,14 @@ layout: main
         </p>
       </div>
     </div>
-    <div class="row">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/9.java %}
 {% endhighlight %}
+      </div>
     </div>
-    <div class="row top-30">
+    <div class="row top-10">
       <div class="twelve columns">
         <p>
           If the value to be bound cannot (or should not) be re-created, it can be
@@ -162,28 +179,32 @@ layout: main
         </p>
       </div>
     </div>
-    <div class="row top-10">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/10.java %}
 {% endhighlight %}
+      </div>
     </div>
-    <div class="row top-30">
+    <div class="row top-10">
       <div class="twelve columns">
         <p>
           <b>@BindWhen</b> can be used to control when a value should be bound.
         </p>
       </div>
     </div>
-    <div class="row top-10">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/11.java %}
 {% endhighlight %}
+      </div>
     </div>
   </div>
 </div>
 
 <!-- View holders -->
-<div class="section secondary">
+<div class="section">
   <div class="container">
     <div class="row">
       <div class="twelve columns">
@@ -197,12 +218,14 @@ layout: main
         </p>
       </div>
     </div>
-    <div class="row">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/6.java %}
 {% endhighlight %}
+      </div>
     </div>
-    <div class="row top-30">
+    <div class="row top-10">
       <div class="twelve columns">
         <p>
           Since binder will handle binding of <b><i>all items of type Post</i></b> in adapter, it's important to separate
@@ -211,12 +234,14 @@ layout: main
         </p>
       </div>
     </div>
-    <div class="row spacing-small">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/7.java %}
 {% endhighlight %}
+      </div>
     </div>
-    <div class="row top-30">
+    <div class="row top-10">
       <div class="twelve columns">
         <p>
           If your data set consists of multiple types, simply provide multiple
@@ -224,10 +249,12 @@ layout: main
         </p>
       </div>
     </div>
-    <div class="row spacing-small">
+    <div class="row code-container">
+      <div class="code java">
 {% highlight java linenos %}
 {% include snippets/8.java %}
 {% endhighlight %}
+      </div>
     </div>
   </div>
 </div>
@@ -242,10 +269,23 @@ layout: main
         </h4>
       </div>
     </div>
-    <div class="row top-10">
+    <div class="row top-10 code-container">
+      <div class="code java">
 {% highlight gradle linenos %}
-{% include snippets/download.gradle %}
+{% include snippets/download-java.gradle %}
 {% endhighlight %}
+      </div>
+      <div class="code kotlin">
+{% highlight gradle linenos %}
+{% include snippets/download-kotlin.gradle %}
+{% endhighlight %}
+      </div>
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("body").css("display", "block");
+  });
+</script>

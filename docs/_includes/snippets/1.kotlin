@@ -1,0 +1,6 @@
+
+// A val is a private field with a public getter
+val title = "Hello Witch!" @BindToTextView(id = R.id.title) get
+...
+
+Witch.bind(model, activity)

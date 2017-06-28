@@ -23,6 +23,7 @@ body {
   font-family: 'Roboto';
   font-weight: 400;
   color: $primary-color;
+  display: none;
 }
 
 p {
@@ -54,6 +55,52 @@ p {
         width: 50%;
     }
 }
+.code-container {
+
+.toggles {
+  width: auto;
+  padding: 0px;
+  button {
+    width: auto;
+    height:auto;
+    line-height: 20px;
+    margin: 6px 0px;
+    font-size: 10px;
+    padding: 0px 4px;
+    border-radius: 4px;
+    color: #888;
+    border: 1.2px solid #ccc;
+    &:hover {
+      border-color: $accent-color-secondary;
+      color: $accent-color-secondary;
+    }
+    &:active {
+      border-color: $accent-color-secondary;
+      background-color: $accent-color-secondary;
+      color: #fff;
+    }
+    &.active {
+      border-color: $accent-color-secondary;
+      background-color: $accent-color-secondary;
+      color: #fff;
+    }
+    &:disabled {
+      border-color: $transparent;
+      background-color: $transparent;
+      color: #999;
+    }
+  }
+}
+
+.highlight {
+  display: none;
+}
+
+.highlight.active {
+  display: block;
+}
+
+}
 
 button {
   font-family: 'Roboto';
@@ -71,6 +118,11 @@ button {
     color: $accent-color;
   }
   &:active {
+    border-color: $accent-color;
+    background-color: $accent-color;
+    color: #fff;
+  }
+  &.active {
     border-color: $accent-color;
     background-color: $accent-color;
     color: #fff;
@@ -109,8 +161,8 @@ div ul {
 }
 
 .section {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   width: 100%;
   h4 {
     font-weight: 700;

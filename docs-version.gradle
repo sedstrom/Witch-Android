@@ -6,10 +6,10 @@ task update() << {
         return;
     }
 
-    // Gradle
+    // Gradle JAVA
     def compile = "compile 'se.snylt:witch:${VERSION_NAME}'";
     def apt = "annotationProcessor 'se.snylt:witch-processor:${VERSION_NAME}'";
-    File outputFile = new File("./docs/_includes/snippets", "download.gradle");
+    File outputFile = new File("./docs/_includes/snippets", "download-java.gradle");
     if(outputFile.exists()) {
         outputFile.delete();
     }
@@ -18,6 +18,19 @@ task update() << {
     fileWriter.write(compile);
     fileWriter.write("\n");
     fileWriter.write(apt);
+    fileWriter.close();
+
+    // Gradle KOTLIN
+    def kapt = "kapt 'se.snylt:witch-processor:${VERSION_NAME}'";
+    outputFile = new File("./docs/_includes/snippets", "download-kotlin.gradle");
+    if(outputFile.exists()) {
+        outputFile.delete();
+    }
+    outputFile.createNewFile();
+    fileWriter = new FileWriter(outputFile, true);
+    fileWriter.write(compile);
+    fileWriter.write("\n");
+    fileWriter.write(kapt);
     fileWriter.close();
     println("Updated version ${VERSION_NAME} in docs")
 }
