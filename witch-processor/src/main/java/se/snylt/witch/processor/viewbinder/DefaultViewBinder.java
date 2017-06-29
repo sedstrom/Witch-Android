@@ -13,7 +13,7 @@ import static se.snylt.witch.processor.TypeUtils.DEFAULT_VIEW_BINDER;
 
 public class DefaultViewBinder extends ViewBinderBase {
 
-    protected final ClassName targetTypeName;
+    final ClassName targetTypeName;
 
     public DefaultViewBinder(ClassName viewHolderClassName, ValueAccessor accessor,
             ClassName targetTypeName, int viewId) {

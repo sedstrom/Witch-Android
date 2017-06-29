@@ -50,6 +50,7 @@ import se.snylt.witch.processor.java.ViewHolderJavaHelper;
 import se.snylt.witch.processor.valueaccessor.FieldAccessor;
 import se.snylt.witch.processor.valueaccessor.MethodAccessor;
 import se.snylt.witch.processor.valueaccessor.ValueAccessor;
+import se.snylt.witch.processor.viewbinder.BinderViewBinder;
 import se.snylt.witch.processor.viewbinder.DefaultViewBinder;
 import se.snylt.witch.processor.viewbinder.ValueBinderViewBinder;
 import se.snylt.witch.processor.viewbinder.ValueViewBinder;
@@ -57,6 +58,8 @@ import se.snylt.witch.processor.viewbinder.ViewBinder;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyAlways;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotSame;
+
+import static se.snylt.witch.processor.PropertytUtils.getBinderAccessor;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
@@ -70,6 +73,8 @@ import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotSame;
         SupportedAnnotations.BindToViewPager.name,
         SupportedAnnotations.OnBind.name,
         SupportedAnnotations.OnBindEach.name,
+        SupportedAnnotations.Binds.name,
+        SupportedAnnotations.BindWhen.name,
         SupportedAnnotations.Mod.name,
         SupportedAnnotations.AlwaysBind.name
 })
@@ -169,11 +174,15 @@ public class WitchProcessor extends AbstractProcessor {
                     ClassName viewHolderClassName = getBindingViewHolderName(target);
                     ClassName targetClassName = getElementClassName(target);
 
+                    // TODO make compose-able
                     ViewBinder viewBinder;
+                    String binder;
                     if(isValueBinder(value)) {
                         viewBinder = new ValueBinderViewBinder(viewHolderClassName, valueAccessor, targetClassName, viewId);
                     } else if(isValue(value)) {
                         viewBinder = new ValueViewBinder(viewHolderClassName, valueAccessor, targetClassName, viewId);
+                    } else if((binder = getBinder(roundEnv, value)) != null) {
+                        viewBinder = new BinderViewBinder(viewHolderClassName, valueAccessor, targetClassName, viewId, binder);
                     } else {
                         viewBinder = new DefaultViewBinder(viewHolderClassName, valueAccessor, targetClassName, viewId);
                     }
@@ -182,6 +191,21 @@ public class WitchProcessor extends AbstractProcessor {
                 }
             }
         }
+    }
+
+    private String getBinder(RoundEnvironment roundEnvironment, Element value) {
+        for(Element binder: roundEnvironment.getElementsAnnotatedWith(se.snylt.witch.annotations.Binds.class)) {
+            String binderAccessor = binder.getSimpleName().toString();
+            String binderAccessorForValue = getBinderAccessor(value.getSimpleName().toString());
+            if(binderAccessor.equals(binderAccessorForValue) && value.getEnclosingElement().equals(binder.getEnclosingElement())) {
+                if(isAccessibleMethod(binder)) {
+                    return binderAccessor + "()";
+                } else if (isAccessibleField(binder)){
+                    return binderAccessor;
+                }
+            }
+        }
+        return null;
     }
 
     private boolean isValue(Element value) {
@@ -194,13 +218,21 @@ public class WitchProcessor extends AbstractProcessor {
         return typeUtils.isAssignable(getType(value), valueBinder);
     }
 
+    private boolean isAccessibleMethod(Element value) {
+        return value.getKind() == ElementKind.METHOD && notPrivateOrProtected(value);
+    }
+
+    private boolean isAccessibleField(Element value) {
+        return value.getKind().isField() && notPrivateOrProtected(value);
+    }
+
     private ValueAccessor getValueAccessor(Element value) {
 
-        if (value.getKind() == ElementKind.METHOD && notPrivateOrProtected(value)) {
+        if (isAccessibleMethod(value)) {
             return new MethodAccessor(value.getSimpleName().toString());
         }
 
-        if (value.getKind().isField() && notPrivateOrProtected(value)) {
+        if (isAccessibleField(value)) {
             return new FieldAccessor(value.getSimpleName().toString());
         }
 

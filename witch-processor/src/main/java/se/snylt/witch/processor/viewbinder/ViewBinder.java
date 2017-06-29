@@ -14,6 +14,8 @@ public abstract class ViewBinder {
 
     public ValueAccessor valueAccessor;
 
+    public ValueAccessor binderAccessor;
+
     public abstract TypeSpec newInstance();
 
     abstract MethodSpec getView();

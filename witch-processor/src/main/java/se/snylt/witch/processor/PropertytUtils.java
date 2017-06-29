@@ -3,8 +3,15 @@ package se.snylt.witch.processor;
 public class PropertytUtils {
 
     public static String getPropertySetter(String property) {
-        String firstUpperCase = property.toUpperCase().charAt(0) + ((property.length() > 0) ? property.substring(1) : "");
-        return "set" + firstUpperCase;
+        return "set" + capitalize(property);
+    }
+
+    public static String getBinderAccessor(String value) {
+        return "bind" + capitalize(value);
+    }
+
+    private static String capitalize(String s) {
+        return s.toUpperCase().charAt(0) + ((s.length() > 0) ? s.substring(1) : "");
     }
 
 }

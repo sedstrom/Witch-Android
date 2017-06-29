@@ -9,6 +9,8 @@ public abstract class ViewBinder {
 
     public final int viewId;
 
+    private Binder binder;
+
     public ViewBinder(int viewId) {
         this.viewId = viewId;
     }
@@ -16,10 +18,17 @@ public abstract class ViewBinder {
     public boolean bind(Object viewHolder, ViewFinder viewFinder, Object target) {
         if (isDirty(target)) {
             View view = findView(viewHolder, viewFinder);
-            getBinder(target).bind(view, getValue(target));
+            getOrCreateBinder(target).bind(view, getValue(target));
             return true;
         }
         return false;
+    }
+
+    private Binder getOrCreateBinder(Object target) {
+        if(binder == null) {
+            binder = getBinder(target);
+        }
+        return binder;
     }
 
     /**

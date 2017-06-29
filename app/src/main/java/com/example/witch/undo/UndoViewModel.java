@@ -9,7 +9,6 @@ import se.snylt.witch.annotations.BindToView;
 
 public class UndoViewModel {
 
-
     @BindToView(id = R.id.undo_fragment_undo_button, view = View.class, set = "enabled")
     public final Boolean undoEnabled;
 
