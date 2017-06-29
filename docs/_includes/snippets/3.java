@@ -1,5 +1,5 @@
 @BindToTextView(R.id.name)
-void name() {
+String name() {
   if(user == null) {
     return "Magica de Hex";
   }
