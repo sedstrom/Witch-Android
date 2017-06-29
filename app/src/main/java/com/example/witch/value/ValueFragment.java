@@ -15,48 +15,37 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import se.snylt.witch.annotations.BindTo;
-import se.snylt.witch.annotations.Binds;
 import se.snylt.witch.viewbinder.Witch;
 import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
+import se.snylt.witch.viewbinder.bindaction.ValueBinder;
 
 public class ValueFragment extends Fragment {
 
-    private String text = "";
-
     @BindTo(R.id.value_view_fragment_input)
-    TextWatcher textWatcher = new TextWatcherAdapter() {
+    ValueBinder<EditText, TextWatcher> textWatcher = ValueBinder.create(new TextWatcherAdapter() {
 
         @Override
         public void afterTextChanged(Editable s) {
             // Use update to flag value as dirty
-            text = s.toString();
+            text.update().setText(s.toString());
             bind();
         }
-    };
-
-    @Binds
-    Binder bindTextWatcher = Binder.create(new SyncOnBind<EditText, TextWatcher>() {
+    }, Binder.create(new SyncOnBind<EditText, TextWatcher>() {
         @Override
         public void onBind(EditText editText, TextWatcher textWatcher) {
             editText.addTextChangedListener(textWatcher);
         }
-    });
+    }));
 
     @BindTo(R.id.value_view_fragment_text)
-    final String text() {
-        return text;
-    }
-
-    @Binds
-    final Binder<TextView, String> bindText() {
-        return Binder.create(new SyncOnBind<TextView, String>() {
-            @Override
-            public void onBind(TextView textView, String text) {
-                textView.setText(text);
-            }
-        });
-    }
+    final ValueBinder<TextView, Model> text = ValueBinder.create(new Model(),
+            Binder.create(new SyncOnBind<TextView, Model>() {
+                @Override
+                public void onBind(TextView textView, Model m) {
+                    textView.setText(m.getText());
+                }
+            }));
 
     private void bind() {
         Witch.bind(this, getView());
@@ -73,6 +62,19 @@ public class ValueFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind();
+    }
+
+    static class Model {
+
+        private String text = "";
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
     }
 }
 
