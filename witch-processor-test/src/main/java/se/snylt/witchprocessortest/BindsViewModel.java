@@ -35,6 +35,36 @@ class BindsViewModel extends TestViewModel {
         });
     }
 
+    @BindTo(2)
+    String foo() {
+        return "foo";
+    }
+
+    @Binds
+    Binder<View, String> getBindFoo() {
+        return Binder.create(new SyncOnBind<View, String>() {
+            @Override
+            public void onBind(View view, String s) {
+                view.setTag(s);
+            }
+        });
+    }
+
+    @BindTo(3)
+    String getBar() {
+        return "bar";
+    }
+
+    @Binds
+    Binder<View, String> bindBar() {
+        return Binder.create(new SyncOnBind<View, String>() {
+            @Override
+            public void onBind(View view, String s) {
+                view.setTag(s);
+            }
+        });
+    }
+
     BindsViewModel() {
         super(View.class);
     }

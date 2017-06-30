@@ -37,6 +37,10 @@ public class BindsViewModelTest extends TestBase {
                     verify(mockedView, times(1)).setTag(eq("field"));
                 } else if(viewId == 1) {
                     verify(mockedView, times(1)).setTag(eq("method"));
+                } else if(viewId == 2) {
+                    verify(mockedView, times(1)).setTag(eq("foo"));
+                } else if(viewId == 3) {
+                    verify(mockedView, times(1)).setTag(eq("bar"));
                 }
             }
         };

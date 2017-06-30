@@ -7,7 +7,13 @@ public class PropertytUtils {
     }
 
     public static String getBinderAccessor(String value) {
-        return "bind" + capitalize(value);
+        return "bind" + capitalize(stripGet(value));
+    }
+
+    public static String stripGet(String s) {
+        s = s.replaceFirst("^get", "");
+        s = Character.toLowerCase(s.charAt(0)) + s.substring(1);
+        return s;
     }
 
     private static String capitalize(String s) {

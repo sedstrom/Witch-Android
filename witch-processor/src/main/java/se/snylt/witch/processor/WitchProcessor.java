@@ -60,6 +60,7 @@ import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotSame;
 
 import static se.snylt.witch.processor.PropertytUtils.getBinderAccessor;
+import static se.snylt.witch.processor.PropertytUtils.stripGet;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
@@ -197,7 +198,7 @@ public class WitchProcessor extends AbstractProcessor {
         for(Element binder: roundEnvironment.getElementsAnnotatedWith(se.snylt.witch.annotations.Binds.class)) {
             String binderAccessor = binder.getSimpleName().toString();
             String binderAccessorForValue = getBinderAccessor(value.getSimpleName().toString());
-            if(binderAccessor.equals(binderAccessorForValue) && value.getEnclosingElement().equals(binder.getEnclosingElement())) {
+            if(stripGet(binderAccessor).equals(stripGet(binderAccessorForValue)) && value.getEnclosingElement().equals(binder.getEnclosingElement())) {
                 if(isAccessibleMethod(binder)) {
                     return binderAccessor + "()";
                 } else if (isAccessibleField(binder)){
