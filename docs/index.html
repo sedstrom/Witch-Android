@@ -103,11 +103,19 @@ layout: main
 {% include snippets/3.java %}
 {% endhighlight %}
       </div>
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/3.kotlin %}
+{% endhighlight %}
+      </div>
     </div>
     <div class="row top-10">
       <div class="twelve columns">
         <p>
-          More advanced bindings can be create with Binder.
+          For more advanced bindings, a custom binder can be provided with the
+          <b>@Bind</b> annotation. The binder is mapped to the annotated value by prefixing
+          the the binder property with <b>bind</b>[Property]. In the code sample <b>bindTitle</b> provides
+          binder for <b>title</b>.
         </p>
       </div>
     </div>
@@ -115,6 +123,11 @@ layout: main
       <div class="code java">
 {% highlight java linenos %}
 {% include snippets/4.java %}
+{% endhighlight %}
+      </div>
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/4.kotlin %}
 {% endhighlight %}
       </div>
     </div>
@@ -137,6 +150,11 @@ layout: main
       <div class="code java">
 {% highlight java linenos %}
 {% include snippets/5.java %}
+{% endhighlight %}
+      </div>
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/5.kotlin %}
 {% endhighlight %}
       </div>
     </div>

@@ -1,13 +1,10 @@
-Binder binder = Binder.create(new SyncOnBind<ImageView, String>() {
+@BindTo(R.id.title)
+String title = "Abra cadabra!";
+
+@Bind
+Binder<TextView, String> bindTitle = Binder.create(new SyncOnBind<TextView, String>() {
   @Override
-  public void onBind(ImageView view, String url) {
-    Picasso
-    .with(view.getContext())
-    .load(url)
-    .into(imageView);
+  public void onBind(TextView view, String title) {
+    view.setText(title);
   }
 });
-
-// Use ValueBinder to use binder with annotation
-@BindTo(R.id.image)
-ValueBinder kitten = ValueBinder.create("www.snylt.se/kitten.png", binder);
