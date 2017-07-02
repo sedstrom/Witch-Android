@@ -6,14 +6,14 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
-import se.snylt.witch.processor.valueaccessor.ValueAccessor;
+import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 
 import static se.snylt.witch.processor.TypeUtils.VALUE;
 import static se.snylt.witch.processor.TypeUtils.VALUE_VIEW_BINDER;
 
 public class ValueViewBinder extends DefaultViewBinder {
 
-    public ValueViewBinder(ClassName viewHolderClassName, ValueAccessor accessor,
+    public ValueViewBinder(ClassName viewHolderClassName, PropertyAccessor accessor,
             ClassName targetTypeName, int viewId) {
         super(viewHolderClassName, accessor, targetTypeName, viewId);
     }
@@ -36,7 +36,7 @@ public class ValueViewBinder extends DefaultViewBinder {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "target")
                 .returns(Object.class)
-                .addStatement("return (($T)(($T)target).$N).take()", VALUE, targetTypeName, valueAccessor.accessValueString())
+                .addStatement("return (($T)(($T)target).$N).take()", VALUE, targetTypeName, valueAccessor.accessPropertyString())
                 .build();
     }
 
@@ -46,7 +46,7 @@ public class ValueViewBinder extends DefaultViewBinder {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "target")
                 .returns(boolean.class)
-                .addStatement("return (($T)(($T)target).$N).isDirty()", VALUE, targetTypeName, valueAccessor.accessValueString())
+                .addStatement("return (($T)(($T)target).$N).isDirty()", VALUE, targetTypeName, valueAccessor.accessPropertyString())
                 .build();
     }
 }

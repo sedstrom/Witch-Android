@@ -6,7 +6,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
-import se.snylt.witch.processor.valueaccessor.ValueAccessor;
+import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 
 import static se.snylt.witch.processor.TypeUtils.BINDER;
 import static se.snylt.witch.processor.TypeUtils.VALUE_BINDER;
@@ -14,7 +14,7 @@ import static se.snylt.witch.processor.TypeUtils.VALUE_BINDER_VIEW_BINDER;
 
 public class ValueBinderViewBinder extends ValueViewBinder {
 
-    public ValueBinderViewBinder(ClassName viewHolderClassName, ValueAccessor accessor,
+    public ValueBinderViewBinder(ClassName viewHolderClassName, PropertyAccessor accessor,
             ClassName targetTypeName, int viewId) {
         super(viewHolderClassName, accessor, targetTypeName, viewId);
     }
@@ -36,7 +36,7 @@ public class ValueBinderViewBinder extends ValueViewBinder {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "target")
                 .returns(boolean.class)
-                .addStatement("return (($T)(($T)target).$N).isDirty()", VALUE_BINDER, targetTypeName, valueAccessor.accessValueString())
+                .addStatement("return (($T)(($T)target).$N).isDirty()", VALUE_BINDER, targetTypeName, valueAccessor.accessPropertyString())
                 .build();
     }
 
@@ -46,7 +46,7 @@ public class ValueBinderViewBinder extends ValueViewBinder {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "target")
                 .returns(BINDER)
-                .addStatement("return (($T)(($T)target).$N).getBinder()", VALUE_BINDER, targetTypeName, valueAccessor.accessValueString())
+                .addStatement("return (($T)(($T)target).$N).getBinder()", VALUE_BINDER, targetTypeName, valueAccessor.accessPropertyString())
                 .build();
     }
 
@@ -55,7 +55,7 @@ public class ValueBinderViewBinder extends ValueViewBinder {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "target")
                 .returns(VALUE_BINDER)
-                .addStatement("return ($T)(($T)target).$N", VALUE_BINDER, targetTypeName, valueAccessor.accessValueString())
+                .addStatement("return ($T)(($T)target).$N", VALUE_BINDER, targetTypeName, valueAccessor.accessPropertyString())
                 .build();
     }
 }

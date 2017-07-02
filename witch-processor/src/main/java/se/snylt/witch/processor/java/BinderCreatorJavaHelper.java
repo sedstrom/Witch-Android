@@ -43,7 +43,7 @@ public class BinderCreatorJavaHelper {
         for (ViewBindingDef viewBindingDef : viewBindings) {
 
             createBinding.addComment("===========================================");
-            createBinding.addComment("Bind " + viewBindingDef.getViewBinder().valueAccessor.accessValueString() + " BEGIN");
+            createBinding.addComment("Bind " + viewBindingDef.getViewBinder().valueAccessor.accessPropertyString() + " BEGIN");
 
 
             // Create Binder
@@ -59,7 +59,7 @@ public class BinderCreatorJavaHelper {
             createBinding.addStatement("bindingSpecs.add($L)",
                     viewBindingDef.getViewBinder().newInstance());
 
-            createBinding.addComment("Bind " + viewBindingDef.getViewBinder().valueAccessor.accessValueString() + " END");
+            createBinding.addComment("Bind " + viewBindingDef.getViewBinder().valueAccessor.accessPropertyString() + " END");
             createBinding.addComment("===========================================");
             createBinding.addCode("\n");
         }

@@ -27,7 +27,6 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
@@ -47,9 +46,7 @@ import se.snylt.witch.processor.binding.OnOnBindViewDef;
 import se.snylt.witch.processor.binding.ViewBindingDef;
 import se.snylt.witch.processor.java.BinderCreatorJavaHelper;
 import se.snylt.witch.processor.java.ViewHolderJavaHelper;
-import se.snylt.witch.processor.valueaccessor.FieldAccessor;
-import se.snylt.witch.processor.valueaccessor.MethodAccessor;
-import se.snylt.witch.processor.valueaccessor.ValueAccessor;
+import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 import se.snylt.witch.processor.viewbinder.BinderViewBinder;
 import se.snylt.witch.processor.viewbinder.DefaultViewBinder;
 import se.snylt.witch.processor.viewbinder.ValueBinderViewBinder;
@@ -59,8 +56,7 @@ import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyAlways;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotSame;
 
-import static se.snylt.witch.processor.PropertytUtils.getBinderAccessor;
-import static se.snylt.witch.processor.PropertytUtils.stripGet;
+import static se.snylt.witch.processor.PropertytUtils.bindsValue;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
@@ -74,7 +70,7 @@ import static se.snylt.witch.processor.PropertytUtils.stripGet;
         SupportedAnnotations.BindToViewPager.name,
         SupportedAnnotations.OnBind.name,
         SupportedAnnotations.OnBindEach.name,
-        SupportedAnnotations.Binds.name,
+        SupportedAnnotations.Bind.name,
         SupportedAnnotations.BindWhen.name,
         SupportedAnnotations.Mod.name,
         SupportedAnnotations.AlwaysBind.name
@@ -171,13 +167,13 @@ public class WitchProcessor extends AbstractProcessor {
                 List<ViewBindingDef> viewActionses = targets.get(target);
                 if (!viewActionses.contains(value)) {
                     int viewId = hasViewIdAnnotation.getViewId(value);
-                    ValueAccessor valueAccessor = getValueAccessor(value);
+                    PropertyAccessor valueAccessor = getPropertyAccessor(value);
                     ClassName viewHolderClassName = getBindingViewHolderName(target);
                     ClassName targetClassName = getElementClassName(target);
 
-                    // TODO make compose-able
+                    // TODO make module based
                     ViewBinder viewBinder;
-                    String binder;
+                    PropertyAccessor binder;
                     if(isValueBinder(value)) {
                         viewBinder = new ValueBinderViewBinder(viewHolderClassName, valueAccessor, targetClassName, viewId);
                     } else if(isValue(value)) {
@@ -194,16 +190,10 @@ public class WitchProcessor extends AbstractProcessor {
         }
     }
 
-    private String getBinder(RoundEnvironment roundEnvironment, Element value) {
-        for(Element binder: roundEnvironment.getElementsAnnotatedWith(se.snylt.witch.annotations.Binds.class)) {
-            String binderAccessor = binder.getSimpleName().toString();
-            String binderAccessorForValue = getBinderAccessor(value.getSimpleName().toString());
-            if(stripGet(binderAccessor).equals(stripGet(binderAccessorForValue)) && value.getEnclosingElement().equals(binder.getEnclosingElement())) {
-                if(isAccessibleMethod(binder)) {
-                    return binderAccessor + "()";
-                } else if (isAccessibleField(binder)){
-                    return binderAccessor;
-                }
+    private PropertyAccessor getBinder(RoundEnvironment roundEnvironment, Element value) {
+        for(Element binder: roundEnvironment.getElementsAnnotatedWith(se.snylt.witch.annotations.Bind.class)) {
+            if((bindsValue(value, binder)) && value.getEnclosingElement().equals(binder.getEnclosingElement())) {
+                return getPropertyAccessor(binder);
             }
         }
         return null;
@@ -219,28 +209,16 @@ public class WitchProcessor extends AbstractProcessor {
         return typeUtils.isAssignable(getType(value), valueBinder);
     }
 
-    private boolean isAccessibleMethod(Element value) {
-        return value.getKind() == ElementKind.METHOD && notPrivateOrProtected(value);
-    }
+    private PropertyAccessor getPropertyAccessor(Element value) {
 
-    private boolean isAccessibleField(Element value) {
-        return value.getKind().isField() && notPrivateOrProtected(value);
-    }
+        PropertyAccessor a = getPropertyAccessor(value);
 
-    private ValueAccessor getValueAccessor(Element value) {
-
-        if (isAccessibleMethod(value)) {
-            return new MethodAccessor(value.getSimpleName().toString());
+        if(a == null) {
+            logAndThrowError("Can't access " + value.getEnclosingElement().getSimpleName() + "." + value.getSimpleName()
+                    + ". Make sure value does not have private or protected access.");
         }
 
-        if (isAccessibleField(value)) {
-            return new FieldAccessor(value.getSimpleName().toString());
-        }
-
-        logAndThrowError("Can't access " + value.getEnclosingElement().getSimpleName() + "." + value.getSimpleName()
-                + ". Make sure value does not have private or protected access.");
-
-        return null;
+        return a;
     }
 
     private TypeMirror getType(Element value) {
@@ -252,11 +230,6 @@ public class WitchProcessor extends AbstractProcessor {
             valueType = value.asType();
         }
         return valueType;
-    }
-
-    private boolean notPrivateOrProtected(Element e) {
-        Set<Modifier> modifiers = e.getModifiers();
-        return !modifiers.contains(Modifier.PRIVATE) || !modifiers.contains(Modifier.PROTECTED);
     }
 
     private void addOnBindActions(HashMap<Element, List<ViewBindingDef>> binders, RoundEnvironment roundEnv) {
@@ -415,7 +388,7 @@ public class WitchProcessor extends AbstractProcessor {
 
         // Add bind actions to view binding
         for (ViewBindingDef viewViewBindingDef : viewActions) {
-            if (viewViewBindingDef.equals(getValueAccessor(bindAction))) {
+            if (viewViewBindingDef.equals(getPropertyAccessor(bindAction))) {
                 return viewViewBindingDef;
             }
         }
@@ -475,9 +448,10 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private TypeName getOnBindToRecyclerViewAdapterClass(Element bindAction) {
-        TypeMirror bindClass = null;
+        TypeMirror bindClass;
         try {
             bindAction.getAnnotation(se.snylt.witch.annotations.BindToRecyclerView.class).adapter();
+            return null;
         } catch (MirroredTypeException mte) {
             bindClass = mte.getTypeMirror();
         }
@@ -485,9 +459,10 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private TypeName getOnBindToViewPagerAdapterClass(Element bindAction) {
-        TypeMirror bindClass = null;
+        TypeMirror bindClass;
         try {
             bindAction.getAnnotation(se.snylt.witch.annotations.BindToViewPager.class).adapter();
+            return null;
         } catch (MirroredTypeException mte) {
             bindClass = mte.getTypeMirror();
         }
@@ -496,9 +471,10 @@ public class WitchProcessor extends AbstractProcessor {
 
 
     private TypeMirror getOnBindTypeMirror(Element action) {
-        TypeMirror bindClass = null;
+        TypeMirror bindClass;
         try {
             action.getAnnotation(se.snylt.witch.annotations.OnBind.class).value();
+            return null;
         } catch (MirroredTypeException mte) {
             bindClass = mte.getTypeMirror();
         }
@@ -506,9 +482,10 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private List<? extends TypeMirror> getOnBindEachTypeMirrors(Element action) {
-        List<? extends TypeMirror> bindClasses = null;
+        List<? extends TypeMirror> bindClasses;
         try {
             action.getAnnotation(se.snylt.witch.annotations.OnBindEach.class).value();
+            return null;
         } catch (MirroredTypesException mte) {
             bindClasses = mte.getTypeMirrors();
         }
@@ -516,9 +493,10 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private TypeName getOnBindToViewClass(Element action) {
-        TypeMirror bindClass = null;
+        TypeMirror bindClass;
         try {
             action.getAnnotation(se.snylt.witch.annotations.BindToView.class).view();
+            return null;
         } catch (MirroredTypeException mte) {
             bindClass = mte.getTypeMirror();
         }

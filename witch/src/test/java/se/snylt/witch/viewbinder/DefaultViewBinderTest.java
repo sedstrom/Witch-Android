@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import android.view.View;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.viewbinder.DefaultViewBinder;
@@ -128,6 +129,18 @@ public class DefaultViewBinderTest {
         verify(viewFinder, never()).findViewById(anyInt());
     }
 
+    @Test
+    public void bind_Twice_Should_AskForBinderOnlyOnce(){
+        viewBinder.setValue("123");
+
+        // When
+        viewBinder.bind(viewHolder, viewFinder, target);
+        viewBinder.bind(viewHolder, viewFinder, target);
+
+        // Then
+        assertEquals(1, viewBinder.getBinderCall.get());
+    }
+
     private class TestViewHolder {
 
         private Object view;
@@ -145,6 +158,8 @@ public class DefaultViewBinderTest {
     private class TestViewBinder extends DefaultViewBinder {
 
         private Object value;
+
+        AtomicInteger getBinderCall = new AtomicInteger();
 
         TestViewBinder(int viewId, Binder binder) {
             super(viewId, binder);
@@ -173,9 +188,9 @@ public class DefaultViewBinderTest {
         public Object getView(Object viewHolder) {
             return ((TestViewHolder)viewHolder).getView();
         }
-
         @Override
         public Binder getBinder(Object value) {
+            getBinderCall.incrementAndGet();
             return binder;
         }
 

@@ -41,6 +41,8 @@ public class BindsViewModelTest extends TestBase {
                     verify(mockedView, times(1)).setTag(eq("foo"));
                 } else if(viewId == 3) {
                     verify(mockedView, times(1)).setTag(eq("bar"));
+                } else if(viewId == 4) {
+                    verify(mockedView, times(1)).setTag(eq("poo"));
                 }
             }
         };

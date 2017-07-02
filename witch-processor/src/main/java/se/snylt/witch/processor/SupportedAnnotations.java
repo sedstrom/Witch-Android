@@ -188,9 +188,9 @@ class SupportedAnnotations {
         final static String name = "se.snylt.witch.annotations.OnBindEach";
     }
 
-    // OnBind
-    public final static class Binds {
-        final static String name = "se.snylt.witch.annotations.Binds";
+    // Bind
+    final static class Bind {
+        final static String name = "se.snylt.witch.annotations.Bind";
     }
 
     // AlwaysBind

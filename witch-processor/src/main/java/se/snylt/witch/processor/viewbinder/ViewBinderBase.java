@@ -6,7 +6,7 @@ import com.squareup.javapoet.MethodSpec;
 
 import javax.lang.model.element.Modifier;
 
-import se.snylt.witch.processor.valueaccessor.ValueAccessor;
+import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 
 public abstract class ViewBinderBase extends ViewBinder {
 
@@ -16,7 +16,7 @@ public abstract class ViewBinderBase extends ViewBinder {
 
     final int viewId;
 
-    protected ViewBinderBase(ClassName viewHolderClassName, ValueAccessor accessor, int viewId) {
+    protected ViewBinderBase(ClassName viewHolderClassName, PropertyAccessor accessor, int viewId) {
         this.viewHolderClassName = viewHolderClassName;
         this.valueAccessor = accessor;
         this.viewId = viewId;

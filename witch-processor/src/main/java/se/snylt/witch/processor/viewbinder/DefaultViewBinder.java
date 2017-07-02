@@ -6,7 +6,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
-import se.snylt.witch.processor.valueaccessor.ValueAccessor;
+import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 
 import static se.snylt.witch.processor.TypeUtils.BINDER;
 import static se.snylt.witch.processor.TypeUtils.DEFAULT_VIEW_BINDER;
@@ -15,7 +15,7 @@ public class DefaultViewBinder extends ViewBinderBase {
 
     final ClassName targetTypeName;
 
-    public DefaultViewBinder(ClassName viewHolderClassName, ValueAccessor accessor,
+    public DefaultViewBinder(ClassName viewHolderClassName, PropertyAccessor accessor,
             ClassName targetTypeName, int viewId) {
         super(viewHolderClassName, accessor, viewId);
         this.targetTypeName = targetTypeName;
@@ -39,7 +39,7 @@ public class DefaultViewBinder extends ViewBinderBase {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Object.class, "target")
                 .returns(Object.class)
-                .addStatement("return (($T)target).$N", targetTypeName, valueAccessor.accessValueString())
+                .addStatement("return (($T)target).$N", targetTypeName, valueAccessor.accessPropertyString())
                 .build();
     }
 

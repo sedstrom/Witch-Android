@@ -3,7 +3,7 @@ package se.snylt.witch.processor.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.snylt.witch.processor.valueaccessor.ValueAccessor;
+import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
 
@@ -31,7 +31,7 @@ public class ViewBindingDef {
         if(obj instanceof ViewBindingDef) {
             return ((ViewBindingDef) obj).getValue().equals(getValue());
         }
-        if(obj instanceof ValueAccessor) {
+        if(obj instanceof PropertyAccessor) {
             return obj.equals(getValue());
         }
         return super.equals(obj);
@@ -41,7 +41,7 @@ public class ViewBindingDef {
         viewBinder.isDirty = isDirty;
     }
 
-    ValueAccessor getValue(){
+    PropertyAccessor getValue(){
         return viewBinder.valueAccessor;
     }
 

@@ -4,7 +4,7 @@ package se.snylt.witch.processor.viewbinder;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import se.snylt.witch.processor.valueaccessor.ValueAccessor;
+import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
 
@@ -12,9 +12,9 @@ public abstract class ViewBinder {
 
     public IsDirty isDirty = new IsDirtyIfNotEquals();
 
-    public ValueAccessor valueAccessor;
+    public PropertyAccessor valueAccessor;
 
-    public ValueAccessor binderAccessor;
+    public PropertyAccessor binderAccessor;
 
     public abstract TypeSpec newInstance();
 

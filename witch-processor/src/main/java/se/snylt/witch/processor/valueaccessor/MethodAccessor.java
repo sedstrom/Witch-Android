@@ -1,18 +1,18 @@
 package se.snylt.witch.processor.valueaccessor;
 
-public class MethodAccessor extends ValueAccessor {
+public class MethodAccessor extends PropertyAccessor {
 
-    public MethodAccessor(String valueAccessorName) {
-        super(valueAccessorName);
+    public MethodAccessor(String propertyAccessorName) {
+        super(propertyAccessorName);
     }
 
     @Override
-    public String accessValueString() {
-        return valueAccessorName + "()";
+    public String accessPropertyString() {
+        return propertyAccessorName + "()";
     }
 
     @Override
     public String viewHolderFieldName() {
-        return valueAccessorName + "_M";
+        return propertyAccessorName + "_M";
     }
 }
