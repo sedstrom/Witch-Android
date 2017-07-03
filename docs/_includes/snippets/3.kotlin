@@ -1,5 +1,5 @@
 @BindToTextView(id = R.id.name)
-fun name(): {
+fun name() {
   if(user == null) { "Magica de Hex" } else { user.givenName + " " + user.familyName }
 }
 

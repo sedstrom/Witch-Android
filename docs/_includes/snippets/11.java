@@ -1,7 +1,11 @@
-@BindToView(id = R.id.user_view, view = UserView.class, set = "user")
+@BindTo(R.id.status)
 @BindWhen(BindWhen.ALWAYS)
-User user; // Will be part of every bind pass
+String progress; // Will be part of every bind pass
 
-@BindToTextView(R.id.message)
+@BindTo(R.id.items)
+@BindWhen(BindWhen.NOT_SAME)
+List items; // Will be bound when not same instance as current value
+
+@BindTo(R.id.message)
 @BindWhen(BindWhen.NOT_EQUALS)
-String message; // Will be bound when not equals to current value
+String message; // Will be bound when not same instance or equals to current value

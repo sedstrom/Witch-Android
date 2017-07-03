@@ -160,40 +160,34 @@ layout: main
     </div>
   </div>
 </div>
-<!-- Value diffing -->
+<!-- EFFICIENT -->
 <div class="section">
   <div class="container">
     <div class="row">
       <div class="twelve columns">
         <h4>
-          Value diffing
+          EFFICIENT
         </h4>
         <p>
-          By default, only new values (instances) will be bound to its view.
-          I.e. changing the inner properties of an instance won't qualify it to
-          be bound in upcoming bind pass. A value will only be bound if it is:
-          <ul>
-            <li><p>1. <b>Not the same</b> instance as currently bound value</p></li>
-            <li><p>2. <b>Not equal</b> to currently bound value</p></li>
-          </ul>
+          Witch tries to be smart about what values to be bound in each bind pass,
+          not to cause values to be re-bound when not changed.
+          This behaviour can be altered by using the <b>@BindWhen</b> annotation.
+          The default strategy for all values is <b>NOT_EQUALS</b>, described below.
         </p>
       </div>
     </div>
     <div class="row code-container">
-      <div class="code java">
+      <div class="code java twelve columns">
 {% highlight java linenos %}
-{% include snippets/9.java %}
+{% include snippets/11.java %}
 {% endhighlight %}
       </div>
     </div>
-    <div class="row top-10">
-      <div class="twelve columns">
+    <div class="row">
+      <div class="twelve columns top-10">
         <p>
-          If the value to be bound cannot (or should not) be re-created, it can be
-          wrapped in a <b>Value</b> container. The Value container gives control
-          over when a value should be bound or not. Calling Value.set() or
-          Value.update() will flag the value as dirty and will then be part of
-          next bind pass, regardless of if value is new or different from before.
+          If non of the bind strategies provided is enough, a <b>Value</b>-container
+          can be used to get full control over when binding should happen.
         </p>
       </div>
     </div>
@@ -204,20 +198,6 @@ layout: main
 {% endhighlight %}
       </div>
     </div>
-    <div class="row top-10">
-      <div class="twelve columns">
-        <p>
-          <b>@BindWhen</b> can be used to control when a value should be bound.
-        </p>
-      </div>
-    </div>
-    <div class="row code-container">
-      <div class="code java">
-{% highlight java linenos %}
-{% include snippets/11.java %}
-{% endhighlight %}
-      </div>
-    </div>
   </div>
 </div>
 
@@ -225,7 +205,7 @@ layout: main
 <div class="section">
   <div class="container">
     <div class="row">
-      <div class="twelve columns">
+      <div class="twelve columns top-10">
         <h4>
           View holders built in
         </h4>
