@@ -1,8 +1,8 @@
 val title: String = "Abra cadabra!" @BindTo(R.id.title) get
 
-val bindTitle = Binder.create(object: SyncOnBind<TextView, String>() {
+val bindsTitle = Binder.create(object: SyncOnBind<TextView, String>() {
   override fun onBind(view: TextView , title: String) {
     view.text = title
   }
 })
-@Bind get
+@Binds get
