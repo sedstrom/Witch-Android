@@ -23,8 +23,8 @@ public class PropertytUtils {
     }
 
     static boolean bindsValue(Element valueAccessor, Element bindAccessor) {
-        String va = stripGet(valueAccessor.getSimpleName().toString());
-        String ba = "bind" + capitalize(stripGet(bindAccessor.getSimpleName().toString()));
+        String va = "binds" + capitalize(stripGet(valueAccessor.getSimpleName().toString()));
+        String ba = stripGet(bindAccessor.getSimpleName().toString());
         return va.equals(ba);
     }
 

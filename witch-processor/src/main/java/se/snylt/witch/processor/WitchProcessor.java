@@ -57,6 +57,7 @@ import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotSame;
 
 import static se.snylt.witch.processor.PropertytUtils.bindsValue;
+import static se.snylt.witch.processor.PropertytUtils.getPropertyAccessor;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
@@ -70,7 +71,7 @@ import static se.snylt.witch.processor.PropertytUtils.bindsValue;
         SupportedAnnotations.BindToViewPager.name,
         SupportedAnnotations.OnBind.name,
         SupportedAnnotations.OnBindEach.name,
-        SupportedAnnotations.Bind.name,
+        SupportedAnnotations.Binds.name,
         SupportedAnnotations.BindWhen.name,
         SupportedAnnotations.Mod.name,
         SupportedAnnotations.AlwaysBind.name
@@ -167,7 +168,7 @@ public class WitchProcessor extends AbstractProcessor {
                 List<ViewBindingDef> viewActionses = targets.get(target);
                 if (!viewActionses.contains(value)) {
                     int viewId = hasViewIdAnnotation.getViewId(value);
-                    PropertyAccessor valueAccessor = getPropertyAccessor(value);
+                    PropertyAccessor valueAccessor = getPropertyAccessorOrThrow(value);
                     ClassName viewHolderClassName = getBindingViewHolderName(target);
                     ClassName targetClassName = getElementClassName(target);
 
@@ -191,9 +192,9 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private PropertyAccessor getBinder(RoundEnvironment roundEnvironment, Element value) {
-        for(Element binder: roundEnvironment.getElementsAnnotatedWith(se.snylt.witch.annotations.Bind.class)) {
+        for(Element binder: roundEnvironment.getElementsAnnotatedWith(se.snylt.witch.annotations.Binds.class)) {
             if((bindsValue(value, binder)) && value.getEnclosingElement().equals(binder.getEnclosingElement())) {
-                return getPropertyAccessor(binder);
+                return getPropertyAccessorOrThrow(binder);
             }
         }
         return null;
@@ -209,7 +210,7 @@ public class WitchProcessor extends AbstractProcessor {
         return typeUtils.isAssignable(getType(value), valueBinder);
     }
 
-    private PropertyAccessor getPropertyAccessor(Element value) {
+    private PropertyAccessor getPropertyAccessorOrThrow(Element value) {
 
         PropertyAccessor a = getPropertyAccessor(value);
 
@@ -368,7 +369,6 @@ public class WitchProcessor extends AbstractProcessor {
         }
 
         // If primitive
-        logNote("Type: " + bindAction.toString() + " : " + type);
         if(type.getKind() != null && type.getKind().isPrimitive()) {
             type = typeUtils.boxedClass((PrimitiveType) type).asType();
         }
@@ -388,7 +388,7 @@ public class WitchProcessor extends AbstractProcessor {
 
         // Add bind actions to view binding
         for (ViewBindingDef viewViewBindingDef : viewActions) {
-            if (viewViewBindingDef.equals(getPropertyAccessor(bindAction))) {
+            if (viewViewBindingDef.equals(getPropertyAccessorOrThrow(bindAction))) {
                 return viewViewBindingDef;
             }
         }
