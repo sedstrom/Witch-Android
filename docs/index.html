@@ -169,10 +169,9 @@ layout: main
           EFFICIENT
         </h4>
         <p>
-          Witch tries to be smart about what values to be bound in each bind pass,
-          not to cause values to be re-bound when not changed.
+          Witch is designed to bind only values that has changed since last bind.
           This behaviour can be altered by using the <b>@BindWhen</b> annotation.
-          The default strategy for all values is <b>NOT_EQUALS</b>, described below.
+          The default strategy for all values is <b>BindWhen.NOT_EQUALS</b> described below.
         </p>
       </div>
     </div>
