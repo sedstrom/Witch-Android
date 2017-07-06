@@ -57,52 +57,52 @@ p {
 }
 .code-container {
 
-.toggles {
-  width: auto;
-  padding: 0px;
-  button {
+  .toggles {
     width: auto;
-    height:auto;
-    line-height: 20px;
-    margin: 6px 0px;
-    font-size: 10px;
-    padding: 0px 4px;
-    border-radius: 4px;
-    color: #888;
-    border: 1.2px solid #ccc;
-    &:hover {
-      border-color: $accent-color-secondary;
-      color: $accent-color-secondary;
+    padding: 0px;
+    button {
+      width: auto;
+      height:auto;
+      line-height: 20px;
+      margin: 6px 0px;
+      font-size: 10px;
+      padding: 0px 4px;
+      border-radius: 4px;
+      color: #888;
+      border: 1.2px solid #ccc;
+      &:hover {
+        border-color: $accent-color-secondary;
+        color: $accent-color-secondary;
+      }
+      &:active {
+        border-color: $accent-color-secondary;
+        background-color: $accent-color-secondary;
+        color: #fff;
+      }
+      &.active {
+        border-color: $accent-color-secondary;
+        background-color: $accent-color-secondary;
+        color: #fff;
+      }
+      &:disabled {
+        border-color: $transparent;
+        background-color: $transparent;
+        color: #999;
+      }
     }
-    &:active {
-      border-color: $accent-color-secondary;
-      background-color: $accent-color-secondary;
-      color: #fff;
-    }
-    &.active {
-      border-color: $accent-color-secondary;
-      background-color: $accent-color-secondary;
-      color: #fff;
-    }
-    &:disabled {
-      border-color: $transparent;
-      background-color: $transparent;
-      color: #999;
-    }
+  }
+
+
+  .highlight {
+    display: none;
+  }
+
+  .highlight.active {
+    display: block;
   }
 }
 
-.highlight {
-  display: none;
-}
-
-.highlight.active {
-  display: block;
-}
-
-}
-
-button {
+.button {
   font-family: 'Roboto';
   font-weight: 700;
   font-size: 13px;
@@ -110,12 +110,12 @@ button {
   color: $primary-color;
   background-color: $white;
   height: $button-height;
-  width: 100%;
   border: 2px solid $primary-color;
   border-radius: $half-button-height;
   &:hover {
     border-color: $accent-color;
     color: $accent-color;
+    text-decoration: none;
   }
   &:active {
     border-color: $accent-color;
@@ -132,7 +132,7 @@ button {
   transition: color 0.15s, border-color 0.15s, background-color 0.15s;
 }
 
-button.plain {
+.button.plain {
   background-color: $transparent;
   border: 0px;
   border-radius: 0;
@@ -141,12 +141,10 @@ button.plain {
   font-size: 16px;
   &:hover {
     color: $accent-color;
-    padding-top: 3px;
     border-bottom: 3px solid $accent-color;
   }
   &:active {
     color: $accent-color;
-    padding-top: 3px;
     border-bottom: 6px solid $accent-color;
   }
 
