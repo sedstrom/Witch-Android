@@ -112,6 +112,9 @@ p {
   height: $button-height;
   border: 2px solid $primary-color;
   border-radius: $half-button-height;
+  &:visited {
+    color: $primary-color;
+  }
   &:hover {
     border-color: $accent-color;
     color: $accent-color;
@@ -128,6 +131,7 @@ p {
     color: #fff;
   }
 
+
   -webkit-transition: color 0.15s, border-color 0.15s, background-color 0.15s;
   transition: color 0.15s, border-color 0.15s, background-color 0.15s;
 }
@@ -139,6 +143,9 @@ p {
   border-bottom: 0px solid $accent-color;
   padding-top: 0px;
   font-size: 16px;
+  &:visited {
+    color: $primary-color;
+  }
   &:hover {
     color: $accent-color;
     border-bottom: 3px solid $accent-color;
