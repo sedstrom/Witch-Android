@@ -2,8 +2,11 @@
 
 ### View-data binding on Android.
 
-For documentation, getting started guide and examples:
+For documentation, getting started guide:
 https://sedstrom.github.io/Witch-Android/
+
+For examples:
+https://sedstrom.github.io/Witch-Android-Samples/
 
 License
 -------
