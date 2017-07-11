@@ -2,7 +2,7 @@
 
 ### View-data binding on Android.
 
-For documentation, getting started guide:
+For documentation and getting started guide:
 https://sedstrom.github.io/Witch-Android/
 
 For examples:
