@@ -31,8 +31,9 @@ body {
 
 
 .container {
-  @media (min-width: 100px) {
-    width: 90%
+  @media (min-width: 10px) {
+    width: 90%;
+    padding: 0;
   }
 }
 
