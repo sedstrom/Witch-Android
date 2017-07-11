@@ -6,7 +6,7 @@ For documentation, getting started guide:
 https://sedstrom.github.io/Witch-Android/
 
 For examples:
-https://sedstrom.github.io/Witch-Android-Samples/
+https://github.com/sedstrom/Witch-Android-Samples
 
 License
 -------
