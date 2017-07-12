@@ -134,7 +134,7 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
          * @param item item to be bound
          * @return Binder ready to bind {@param item}
          */
-        Binder take(Object item) {
+        Binder<Item> take(Object item) {
             this.item = (Item) item;
             return this;
         }

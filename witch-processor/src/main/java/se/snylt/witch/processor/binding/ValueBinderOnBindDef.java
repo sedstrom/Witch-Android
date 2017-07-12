@@ -14,7 +14,7 @@ public class ValueBinderOnBindDef extends OnBindDef {
     public ValueBinderOnBindDef(){}
 
     @Override
-    public String getNewInstanceJava() {
+    public String create() {
         MethodSpec method = MethodSpec.methodBuilder("onBind")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(TypeName.OBJECT, "target")

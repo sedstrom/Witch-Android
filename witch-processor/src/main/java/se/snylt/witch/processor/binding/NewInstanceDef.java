@@ -11,7 +11,7 @@ public class NewInstanceDef extends OnBindDef {
     }
 
     @Override
-    public String getNewInstanceJava() {
+    public String create() {
         return "new " + onBindClass + "()";
     }
 }

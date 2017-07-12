@@ -24,7 +24,7 @@ public class OnOnBindViewDef extends OnBindDef {
     }
 
     @Override
-    public String getNewInstanceJava() {
+    public String create() {
         MethodSpec method = MethodSpec.methodBuilder("onBind")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(viewType, "target")

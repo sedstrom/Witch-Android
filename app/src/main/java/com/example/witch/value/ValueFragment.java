@@ -15,15 +15,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import se.snylt.witch.annotations.BindTo;
+import se.snylt.witch.annotations.Binds;
+import se.snylt.witch.viewbinder.Value;
 import se.snylt.witch.viewbinder.Witch;
 import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
-import se.snylt.witch.viewbinder.bindaction.ValueBinder;
 
 public class ValueFragment extends Fragment {
 
     @BindTo(R.id.value_view_fragment_input)
-    ValueBinder<EditText, TextWatcher> textWatcher = ValueBinder.create(new TextWatcherAdapter() {
+    final TextWatcher textWatcher = new TextWatcherAdapter() {
 
         @Override
         public void afterTextChanged(Editable s) {
@@ -31,21 +32,26 @@ public class ValueFragment extends Fragment {
             text.update().setText(s.toString());
             bind();
         }
-    }, Binder.create(new SyncOnBind<EditText, TextWatcher>() {
+    };
+
+    @Binds
+    Binder<EditText, TextWatcher> bindsTextWatcher = Binder.create(new SyncOnBind<EditText, TextWatcher>() {
         @Override
         public void onBind(EditText editText, TextWatcher textWatcher) {
             editText.addTextChangedListener(textWatcher);
         }
-    }));
+    });
 
     @BindTo(R.id.value_view_fragment_text)
-    final ValueBinder<TextView, Model> text = ValueBinder.create(new Model(),
-            Binder.create(new SyncOnBind<TextView, Model>() {
-                @Override
-                public void onBind(TextView textView, Model m) {
-                    textView.setText(m.getText());
-                }
-            }));
+    final Value<Model> text = new Value<>(new Model());
+
+    @Binds
+    Binder<TextView, Model> bindsText = Binder.create(new SyncOnBind<TextView, Model>() {
+        @Override
+        public void onBind(TextView textView, Model m) {
+            textView.setText(m.getText());
+        }
+    });
 
     private void bind() {
         Witch.bind(this, getView());

@@ -32,8 +32,8 @@ public class RecyclerViewFragment extends Fragment implements View.OnClickListen
         // Provide one binder per model type
         RecyclerViewBinderAdapter<Post> adapter =
                 new RecyclerViewBinderAdapter.Builder<>(posts())
-                        .binder(new PostWithPicture.Binder())
-                        .binder(new Post.Binder())
+                        .binder(new PostWithPicture.PostBinder())
+                        .binder(new Post.PostBinder())
                         .build();
 
         recyclerView.setAdapter(adapter);

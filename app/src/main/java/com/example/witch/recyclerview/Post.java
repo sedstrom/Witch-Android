@@ -17,9 +17,9 @@ class Post {
     }
 
     // Binder
-    static class Binder extends RecyclerViewBinderAdapter.Binder<Post> {
+    static class PostBinder extends RecyclerViewBinderAdapter.Binder<Post> {
 
-        Binder() {super(R.layout.recycler_view_item_2);}
+        PostBinder() {super(R.layout.recycler_view_item_2);}
 
         @BindToTextView(id = R.id.my_item_title)
         String title() {

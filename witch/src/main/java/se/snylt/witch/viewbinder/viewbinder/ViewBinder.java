@@ -9,7 +9,7 @@ public abstract class ViewBinder {
 
     public final int viewId;
 
-    private Binder binder;
+    protected Object historyValue = DiffValue.NO_HISTORY;
 
     public ViewBinder(int viewId) {
         this.viewId = viewId;
@@ -18,17 +18,12 @@ public abstract class ViewBinder {
     public boolean bind(Object viewHolder, ViewFinder viewFinder, Object target) {
         if (isDirty(target)) {
             View view = findView(viewHolder, viewFinder);
-            getOrCreateBinder(target).bind(view, getValue(target));
+            Object value = getValue(target);
+            getBinder(target).bind(view, getValue(target));
+            historyValue = value;
             return true;
         }
         return false;
-    }
-
-    private Binder getOrCreateBinder(Object target) {
-        if(binder == null) {
-            binder = getBinder(target);
-        }
-        return binder;
     }
 
     /**

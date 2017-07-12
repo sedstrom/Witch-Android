@@ -1,10 +1,12 @@
 package se.snylt.witch.processor.viewbinder.isdirty;
 
 
-public class IsDirtyNever implements IsDirty {
+import com.squareup.javapoet.MethodSpec;
+
+public class IsDirtyNever extends IsDirty {
 
     @Override
-    public String isDirty() {
-        return "false";
+    MethodSpec.Builder addReturnStatement(MethodSpec.Builder builder) {
+        return builder.addStatement("return false");
     }
 }

@@ -24,12 +24,6 @@ public class TypeUtils {
 
     public final static TypeName VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "ViewBinder");
 
-    public final static TypeName DEFAULT_VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DefaultViewBinder");
-
-    public final static TypeName VALUE_VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "ValueViewBinder");
-
-    public final static TypeName VALUE_BINDER_VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "ValueBinderViewBinder");
-
     public final static TypeName VALUE = ClassName.get(LIBRARY_PACKAGE, "Value");
 
     public final static TypeName DIFF_VALUE = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue");
@@ -37,8 +31,6 @@ public class TypeUtils {
     public static final TypeName TARGET_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinder");
 
     public final static TypeName TARGET_VIEW_BINDER_FACTORY = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinderFactory");
-
-    public final static TypeName VALUE_BINDER = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "ValueBinder");
 
     public final static TypeName BINDER = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "Binder");
 

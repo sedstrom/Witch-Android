@@ -9,8 +9,9 @@ import android.widget.ImageView;
 import se.snylt.witch.annotations.BindTo;
 import se.snylt.witch.annotations.BindToTextView;
 import se.snylt.witch.annotations.BindToView;
+import se.snylt.witch.annotations.Binds;
+import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
-import se.snylt.witch.viewbinder.bindaction.ValueBinder;
 import se.snylt.witch.viewbinder.recyclerview.RecyclerViewBinderAdapter;
 
 class PostWithPicture extends Post {
@@ -26,20 +27,9 @@ class PostWithPicture extends Post {
     }
 
     // Binder
-    static class Binder extends RecyclerViewBinderAdapter.Binder<PostWithPicture> {
+    static class PostBinder extends RecyclerViewBinderAdapter.Binder<PostWithPicture> {
 
-        private final ValueBinder<ImageView, String> image = ValueBinder.create(
-                se.snylt.witch.viewbinder.bindaction.Binder.create(
-                        new SyncOnBind<ImageView, String>() {
-                            @Override
-                            public void onBind(ImageView imageView, String imageUrl) {
-                                Picasso.with(imageView.getContext())
-                                        .load(imageUrl)
-                                        .into(imageView);
-                            }
-                        }));
-
-        Binder() {
+        PostBinder() {
             super(R.layout.recycler_view_item);
         }
 
@@ -59,10 +49,20 @@ class PostWithPicture extends Post {
         }
 
         @BindTo(R.id.my_item_image)
-        ValueBinder<ImageView, String> image(){
-            image.set(item.imageUrl);
-            return image;
+        String image() {
+            return item.imageUrl;
         }
+
+        @Binds
+        Binder<ImageView, String> bindsImage = Binder.create(
+                new SyncOnBind<ImageView, String>() {
+                    @Override
+                    public void onBind(ImageView imageView, String imageUrl) {
+                        Picasso.with(imageView.getContext())
+                                .load(imageUrl)
+                                .into(imageView);
+                    }
+                });
 
         @Override
         public boolean bindsItem(Object item) {

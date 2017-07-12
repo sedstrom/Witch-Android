@@ -5,46 +5,43 @@ import com.example.witch.R;
 import android.widget.TextView;
 
 import se.snylt.witch.annotations.BindTo;
+import se.snylt.witch.annotations.Binds;
 import se.snylt.witch.viewbinder.bindaction.Binder;
-import se.snylt.witch.viewbinder.bindaction.ValueBinder;
 
 class AnimationsViewModel {
 
-    private final String one;
+    @BindTo(R.id.animations_fragment_text_1)
+    final String one;
 
-    private final String two;
+    @Binds
+    final Binder<TextView, String> bindsOne;
 
-    private final String three;
+    @BindTo(R.id.animations_fragment_text_2)
+    final String two;
 
-    private final String four;
+    @Binds
+    final Binder<TextView, String> bindsTwo;
 
-    private final Binder<TextView, String> binder;
+    @BindTo(R.id.animations_fragment_text_3)
+    final String three;
+
+    @Binds
+    final Binder<TextView, String> bindsThree;
+
+    @BindTo(R.id.animations_fragment_text_4)
+    final String four;
+
+    @Binds
+    final Binder<TextView, String> bindsFour;
 
     AnimationsViewModel(String one, String two, String three, String four, Binder<TextView, String> binder) {
         this.one = one;
+        this.bindsOne = binder;
         this.two = two;
+        this.bindsTwo = binder;
         this.three = three;
+        this.bindsThree = binder;
         this.four = four;
-        this.binder = binder;
-    }
-
-    @BindTo(R.id.animations_fragment_text_1)
-    ValueBinder<TextView, String> one() {
-        return ValueBinder.create(one, binder);
-    }
-
-    @BindTo(R.id.animations_fragment_text_2)
-    ValueBinder<TextView, String> two() {
-        return ValueBinder.create(two, binder);
-    }
-
-    @BindTo(R.id.animations_fragment_text_3)
-    ValueBinder<TextView, String> three() {
-        return ValueBinder.create(three, binder);
-    }
-
-    @BindTo(R.id.animations_fragment_text_4)
-    ValueBinder<TextView, String> four() {
-        return ValueBinder.create(four, binder);
+        this.bindsFour = binder;
     }
 }

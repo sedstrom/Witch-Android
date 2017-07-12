@@ -12,10 +12,10 @@ import java.util.Stack;
 
 import se.snylt.witch.annotations.BindTo;
 import se.snylt.witch.annotations.BindToView;
+import se.snylt.witch.annotations.Binds;
 import se.snylt.witch.viewbinder.Witch;
 import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
-import se.snylt.witch.viewbinder.bindaction.ValueBinder;
 
 public class MainActivity extends AppCompatActivity implements OnExampleFragmentSelected {
 
@@ -69,22 +69,11 @@ public class MainActivity extends AppCompatActivity implements OnExampleFragment
 
     class ViewModel {
 
-        private final Fragment fragment;
-
-        private final boolean displayHomeAsUp;
-
-        @BindToView(id = R.id.main_activity_toolbar, view = Toolbar.class, set = "title")
-        public final String title;
-
-        ViewModel(Fragment fragment, boolean displayHomeAsUp, String title) {
-            this.fragment = fragment;
-            this.displayHomeAsUp = displayHomeAsUp;
-            this.title = title;
-        }
-
         @BindTo(R.id.main_activity_fragment_container)
-        ValueBinder<View, Fragment> bindFragment() {
-            return ValueBinder.create(fragment, Binder.create(new SyncOnBind<View, Fragment>() {
+        final Fragment fragment;
+
+        @Binds
+        Binder<View, Fragment> bindsFragment = Binder.create(new SyncOnBind<View, Fragment>() {
                 @Override
                 public void onBind(View view, Fragment fragment) {
                     getSupportFragmentManager().beginTransaction()
@@ -92,17 +81,26 @@ public class MainActivity extends AppCompatActivity implements OnExampleFragment
                             .replace(view.getId(), fragment)
                             .commit();
                 }
-            }));
-        }
+            });
 
         @BindTo(R.id.main_activity_toolbar)
-        ValueBinder<View, Boolean> bindDisplayHomeAsUp(){
-            return ValueBinder.create(displayHomeAsUp, Binder.create(new SyncOnBind<View, Boolean>() {
-                @Override
-                public void onBind(View view, Boolean enabled) {
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
-                }
-            }));
+        final boolean displayHomeAsUp;
+
+        @Binds
+        final Binder<View, Boolean> bindsDisplayHomeAsUp = Binder.create(new SyncOnBind<View, Boolean>() {
+            @Override
+            public void onBind(View view, Boolean enabled) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
+            }
+        });
+
+        @BindToView(id = R.id.main_activity_toolbar, view = Toolbar.class, set = "title")
+        final String title;
+
+        ViewModel(Fragment fragment, boolean displayHomeAsUp, String title) {
+            this.fragment = fragment;
+            this.displayHomeAsUp = displayHomeAsUp;
+            this.title = title;
         }
     }
 }

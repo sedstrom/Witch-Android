@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import se.snylt.witch.viewbinder.bindaction.Binder;
-import se.snylt.witch.viewbinder.viewbinder.DefaultViewBinder;
+import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
 import static junit.framework.Assert.assertEquals;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DefaultViewBinderTest {
+public class ViewBinderTest {
 
     private final static int VIEW_ID = 666;
 
@@ -130,7 +130,7 @@ public class DefaultViewBinderTest {
     }
 
     @Test
-    public void bind_Twice_Should_AskForBinderOnlyOnce(){
+    public void bind_Twice_Should_AskForBinderTwice(){
         viewBinder.setValue("123");
 
         // When
@@ -138,7 +138,7 @@ public class DefaultViewBinderTest {
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
-        assertEquals(1, viewBinder.getBinderCall.get());
+        assertEquals(2, viewBinder.getBinderCall.get());
     }
 
     private class TestViewHolder {
@@ -155,14 +155,17 @@ public class DefaultViewBinderTest {
     }
 
 
-    private class TestViewBinder extends DefaultViewBinder {
+    private class TestViewBinder extends ViewBinder {
 
         private Object value;
 
         AtomicInteger getBinderCall = new AtomicInteger();
 
+        private Binder binder;
+
         TestViewBinder(int viewId, Binder binder) {
-            super(viewId, binder);
+            super(viewId);
+            this.binder = binder;
         }
 
         @Override
