@@ -6,10 +6,10 @@ import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 
-import se.snylt.witch.processor.binding.OnBindDef;
+import se.snylt.witch.processor.binding.OnBind;
 import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 
-import static se.snylt.witch.processor.TypeUtils.BINDER;
+import static se.snylt.witch.processor.utils.TypeUtils.BINDER;
 
 public class GetTargetBinder extends GetBinder {
 
@@ -26,14 +26,14 @@ public class GetTargetBinder extends GetBinder {
     public MethodSpec create() {
         return MethodSpec.methodBuilder("getBinder")
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(Object.class, "target")
+                .addParameter(targetTypeName, "target")
                 .returns(BINDER)
-                .addStatement("return (($T)target).$N", targetTypeName, binderAccessor.accessPropertyString())
+                .addStatement("return target.$N", binderAccessor.accessPropertyString())
                 .build();
     }
 
     @Override
-    public void addOnBind(OnBindDef onBindDef) {
+    public void addOnBind(OnBind onBind) {
         throw new IllegalAccessError("Not supported");
     }
 }

@@ -5,7 +5,7 @@ import android.view.View;
 import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
-public abstract class ViewBinder {
+public abstract class ViewBinder<Target, V extends View, Value, ViewHolder> {
 
     public final int viewId;
 
@@ -15,9 +15,9 @@ public abstract class ViewBinder {
         this.viewId = viewId;
     }
 
-    public boolean bind(Object viewHolder, ViewFinder viewFinder, Object target) {
+    public boolean bind(ViewHolder viewHolder, ViewFinder viewFinder, Target target) {
         if (isDirty(target)) {
-            View view = findView(viewHolder, viewFinder);
+            V view = findView(viewHolder, viewFinder);
             Object value = getValue(target);
             getBinder(target).bind(view, getValue(target));
             historyValue = value;
@@ -30,16 +30,16 @@ public abstract class ViewBinder {
      * Find view for binding. First looks in view holder. If not foudn in view holder, view is looked up with viewfinder and
      * stored in view holder.
      * @param viewHolder view holder for storing view
-     * @param viewFinder view fidner for view lookup
+     * @param viewFinder view finder for view lookup
      * @return view for binding
      */
-    private View findView(Object viewHolder, ViewFinder viewFinder) {
+    private V findView(ViewHolder viewHolder, ViewFinder viewFinder) {
         if (getView(viewHolder) == null) {
-            View view = viewFinder.findViewById(viewId);
+            V view = (V) viewFinder.findViewById(viewId);
             setView(viewHolder, view);
             return view;
         }
-        return (View) getView(viewHolder);
+        return getView(viewHolder);
     }
 
     /**
@@ -47,28 +47,28 @@ public abstract class ViewBinder {
      * @param target target containing value to be bound.
      * @return the value
      */
-    public abstract Object getValue(Object target);
+    public abstract Value getValue(Target target);
 
     /**
      * Store view in view holder.
      * @param viewHolder view holder to store view in
      * @param view view to store
      */
-    public abstract void setView(Object viewHolder, Object view);
+    public abstract void setView(ViewHolder viewHolder, V view);
 
     /**
      * Get view for binding.
      * @param viewHolder view holder that stores view after lookup.
      * @return the view
      */
-    public abstract Object getView(Object viewHolder);
+    public abstract V getView(ViewHolder viewHolder);
 
     /**
      * Check if value has been updated
      * @param target containing value
      * @return true if value is dirty and should be bound, otherwise false.
      */
-    public abstract boolean isDirty(Object target);
+    public abstract boolean isDirty(Target target);
 
     /**
      * Get binder for this view binder.
@@ -76,5 +76,5 @@ public abstract class ViewBinder {
      * @param target that contains value
      * @return binder
      */
-    public abstract Binder getBinder(Object target);
+    public abstract Binder<V, Value> getBinder(Target target);
 }

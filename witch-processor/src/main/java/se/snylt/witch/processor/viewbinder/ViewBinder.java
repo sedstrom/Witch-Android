@@ -1,13 +1,14 @@
 package se.snylt.witch.processor.viewbinder;
 
 
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import se.snylt.witch.processor.binding.OnBindDef;
+import se.snylt.witch.processor.binding.OnBind;
 import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 import se.snylt.witch.processor.viewbinder.getbinder.GetBinder;
 
-public class ViewBinderComposition {
+public class ViewBinder {
 
     private TypeSpecModule newInstance;
 
@@ -21,7 +22,7 @@ public class ViewBinderComposition {
 
     private final MethodSpecModule isDirty;
 
-    ViewBinderComposition(
+    ViewBinder(
             TypeSpecModule newInstance,
             MethodSpecModule getView,
             MethodSpecModule setView,
@@ -62,6 +63,12 @@ public class ViewBinderComposition {
 
         private PropertyAccessor valueAccessor;
 
+        private TypeName targetTypeName;
+
+        public Builder(TypeName targetTypeName) {
+            this.targetTypeName = targetTypeName;
+        }
+
         public Builder setNewInstance(TypeSpecModule newInstance) {
             this.newInstance = newInstance;
             return this;
@@ -101,8 +108,8 @@ public class ViewBinderComposition {
             return valueAccessor;
         }
 
-        public ViewBinderComposition build() {
-            return new ViewBinderComposition(
+        public ViewBinder build() {
+            return new ViewBinder(
                     newInstance,
                     getView,
                     setView,
@@ -111,19 +118,23 @@ public class ViewBinderComposition {
                     isDirty);
         }
 
-        public void addOnBind(OnBindDef onBind) {
+        public void addOnBind(OnBind onBind) {
             getBinder.addOnBind(onBind);
         }
 
         @Override
         public boolean equals(Object obj) {
-            if(obj instanceof ViewBinderComposition.Builder) {
-                return ((ViewBinderComposition.Builder) obj).getValueAccessor().equals(getValueAccessor());
+            if(obj instanceof ViewBinder.Builder) {
+                return ((ViewBinder.Builder) obj).getValueAccessor().equals(getValueAccessor());
             }
             if(obj instanceof PropertyAccessor) {
                 return obj.equals(getValueAccessor());
             }
             return super.equals(obj);
+        }
+
+        public TypeName getTargetTypeName() {
+            return targetTypeName;
         }
     }
 

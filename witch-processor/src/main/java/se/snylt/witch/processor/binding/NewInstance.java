@@ -2,11 +2,11 @@ package se.snylt.witch.processor.binding;
 
 import com.squareup.javapoet.TypeName;
 
-public class NewInstanceDef extends OnBindDef {
+public class NewInstance extends OnBind {
 
     private final TypeName onBindClass;
 
-    public NewInstanceDef(TypeName onBindClass) {
+    public NewInstance(TypeName onBindClass) {
         this.onBindClass = onBindClass;
     }
 

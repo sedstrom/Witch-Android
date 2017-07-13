@@ -15,18 +15,21 @@ public class GetTargetValue implements MethodSpecModule {
 
     private final PropertyAccessor valueAccessor;
 
-    public GetTargetValue(TypeName targetTypeName, PropertyAccessor valueAccessor) {
+    private final TypeName valueTypeName;
+
+    public GetTargetValue(TypeName targetTypeName, PropertyAccessor valueAccessor, TypeName valueTypeName) {
         this.targetTypeName = targetTypeName;
         this.valueAccessor = valueAccessor;
+        this.valueTypeName = valueTypeName;
     }
 
     @Override
     public MethodSpec create() {
         return  MethodSpec.methodBuilder("getValue")
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(Object.class, "target")
-                .returns(Object.class)
-                .addStatement("return (($T)target).$N", targetTypeName, valueAccessor.accessPropertyString())
+                .addParameter(targetTypeName, "target")
+                .returns(valueTypeName)
+                .addStatement("return target.$N", valueAccessor.accessPropertyString())
                 .build();
     }
 }

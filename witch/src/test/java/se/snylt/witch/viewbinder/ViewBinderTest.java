@@ -143,13 +143,13 @@ public class ViewBinderTest {
 
     private class TestViewHolder {
 
-        private Object view;
+        private View view;
 
-        public Object getView() {
+        public View getView() {
             return view;
         }
 
-        public void setView(Object view) {
+        public void setView(View view) {
             this.view = view;
         }
     }
@@ -183,12 +183,12 @@ public class ViewBinderTest {
         }
 
         @Override
-        public void setView(Object viewHolder, Object view) {
+        public void setView(Object viewHolder, View view) {
             ((TestViewHolder)viewHolder).setView(view);
         }
 
         @Override
-        public Object getView(Object viewHolder) {
+        public View getView(Object viewHolder) {
             return ((TestViewHolder)viewHolder).getView();
         }
         @Override

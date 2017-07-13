@@ -7,9 +7,9 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
-import se.snylt.witch.processor.TypeUtils;
+import se.snylt.witch.processor.utils.TypeUtils;
 
-public class OnOnBindViewDef extends OnBindDef {
+public class OnBindPropertySetter extends OnBind {
 
     private final String property;
 
@@ -17,7 +17,7 @@ public class OnOnBindViewDef extends OnBindDef {
 
     private final TypeName valueType;
 
-    public OnOnBindViewDef(String property, TypeName viewType, TypeName valueType) {
+    public OnBindPropertySetter(String property, TypeName viewType, TypeName valueType) {
         this.property = property;
         this.viewType = viewType;
         this.valueType = valueType;

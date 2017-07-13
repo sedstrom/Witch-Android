@@ -7,11 +7,11 @@ import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 
-import se.snylt.witch.processor.TypeUtils;
+import se.snylt.witch.processor.utils.TypeUtils;
 
-import static se.snylt.witch.processor.PropertytUtils.getPropertySetter;
+import static se.snylt.witch.processor.utils.PropertyUtils.getPropertySetter;
 
-public class OnOnBindGetAdapterViewDef extends OnBindDef {
+public class OnOnBindGetAdapterView extends OnBind {
 
     private final String property;
 
@@ -21,7 +21,7 @@ public class OnOnBindGetAdapterViewDef extends OnBindDef {
 
     private final TypeName valueType;
 
-    public OnOnBindGetAdapterViewDef(String property, TypeName viewType, TypeName adapterType,  TypeName valueType) {
+    public OnOnBindGetAdapterView(String property, TypeName viewType, TypeName adapterType,  TypeName valueType) {
         this.property = property;
         this.viewType = viewType;
         this.adapterType = adapterType;

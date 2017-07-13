@@ -3,6 +3,7 @@ package se.snylt.witch.processor.viewbinder.getview;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 
@@ -11,14 +12,14 @@ import se.snylt.witch.processor.viewbinder.MethodSpecModule;
 
 public class GetViewHolderView implements MethodSpecModule {
 
-    private final ClassName viewClassName = ClassName.get("android.view", "View");
+    private final TypeName viewTypeName = ClassName.get("android.view", "View");
 
-    private final ClassName viewHolderClassName;
+    private final TypeName viewHolderTypeName;
 
     private final PropertyAccessor valueAccessor;
 
-    public GetViewHolderView(ClassName viewHolderClassName, PropertyAccessor valueAccessor) {
-        this.viewHolderClassName = viewHolderClassName;
+    public GetViewHolderView(TypeName viewHolderTypeName, PropertyAccessor valueAccessor) {
+        this.viewHolderTypeName = viewHolderTypeName;
         this.valueAccessor = valueAccessor;
     }
 
@@ -26,9 +27,9 @@ public class GetViewHolderView implements MethodSpecModule {
     public MethodSpec create() {
         return MethodSpec.methodBuilder("getView")
                 .addModifiers(Modifier.PUBLIC)
-                .addParameter(Object.class, "viewHolder")
-                .returns(viewClassName)
-                .addStatement("return (($T)viewHolder).$N", viewHolderClassName, valueAccessor.viewHolderFieldName())
+                .addParameter(viewHolderTypeName, "viewHolder")
+                .returns(viewTypeName)
+                .addStatement("return viewHolder.$N", valueAccessor.viewHolderFieldName())
                 .build();
     }
 }

@@ -7,10 +7,10 @@ import android.view.View;
 
 import java.util.PriorityQueue;
 
-import se.snylt.witch.annotations.AlwaysBind;
 import se.snylt.witch.annotations.BindTo;
 import se.snylt.witch.annotations.BindToEditText;
 import se.snylt.witch.annotations.BindToView;
+import se.snylt.witch.annotations.BindWhen;
 import se.snylt.witch.annotations.OnBind;
 
 class LoginViewModel {
@@ -90,7 +90,7 @@ class LoginViewModel {
 
     @BindTo(R.id.login_fragment_container)
     @OnBind(ToastShort.class)
-    @AlwaysBind
+    @BindWhen(BindWhen.ALWAYS)
     String message() {
         return message.isEmpty() ? null : message.poll();
     }

@@ -172,12 +172,6 @@ class SupportedAnnotations {
         }
     }
 
-    // Mod
-    @Deprecated
-    final static class Mod {
-        final static String name = "se.snylt.witch.annotations.Mod";
-    }
-
     // OnBind
     public final static class OnBind {
         final static String name = "se.snylt.witch.annotations.OnBind";
@@ -188,15 +182,9 @@ class SupportedAnnotations {
         final static String name = "se.snylt.witch.annotations.OnBindEach";
     }
 
-    // Bind
+    // Binds
     final static class Binds {
         final static String name = "se.snylt.witch.annotations.Binds";
-    }
-
-    // AlwaysBind
-    @Deprecated
-    final static class AlwaysBind {
-        final static String name = "se.snylt.witch.annotations.AlwaysBind";
     }
 
     final static class BindWhen {

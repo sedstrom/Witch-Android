@@ -1,4 +1,4 @@
-package se.snylt.witch.processor;
+package se.snylt.witch.processor.utils;
 
 import java.util.Set;
 
@@ -10,7 +10,7 @@ import se.snylt.witch.processor.valueaccessor.FieldAccessor;
 import se.snylt.witch.processor.valueaccessor.MethodAccessor;
 import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 
-public class PropertytUtils {
+public class PropertyUtils {
 
     public static String getPropertySetter(String property) {
         return "set" + capitalize(property);
@@ -22,9 +22,9 @@ public class PropertytUtils {
         return s;
     }
 
-    static boolean bindsValue(Element valueAccessor, Element bindAccessor) {
+    public static boolean bindsValue(Element valueAccessor, Element bindsAccessor) {
         String va = "binds" + capitalize(stripGet(valueAccessor.getSimpleName().toString()));
-        String ba = stripGet(bindAccessor.getSimpleName().toString());
+        String ba = stripGet(bindsAccessor.getSimpleName().toString());
         return va.equals(ba);
     }
 
@@ -45,7 +45,7 @@ public class PropertytUtils {
         return value.getKind().isField() && notPrivateOrProtected(value);
     }
 
-    static PropertyAccessor getPropertyAccessor(Element element) {
+    public static PropertyAccessor getPropertyAccessor(Element element) {
         if (isAccessibleMethod(element)) {
             return new MethodAccessor(element.getSimpleName().toString());
         }
