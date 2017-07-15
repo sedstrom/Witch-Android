@@ -38,7 +38,7 @@ public class TestViewBinderUtils {
         }
     }
 
-    private static ViewFinder viewFinderWithView(View view) {
+    public static ViewFinder viewFinderWithView(View view) {
         ViewFinder finder = mock(ViewFinder.class);
         when(finder.findViewById(anyInt())).thenReturn(view);
         return finder;

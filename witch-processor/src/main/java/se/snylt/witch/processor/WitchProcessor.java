@@ -102,17 +102,17 @@ public class WitchProcessor extends AbstractProcessor {
             String bindWhenValue =  bindWhen.getAnnotation(se.snylt.witch.annotations.BindWhen.class).value();
             switch (bindWhenValue) {
                 case BindWhen.ALWAYS: {
-                    ViewBinder.Builder binder = getViewBinder(bindWhen, targetViewBinders);
+                    ViewBinder.Builder binder = getOrCreateViewBinder(bindWhen, targetViewBinders);
                     binder.setIsDirty(new IsDirtyAlways(binder.getTargetTypeName()));
                     continue;
                 }
                 case BindWhen.NOT_EQUALS: {
-                    ViewBinder.Builder binder = getViewBinder(bindWhen, targetViewBinders);
+                    ViewBinder.Builder binder = getOrCreateViewBinder(bindWhen, targetViewBinders);
                     binder.setIsDirty(new IsDirtyIfNotEquals(binder.getTargetTypeName()));
                     continue;
                 }
                 case BindWhen.NOT_SAME: {
-                    ViewBinder.Builder binder = getViewBinder(bindWhen, targetViewBinders);
+                    ViewBinder.Builder binder = getOrCreateViewBinder(bindWhen, targetViewBinders);
                     binder.setIsDirty(new IsDirtyIfNotSame(binder.getTargetTypeName()));
                     continue;
                 }
@@ -124,47 +124,55 @@ public class WitchProcessor extends AbstractProcessor {
 
     private void processTargets(Map<Element, List<ViewBinder.Builder>> targetViewBinders, RoundEnvironment roundEnv,
             SupportedAnnotations.HasViewId... annotations) {
+
+        // Add all targets
         for (SupportedAnnotations.HasViewId hasViewIdAnnotation : annotations) {
             for (Element targetMember : roundEnv.getElementsAnnotatedWith(hasViewIdAnnotation.getClazz())) {
-
                 Element target = targetMember.getEnclosingElement();
-
                 if (!targetViewBinders.containsKey(target)) {
                     targetViewBinders.put(target, new LinkedList<>());
                 }
+            }
+        }
 
-                List<ViewBinder.Builder> viewBinders = targetViewBinders.get(target);
+        // Add all view binders in proper order.
+        for(Element target: targetViewBinders.keySet()) {
+            for(Element targetMember: target.getEnclosedElements()) {
+                for(SupportedAnnotations.HasViewId viewIdAnnotation: annotations) {
+                    if(targetMember.getAnnotation(viewIdAnnotation.getClazz()) != null) {
+                        List<ViewBinder.Builder> viewBinders = targetViewBinders.get(target);
+                        if (!viewBinders.contains(targetMember)) {
 
-                if (!viewBinders.contains(targetMember)) {
+                            int viewId = viewIdAnnotation.getViewId(targetMember);
+                            PropertyAccessor valueAccessor = getPropertyAccessor(targetMember);
+                            TypeName viewHolderTypeName = ClassUtils.getBindingViewHolderName(target);
+                            TypeName targetTypeName = ClassUtils.getElementClassName(target);
+                            TypeName viewTypeName = ClassName.get("android.view", "View");
+                            TypeName valueTypeName = typeUtils.getValueType(targetMember);
 
-                    int viewId = hasViewIdAnnotation.getViewId(targetMember);
-                    PropertyAccessor valueAccessor = getPropertyAccessor(targetMember);
-                    TypeName viewHolderTypeName = ClassUtils.getBindingViewHolderName(target);
-                    TypeName targetTypeName = ClassUtils.getElementClassName(target);
-                    TypeName viewTypeName = ClassName.get("android.view", "View");
-                    TypeName valueTypeName = typeUtils.getValueType(targetMember);
+                            // Defaults
+                            ViewBinder.Builder builder = new ViewBinder.Builder(targetTypeName)
+                                    .setNewInstance(new NewViewBinderInstance(viewId, viewTypeName, viewHolderTypeName, targetTypeName, valueTypeName))
+                                    .setValueAccessor(valueAccessor)
+                                    .setGetView(new GetViewHolderView(viewHolderTypeName, valueAccessor))
+                                    .setGetValue(new GetTargetValue(targetTypeName, valueAccessor, valueTypeName))
+                                    .setSetView(new SetViewHolderView(viewHolderTypeName, valueAccessor))
+                                    .setGetBinder(new GetBinderComposition(targetTypeName))
+                                    .setIsDirty(new IsDirtyIfNotEquals(targetTypeName));
 
-                    // Defaults
-                    ViewBinder.Builder builder = new ViewBinder.Builder(targetTypeName)
-                            .setNewInstance(new NewViewBinderInstance(viewId, viewTypeName, viewHolderTypeName, targetTypeName, valueTypeName))
-                            .setValueAccessor(valueAccessor)
-                            .setGetView(new GetViewHolderView(viewHolderTypeName, valueAccessor))
-                            .setGetValue(new GetTargetValue(targetTypeName, valueAccessor, valueTypeName))
-                            .setSetView(new SetViewHolderView(viewHolderTypeName, valueAccessor))
-                            .setGetBinder(new GetBinderComposition(targetTypeName))
-                            .setIsDirty(new IsDirtyIfNotEquals(targetTypeName));
+                            if(typeUtils.isValueContainer(targetMember)) {
+                                builder.setIsDirty(new IsValueDirty(targetTypeName, valueAccessor))
+                                        .setGetValue(new GetTargetValueValue(targetTypeName, valueAccessor, valueTypeName));
+                            }
 
-                    if(typeUtils.isValueContainer(targetMember)) {
-                        builder.setIsDirty(new IsValueDirty(targetTypeName, valueAccessor))
-                                .setGetValue(new GetTargetValueValue(targetTypeName, valueAccessor, valueTypeName));
+                            PropertyAccessor binderAccessor;
+                            if((binderAccessor = getBinder(roundEnv, targetMember)) != null) {
+                                builder.setGetBinder(new GetTargetBinder(targetTypeName, binderAccessor));
+                            }
+
+                            viewBinders.add(builder);
+                        }
                     }
-
-                    PropertyAccessor binderAccessor;
-                    if((binderAccessor = getBinder(roundEnv, targetMember)) != null) {
-                        builder.setGetBinder(new GetTargetBinder(targetTypeName, binderAccessor));
-                    }
-
-                    viewBinders.add(builder);
                 }
             }
         }
@@ -310,11 +318,11 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private void addOnBind(Element targetMemeber, OnBind onBind, HashMap<Element, List<ViewBinder.Builder>> targetViewBinders) {
-        ViewBinder.Builder viewBinder = getViewBinder(targetMemeber, targetViewBinders);
+        ViewBinder.Builder viewBinder = getOrCreateViewBinder(targetMemeber, targetViewBinders);
         viewBinder.addOnBind(onBind);
     }
 
-    private ViewBinder.Builder getViewBinder(Element targetMember, HashMap<Element, List<ViewBinder.Builder>> targetViewBinders) {
+    private ViewBinder.Builder getOrCreateViewBinder(Element targetMember, HashMap<Element, List<ViewBinder.Builder>> targetViewBinders) {
         Element target = targetMember.getEnclosingElement();
         List<ViewBinder.Builder> viewBinders = targetViewBinders.get(target);
 

@@ -204,6 +204,5 @@ class SupportedAnnotations {
             new BindToImageView(),
             new BindToViewPager()
     };
-
-
+    
 }
