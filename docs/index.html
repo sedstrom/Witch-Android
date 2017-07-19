@@ -41,75 +41,102 @@ layout: main
     </div>
   </div>
 </div>
-<!-- Simple -->
+<!-- Binding data -->
 <div class="section divider-top">
   <div class="container top-30">
     <div class="row">
       <div class="twelve columns">
         <h4>
-          Simple
+          Binding data to a view
         </h4>
         <p>
-          Bind values directly to views without any lookup.
+          Data is bound by annotating a field or a method with any of the
+          <b>BindTo</b>-annotaitons with a provided view id. Passing the instance containing the
+          data and a view finder (an activity or a view containing the view) will fulfill the binding.
         </p>
       </div>
     </div>
     <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/1.java %}
+{% include snippets/bind-to-view.java %}
 {% endhighlight %}
       </div>
       <div class="code kotlin">
 {% highlight kotlin linenos %}
-{% include snippets/1.kotlin %}
+{% include snippets/bind-to-view.kotlin %}
 {% endhighlight %}
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Flexible -->
-<div class="section">
-  <div class="container">
+    <!-- Setter -->
     <div class="row">
       <div class="twelve columns">
         <h4>
-          Flexible
+          Custom setter
         </h4>
         <p>
-          Views not backed up by an annotation, can be bound with custom view class.
+          Most <b>BindTo</b>-annotations are configured with a default setter that
+          will be used when bound. This can be altered by specifying a custom
+          set-paramter. A custom set-paramter must be backed up by a public
+          setter on the view type used.
         </p>
       </div>
     </div>
     <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/2.java %}
+{% include snippets/set-property.java %}
 {% endhighlight %}
       </div>
     </div>
-    <div class="row top-10">
+    <!-- Custom view -->
+    <div class="row">
       <div class="twelve columns">
+        <h4>
+          Custom view type
+        </h4>
         <p>
-          Annotate methods for dynamic values
+          Views that are not backed up by an annotation, can be bound to by using
+          a custom view parameter.
         </p>
       </div>
     </div>
     <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/3.java %}
+{% include snippets/custom-view.java %}
+{% endhighlight %}
+      </div>
+    </div>
+    <!-- Annotate methods-->
+    <div class="row">
+      <div class="twelve columns">
+        <h4>
+          Annotate methods
+        </h4>
+        <p>
+          Methods can be annotated for dynamic values.
+        </p>
+      </div>
+    </div>
+    <div class="row code-container">
+      <div class="code java">
+{% highlight java linenos %}
+{% include snippets/annotate-method.java %}
 {% endhighlight %}
       </div>
       <div class="code kotlin">
 {% highlight kotlin linenos %}
-{% include snippets/3.kotlin %}
+{% include snippets/annotate-method.kotlin %}
 {% endhighlight %}
       </div>
     </div>
-    <div class="row top-10">
+    <!-- Custom binder -->
+    <div class="row">
       <div class="twelve columns">
+        <h4>
+          Custom binder
+        </h4>
         <p>
           For more advanced bindings, a custom binder can be provided with the
           <b>@Binds</b> annotation. The binder is mapped to the annotated value by prefixing
@@ -121,17 +148,21 @@ layout: main
     <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/4.java %}
+{% include snippets/binder.java %}
 {% endhighlight %}
       </div>
       <div class="code kotlin">
 {% highlight kotlin linenos %}
-{% include snippets/4.kotlin %}
+{% include snippets/binder.kotlin %}
 {% endhighlight %}
       </div>
     </div>
-    <div class="row top-10">
+    <!-- Bind order -->
+    <div class="row">
       <div class="twelve columns">
+        <h4>
+          Bind order
+        </h4>
         <p>
           Values are bound in same order as they are declared.
         </p>
@@ -140,46 +171,40 @@ layout: main
     <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/12.java %}
+{% include snippets/bind-order.java %}
 {% endhighlight %}
       </div>
     </div>
-  </div>
-</div>
-<!-- Dynamic -->
-<div class="section">
-  <div class="container">
+    <!-- Advanced binder -->
     <div class="row">
       <div class="twelve columns">
         <h4>
-          Dynamic
+          Compose bind chains
         </h4>
         <p>
-          Bind functions can be re-used and composed in chains.
+          Bind functions can be re-used and composed in chains. This makes it
+          easy to add custom behaviour to a binding, like toggling visiblitiy
+          based on the state of the data.
         </p>
       </div>
     </div>
     <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/5.java %}
+{% include snippets/bind-chains.java %}
 {% endhighlight %}
       </div>
       <div class="code kotlin">
 {% highlight kotlin linenos %}
-{% include snippets/5.kotlin %}
+{% include snippets/bind-chains.kotlin %}
 {% endhighlight %}
       </div>
     </div>
-  </div>
-</div>
-<!-- EFFICIENT -->
-<div class="section">
-  <div class="container">
+    <!-- Simple bind control -->
     <div class="row">
       <div class="twelve columns">
         <h4>
-          EFFICIENT
+          Simple bind control
         </h4>
         <p>
           Witch is designed to bind only values that has changed since last bind.
@@ -191,12 +216,16 @@ layout: main
     <div class="row code-container">
       <div class="code java twelve columns">
 {% highlight java linenos %}
-{% include snippets/11.java %}
+{% include snippets/bind-when.java %}
 {% endhighlight %}
       </div>
     </div>
+    <!-- Advanced bind control -->
     <div class="row">
       <div class="twelve columns top-10">
+        <h4>
+          Advanced bind control
+        </h4>
         <p>
           If non of the bind strategies provided is enough, a <b>Value</b>-container
           can be used to get full control over when binding should happen.
@@ -206,35 +235,32 @@ layout: main
     <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/10.java %}
+{% include snippets/value-container.java %}
 {% endhighlight %}
       </div>
     </div>
-  </div>
-</div>
-
-<!-- View holders -->
-<div class="section">
-  <div class="container">
+    <!-- View holders built in -->
     <div class="row">
       <div class="twelve columns top-10">
         <h4>
-          View holders built in
+          Bind adapter views
         </h4>
         <p>
-          Witch will create view holders for all annotated views. This eliminates the need for creating additional
-          view holders for adapter views. Simply use the RecyclerViewBinderAdapter that requires no implementation besides
-          the actual data binding.
+          Witch will create view holders for all annotated views. This eliminates
+          the need for creating additional view holders for adapter views.
+          Simply use the RecyclerViewBinderAdapter that requires no
+          implementation besides the actual data binding.
         </p>
       </div>
     </div>
     <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/6.java %}
+{% include snippets/recycler-view-binder.java %}
 {% endhighlight %}
       </div>
     </div>
+    <!-- Post binder -->
     <div class="row top-10">
       <div class="twelve columns">
         <p>
@@ -247,10 +273,11 @@ layout: main
     <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/7.java %}
+{% include snippets/post-binder.java %}
 {% endhighlight %}
       </div>
     </div>
+    <!-- Multiple binders -->
     <div class="row top-10">
       <div class="twelve columns">
         <p>
@@ -262,17 +289,12 @@ layout: main
     <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/8.java %}
+{% include snippets/multiple-binders.java %}
 {% endhighlight %}
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Install -->
-<div class="section" id="install">
-  <div class="container">
-    <div class="row">
+    <!-- Install -->
+    <div class="row" id="install">
       <div class="twelve columns">
         <h4>
           Gradle
@@ -291,6 +313,7 @@ layout: main
 {% endhighlight %}
       </div>
     </div>
+
   </div>
 </div>
 
