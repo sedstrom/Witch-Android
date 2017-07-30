@@ -6,13 +6,25 @@ import se.snylt.witch.viewbinder.TargetViewBinder;
 
 public class ViewViewFinder implements ViewFinder {
 
-    private final View view;
+    private View view;
 
-    private final int tag;
+    private int tag;
 
-    public ViewViewFinder(View view, int tag) {
+    private static ViewViewFinder INSTANCE;
+
+    private ViewViewFinder() {}
+
+    public static ViewFinder from(View view, int tag) {
+        if(INSTANCE == null) {
+            INSTANCE = new ViewViewFinder();
+        }
+        return INSTANCE.init(view, tag);
+    }
+
+    private ViewFinder init(View view, int tag) {
         this.view = view;
         this.tag = tag;
+        return this;
     }
 
     @Override

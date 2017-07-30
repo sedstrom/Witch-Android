@@ -1,6 +1,7 @@
 package se.snylt.witch.viewbinder;
 
 import android.app.Activity;
+import android.os.Looper;
 import android.view.View;
 
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
@@ -33,7 +34,7 @@ public class Witch {
     }
 
     /**
-     * Binds annotated values in {@code target} to views in {@code activity} with additional mods.
+     * Binds annotated values in {@code target} to views in {@code activity}
      *
      * @param target view model
      * @param activity activity containing views specified in {@code target}
@@ -50,7 +51,7 @@ public class Witch {
     }
 
     /**
-     * Binds annotated values in {@code target} to views in {@code view} with additional mods.
+     * Binds annotated values in {@code target} to views in {@code view}
      *
      * @param target view model
      * @param view view containing child-views specified in {@code target}
@@ -60,14 +61,21 @@ public class Witch {
     }
 
     private static ViewFinder viewFinder(Activity activity) {
-        return new ViewViewFinder(activity.findViewById(android.R.id.content), VIEW_HOLDER_TAG_DEFAULT);
+        return ViewViewFinder.from(activity.findViewById(android.R.id.content), VIEW_HOLDER_TAG_DEFAULT);
     }
 
     private static ViewFinder viewFinder(View view) {
-        return new ViewViewFinder(view, VIEW_HOLDER_TAG_DEFAULT);
+        return ViewViewFinder.from(view, VIEW_HOLDER_TAG_DEFAULT);
     }
 
     private static void bind(Object target, ViewFinder viewFinder) {
+        assertMainThread();
         witch().doBind(target, viewFinder);
+    }
+
+    private static void assertMainThread() {
+        if(Looper.myLooper() != Looper.getMainLooper()) {
+            throw new IllegalStateException("Calls to Witch can only happen on main thread.");
+        }
     }
 }

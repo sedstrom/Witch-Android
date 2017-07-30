@@ -27,7 +27,7 @@ public abstract class ViewBinder<Target, V extends View, Value, ViewHolder> {
     }
 
     /**
-     * Find view for binding. First looks in view holder. If not foudn in view holder, view is looked up with viewfinder and
+     * Find view for binding. First looks in view holder. If not found in view holder, view is looked up with viewfinder and
      * stored in view holder.
      * @param viewHolder view holder for storing view
      * @param viewFinder view finder for view lookup
