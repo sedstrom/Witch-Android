@@ -37,7 +37,7 @@ public class WitchTest {
     public void setup(){
         MockitoAnnotations.initMocks(this);
         when(activity.findViewById(android.R.id.content)).thenReturn(activityContentView);
-        Witch.witch(core);
+        WitchTestUtils.testInit(core);
     }
 
     @Test
@@ -65,6 +65,12 @@ public class WitchTest {
 
         // Then
         verify(core).doBind(same(target), viewFinderWithTag(Witch.VIEW_HOLDER_TAG_DEFAULT));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void bind_When_LooperNotMain_Should_ThrowIllegalStateException(){
+        ((TestLooperHelper)Witch.looperHelper).isCurrentLooperMainLooper = false;
+        Witch.bind(target, view);
     }
 
     @Test
@@ -102,5 +108,4 @@ public class WitchTest {
             }
         });
     }
-
 }

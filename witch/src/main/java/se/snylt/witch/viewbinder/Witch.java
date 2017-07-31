@@ -1,7 +1,6 @@
 package se.snylt.witch.viewbinder;
 
 import android.app.Activity;
-import android.os.Looper;
 import android.view.View;
 
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
@@ -10,6 +9,8 @@ import se.snylt.witch.viewbinder.viewfinder.ViewViewFinder;
 public class Witch {
 
     private static WitchCore INSTANCE;
+
+    static LooperHelper looperHelper = new AndroidLooperHelper();
 
     public final static int VIEW_HOLDER_TAG_DEFAULT = Integer.MIN_VALUE;
 
@@ -74,7 +75,7 @@ public class Witch {
     }
 
     private static void assertMainThread() {
-        if(Looper.myLooper() != Looper.getMainLooper()) {
+        if(!looperHelper.isCurrentLooperMainLooper()) {
             throw new IllegalStateException("Calls to Witch can only happen on main thread.");
         }
     }

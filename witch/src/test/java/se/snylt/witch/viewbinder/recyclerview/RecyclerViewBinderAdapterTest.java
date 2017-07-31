@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.snylt.witch.viewbinder.Witch;
 import se.snylt.witch.viewbinder.WitchCore;
+import se.snylt.witch.viewbinder.WitchTestUtils;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
 import static junit.framework.Assert.assertEquals;
@@ -64,7 +64,7 @@ public class RecyclerViewBinderAdapterTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        Witch.witch(core);
+        WitchTestUtils.testInit(core);
         items.add(EXISTING_BINDER_ITEM_POSITION, itemWithBinder);
         items.add(NON_EXISTING_BINDER_ITEM_POSITION, itemWithoutBinder);
 

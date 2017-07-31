@@ -14,14 +14,14 @@ public class ViewViewFinder implements ViewFinder {
 
     private ViewViewFinder() {}
 
-    public static ViewFinder from(View view, int tag) {
+    public static ViewViewFinder from(View view, int tag) {
         if(INSTANCE == null) {
             INSTANCE = new ViewViewFinder();
         }
         return INSTANCE.init(view, tag);
     }
 
-    private ViewFinder init(View view, int tag) {
+    private ViewViewFinder init(View view, int tag) {
         this.view = view;
         this.tag = tag;
         return this;

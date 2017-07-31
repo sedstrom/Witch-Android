@@ -32,12 +32,12 @@ public class ViewViewFinderTest {
 
     private final static int TAG = 666;
 
-    private ViewViewFinder viewFinder;
+    private ViewFinder viewFinder;
 
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
-        viewFinder = new ViewViewFinder(view, TAG);
+        viewFinder = ViewViewFinder.from(view, TAG);
 
         makeViewTaggable();
     }
