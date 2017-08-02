@@ -1,2 +1,2 @@
-compile 'se.snylt:witch:0.5.3'
-annotationProcessor 'se.snylt:witch-processor:0.5.3'
+compile 'se.snylt:witch:0.5.4'
+annotationProcessor 'se.snylt:witch-processor:0.5.4'
