@@ -4,8 +4,6 @@ import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
 public class WitchCore {
 
-    final static String TAG = "witch";
-
     private final ViewHolderFactory viewHolderFactory;
 
     private final BinderFactory binderFactory;

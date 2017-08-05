@@ -14,6 +14,8 @@ public class Witch {
 
     public final static int VIEW_HOLDER_TAG_DEFAULT = Integer.MIN_VALUE;
 
+    private static boolean logginEnabled = false;
+
     private static WitchCore witch() {
         if(INSTANCE == null) {
             INSTANCE = new WitchCore(new ViewHolderFactory(), new BinderFactory());
@@ -26,6 +28,21 @@ public class Witch {
         INSTANCE = witchCore;
         return witch();
     }
+
+    /**
+     * Enable or disable logging.
+     */
+    public static void setLoggingEnabled(boolean enabled) {
+        logginEnabled = enabled;
+    }
+
+    /**
+     * Check if logging is enabled
+     */
+    public static boolean isLoggingEnabled() {
+        return logginEnabled;
+    }
+
 
     /**
      * Like {@link #bind(Object, Activity)} but more majestic.

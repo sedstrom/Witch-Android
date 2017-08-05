@@ -11,6 +11,8 @@ import android.view.View;
 
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
@@ -89,6 +91,24 @@ public class WitchTest {
 
         // Then
         verify(core).doBind(same(target), viewFinderWithTag(Witch.VIEW_HOLDER_TAG_DEFAULT));
+    }
+
+    @Test
+    public void enableLogging_Should_EnableLogging(){
+        // When
+        Witch.setLoggingEnabled(true);
+
+        // Then
+        assertTrue(Witch.isLoggingEnabled());
+    }
+
+    @Test
+    public void disableLogging_Should_DisableLogging(){
+        // When
+        Witch.setLoggingEnabled(false);
+
+        // Then
+        assertFalse(Witch.isLoggingEnabled());
     }
 
     private ViewFinder viewFinderWithTag(final int tag) {

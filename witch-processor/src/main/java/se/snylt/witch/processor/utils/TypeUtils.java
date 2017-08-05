@@ -1,6 +1,7 @@
 package se.snylt.witch.processor.utils;
 
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
 import java.util.ArrayList;
@@ -19,15 +20,23 @@ import se.snylt.witch.processor.WitchException;
 
 public class TypeUtils {
 
+
+
     private final Types types;
 
     private final Elements elements;
+
+    public static final TypeName STRING = ClassName.bestGuess("String");
+
+    public static final TypeName HASH_MAP_STRINGS = ParameterizedTypeName.get(ClassName.get("java.util","HashMap"), STRING, STRING);
 
     private final static String LIBRARY_PACKAGE = "se.snylt.witch.viewbinder";
 
     private final static String LIBRARY_VIEW_BINDER_PACKAGE = "se.snylt.witch.viewbinder.viewbinder";
 
     private final static String LIBRARY_BIND_ACTIONS_PACKAGE = "se.snylt.witch.viewbinder.bindaction";
+
+    public static final ClassName ANDROID_PRINTER = ClassName.get(LIBRARY_PACKAGE, "AndroidTargetPrinter");
 
     public static final ClassName LIST = ClassName.get(List.class);
 

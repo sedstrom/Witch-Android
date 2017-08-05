@@ -6,6 +6,7 @@ import android.view.View;
 
 import se.snylt.witch.annotations.BindToEditText;
 import se.snylt.witch.annotations.BindToView;
+import se.snylt.witch.annotations.BindWhen;
 
 public class UndoViewModel {
 
@@ -13,6 +14,7 @@ public class UndoViewModel {
     public final Boolean undoEnabled;
 
     @BindToEditText(id = R.id.undo_fragment_add_edittext)
+    @BindWhen(BindWhen.NOT_EQUALS)
     public final String text;
 
     @BindToEditText(id = R.id.undo_fragment_add_edittext, set = "selection")

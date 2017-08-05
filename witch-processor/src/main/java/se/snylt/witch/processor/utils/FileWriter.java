@@ -2,6 +2,7 @@ package se.snylt.witch.processor.utils;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
@@ -25,7 +26,8 @@ public class FileWriter {
 
     public void writeTargetViewBinder(Element target, HashMap<Element, List<ViewBinder.Builder>> targetViewBinders) {
         ClassName targetViewBinderClassName = ClassUtils.getTargetViewBinderClassName(target);
-        TypeSpec targetViewBinderTypeSpec = new TargetViewBinder(targetViewBinders.get(target), targetViewBinderClassName).create();
+        TypeName targetTypeName = TypeName.get(target.asType());
+        TypeSpec targetViewBinderTypeSpec = new TargetViewBinder(targetViewBinders.get(target), targetViewBinderClassName, targetTypeName).create();
         JavaFile bindingJavaFile = JavaFile.builder(targetViewBinderClassName.packageName(), targetViewBinderTypeSpec).build();
         try {
             bindingJavaFile.writeTo(filer);

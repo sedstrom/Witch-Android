@@ -37,7 +37,7 @@ public class UndoFragment extends Fragment {
         View view = inflater.inflate(R.layout.undo_fragment, container, false);
 
         final EditText editText = (EditText) view.findViewById(R.id.undo_fragment_add_edittext);
-        editText.addTextChangedListener(new TextWatcherAdapter(){
+        editText.addTextChangedListener(new TextWatcherAdapter() {
 
             @Override
             public void afterTextChanged(Editable editable) {

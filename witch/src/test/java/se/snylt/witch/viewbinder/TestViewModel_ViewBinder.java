@@ -6,7 +6,7 @@ import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 
 public class TestViewModel_ViewBinder implements TargetViewBinderFactory {
 
-    public final TestTargetViewBinder binder = new TestTargetViewBinder(null);
+    public final TestTargetViewBinder binder = new TestTargetViewBinder(null, null);
 
     @Override
     public TargetViewBinder createBinder() {
@@ -15,8 +15,8 @@ public class TestViewModel_ViewBinder implements TargetViewBinderFactory {
 
     public static class TestTargetViewBinder extends TargetViewBinder {
 
-        public TestTargetViewBinder(List<ViewBinder> viewBinders) {
-            super(viewBinders);
+        public TestTargetViewBinder(List<ViewBinder> viewBinders, TargetPrinter printer) {
+            super(viewBinders, printer);
         }
     }
 }
