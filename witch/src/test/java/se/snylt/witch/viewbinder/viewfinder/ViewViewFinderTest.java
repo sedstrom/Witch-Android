@@ -15,6 +15,7 @@ import java.util.HashMap;
 import se.snylt.witch.viewbinder.TargetViewBinder;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -103,4 +104,16 @@ public class ViewViewFinderTest {
         assertSame(targetViewBinder, viewFinder.getBinder(key));
     }
 
+    @Test
+    public void fromView_When_ViewNeverUsed_Should_CreateNewViewFinder() {
+        ViewFinder viewFinder = ViewViewFinder.from(view, 0);
+        assertNotNull(viewFinder);
+    }
+
+    @Test
+    public void fromView_When_ViewUsedBefore_Should_ReUseViewFinder() {
+        ViewFinder viewFinder = ViewViewFinder.from(view, TAG);
+        ViewFinder sameViewFinder = ViewViewFinder.from(view, TAG);
+        assertSame(viewFinder, sameViewFinder);
+    }
 }

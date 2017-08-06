@@ -6,25 +6,21 @@ import se.snylt.witch.viewbinder.TargetViewBinder;
 
 public class ViewViewFinder implements ViewFinder {
 
-    private View view;
+    private final View view;
 
-    private int tag;
+    private final int tag;
 
-    private static ViewViewFinder INSTANCE;
-
-    private ViewViewFinder() {}
-
-    public static ViewViewFinder from(View view, int tag) {
-        if(INSTANCE == null) {
-            INSTANCE = new ViewViewFinder();
+    public static ViewFinder from(View view, int tag) {
+        TagContainer tagContainer = getTagContainer(view, tag);
+        if(tagContainer.getViewFinder() == null) {
+            tagContainer.setViewFinder(new ViewViewFinder(view, tag));
         }
-        return INSTANCE.init(view, tag);
+        return tagContainer.getViewFinder();
     }
 
-    private ViewViewFinder init(View view, int tag) {
+    private ViewViewFinder(View view, int tag) {
         this.view = view;
         this.tag = tag;
-        return this;
     }
 
     @Override
@@ -63,6 +59,10 @@ public class ViewViewFinder implements ViewFinder {
     }
 
     private TagContainer getTagContainer() {
+        return getTagContainer(view, tag);
+    }
+
+    private static TagContainer getTagContainer(View view, int tag) {
         TagContainer tagContainer = (TagContainer) view.getTag(tag);
         if(tagContainer == null) {
             tagContainer = new TagContainer();

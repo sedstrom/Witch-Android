@@ -19,6 +19,7 @@ import java.util.List;
 
 import se.snylt.witch.viewbinder.WitchCore;
 import se.snylt.witch.viewbinder.WitchTestUtils;
+import se.snylt.witch.viewbinder.viewfinder.TagContainer;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
 import static junit.framework.Assert.assertEquals;
@@ -49,17 +50,20 @@ public class RecyclerViewBinderAdapterTest {
 
     private ItemBinder itemBinder = spy(new ItemBinder(0));
 
-    @Mock
     EmptyViewHolder emptyViewHolder;
 
     @Mock
     WitchCore core;
 
-    private LayoutInflater inflater;
+    TagContainer tagContainer = new TagContainer();
 
-    private View itemView;
+    @Mock
+    LayoutInflater inflater;
 
-    private ViewGroup parent;
+    @Mock View itemView;
+
+    @Mock
+    ViewGroup parent;
 
     @Before
     public void setup() {
@@ -69,9 +73,9 @@ public class RecyclerViewBinderAdapterTest {
         items.add(NON_EXISTING_BINDER_ITEM_POSITION, itemWithoutBinder);
 
         // Layout inflater stuff
-        parent = mock(ViewGroup.class);
-        inflater = mock(LayoutInflater.class);
-        itemView = mock(View.class);
+        when(itemView.getTag(anyInt())).thenReturn(tagContainer);
+        emptyViewHolder = new EmptyViewHolder(itemView);
+
         when(inflater.inflate(anyInt(), any(ViewGroup.class), anyBoolean())).thenReturn(itemView);
         MockContext context = mock(MockContext.class);
         when(context.getSystemService(eq(Service.LAYOUT_INFLATER_SERVICE))).thenReturn(inflater);
@@ -80,7 +84,6 @@ public class RecyclerViewBinderAdapterTest {
         List<RecyclerViewBinderAdapter.Binder<?>> binders = new ArrayList<>();
         binders.add(itemBinder);
         adapter = new TestRecyclerViewBinderAdapter<>(items, binders);
-
     }
 
     @Test

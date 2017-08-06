@@ -10,6 +10,8 @@ public class TagContainer {
 
     private HashMap<Object, TargetViewBinder> binders = new HashMap<>();
 
+    private ViewFinder viewFinder;
+
     public Object getViewHolder(Object key) {
         return viewHolders.get(key);
     }
@@ -24,5 +26,13 @@ public class TagContainer {
 
     public void putBinder(Object key, TargetViewBinder targetViewBinder) {
         binders.put(key, targetViewBinder);
+    }
+
+    public ViewFinder getViewFinder() {
+        return viewFinder;
+    }
+
+    public void setViewFinder(ViewFinder viewFinder) {
+        this.viewFinder = viewFinder;
     }
 }

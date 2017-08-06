@@ -14,7 +14,7 @@ public class Witch {
 
     public final static int VIEW_HOLDER_TAG_DEFAULT = Integer.MIN_VALUE;
 
-    private static boolean logginEnabled = false;
+    private static boolean loggingEnabled = false;
 
     private static WitchCore witch() {
         if(INSTANCE == null) {
@@ -33,14 +33,14 @@ public class Witch {
      * Enable or disable logging.
      */
     public static void setLoggingEnabled(boolean enabled) {
-        logginEnabled = enabled;
+        loggingEnabled = enabled;
     }
 
     /**
      * Check if logging is enabled
      */
     public static boolean isLoggingEnabled() {
-        return logginEnabled;
+        return loggingEnabled;
     }
 
 
