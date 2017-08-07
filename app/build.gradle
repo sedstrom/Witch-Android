@@ -25,9 +25,6 @@ android {
 
 dependencies {
     // Witch
-    // compile 'se.snylt:witch:0.1.0'
-    // annotationProcessor "se.snylt:witch-processor:0.1.0"
-
     compile project(path: ':witch')
     annotationProcessor project(path: ':witch-processor')
 

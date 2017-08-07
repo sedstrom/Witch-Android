@@ -54,6 +54,10 @@ pre {
   }
 }
 
+code.language-json {
+  padding: 10px;
+}
+
 .highlight .hll { background-color: #ffffcc }
 .highlight .c { color: #999999; font-style: italic } /* Comment */
 .highlight .err { color: #666666; background-color: $transparent;} /* Error */
