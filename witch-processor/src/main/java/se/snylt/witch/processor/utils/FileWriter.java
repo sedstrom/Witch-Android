@@ -25,23 +25,16 @@ public class FileWriter {
     }
 
     public void writeTargetViewBinder(Element target, HashMap<Element, List<ViewBinder.Builder>> targetViewBinders) {
-        ClassName targetViewBinderClassName = ClassUtils.getTargetViewBinderClassName(target);
-        TypeName targetTypeName = TypeName.get(target.asType());
-        ClassName viewHolderClassName = ClassUtils.getBindingViewHolderName(target);
-        TypeSpec targetViewBinderTypeSpec = new TargetViewBinder(targetViewBinders.get(target), targetViewBinderClassName, targetTypeName, viewHolderClassName).create();
-        JavaFile bindingJavaFile = JavaFile.builder(targetViewBinderClassName.packageName(), targetViewBinderTypeSpec).build();
-        try {
-            bindingJavaFile.writeTo(filer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public void writeViewHolder(Element target, HashMap<Element, List<ViewBinder.Builder>> targetViewBinders) {
         ClassName viewHolderClassName = ClassUtils.getBindingViewHolderName(target);
         TypeSpec viewHolderTypeSpec = new ViewHolder(targetViewBinders.get(target), viewHolderClassName).create();
+        ClassName targetViewBinderClassName = ClassUtils.getTargetViewBinderClassName(target);
+        TypeName targetTypeName = TypeName.get(target.asType());
+        TypeSpec targetViewBinderTypeSpec = new TargetViewBinder(targetViewBinders.get(target), targetViewBinderClassName, targetTypeName, viewHolderClassName).create();
+        JavaFile bindingJavaFile = JavaFile.builder(targetViewBinderClassName.packageName(), targetViewBinderTypeSpec).build();
         JavaFile viewHolderJavaFile = JavaFile.builder(viewHolderClassName.packageName(), viewHolderTypeSpec).build();
         try {
+            bindingJavaFile.writeTo(filer);
             viewHolderJavaFile.writeTo(filer);
         } catch (IOException e) {
             e.printStackTrace();

@@ -216,7 +216,6 @@ public class WitchProcessor extends AbstractProcessor {
 
     private void writeFiles(HashMap<Element, List<ViewBinder.Builder>> binders) {
         for (Element target : binders.keySet()) {
-            fileWriter.writeViewHolder(target, binders);
             fileWriter.writeTargetViewBinder(target, binders);
         }
     }

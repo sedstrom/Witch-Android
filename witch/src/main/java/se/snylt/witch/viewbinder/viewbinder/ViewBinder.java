@@ -18,8 +18,9 @@ public abstract class ViewBinder<Target, V extends View, Value, ViewHolder> {
     public boolean bind(ViewHolder viewHolder, ViewFinder viewFinder, Target target) {
         if (isDirty(target)) {
             V view = findView(viewHolder, viewFinder);
-            historyValue = getValue(target);
-            getBinder(target).bind(view, (Value) historyValue);
+            Value v = getValue(target);
+            historyValue = v;
+            getBinder(target).bind(view, v);
             return true;
         }
         return false;
