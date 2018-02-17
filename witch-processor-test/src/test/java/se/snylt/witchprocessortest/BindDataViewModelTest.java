@@ -12,17 +12,16 @@ import se.snylt.witchprocessortest.utils.TestBinderHelper;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
-public class BindDataViewModelTest extends TestBase {
-
-    @Override
-    protected void testBind(List<ViewBinder> binder, Object viewHolder) {
-        // NA
-    }
+public class BindDataViewModelTest {
 
     @Test
-    public void testBindData() {
+    public void testAnnotations_BindData_Data_Bind() {
         BindDataViewModel model = new BindDataViewModel();
-        TestBinderHelper helper = new TestBinderHelper(getViewHolder(), getTargetViewBinder());
+        TestBinderHelper<BindDataViewModel,BindDataViewModel_ViewHolder> helper
+                    = new TestBinderHelper<>(
+                        new BindDataViewModel_ViewHolder(),
+                        new BindDataViewModel_ViewBinder().createBinder());
+
         helper.mockViewForId(R.id.testIdOne, TextView.class);
         helper.mockViewForId(R.id.testIdTwo, TextView.class);
         helper.mockViewForId(R.id.testIdThree, TextView.class);
@@ -31,15 +30,5 @@ public class BindDataViewModelTest extends TestBase {
         verify((TextView)helper.getView(R.id.testIdOne)).setText(eq(model.foo));
         verify((TextView)helper.getView(R.id.testIdTwo)).setText(eq(model.bar()));
         verify((TextView)helper.getView(R.id.testIdThree)).setText(eq(model.doe.get()));
-    }
-
-    @Override
-    protected Object getViewHolder() {
-        return new BindDataViewModel_ViewHolder();
-    }
-
-    @Override
-    protected TargetViewBinder getTargetViewBinder() {
-        return new BindDataViewModel_ViewBinder().createBinder();
     }
 }

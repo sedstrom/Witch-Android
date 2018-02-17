@@ -3,6 +3,9 @@ package se.snylt.witchprocessortest.utils;
 
 import android.view.View;
 
+import org.mockito.InOrder;
+import org.mockito.Mockito;
+
 import java.util.HashMap;
 
 import se.snylt.witch.viewbinder.TargetViewBinder;
@@ -33,11 +36,11 @@ public class TestBinderHelper<Target, ViewHolder> {
         return views.get(id);
     }
 
-    public TestBinderHelper mockViewForId(int id, Class<? extends View> clazz) {
+    public View mockViewForId(int id, Class<? extends View> clazz) {
         View view = mock(clazz);
         when(viewFinder.findViewById(eq(id))).thenReturn(view);
         views.put(new Integer(id), view);
-        return this;
+        return view;
     }
 
     public void bind(Target target) {

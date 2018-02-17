@@ -47,9 +47,10 @@ public class TargetViewBinder {
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addSuperinterface(TARGET_VIEW_BINDER_FACTORY);
 
+        TypeName targetViewBinderType = ParameterizedTypeName.get(TARGET_VIEW_BINDER, targetTypeName, viewHolderClassName);
         MethodSpec.Builder createBinder = MethodSpec.methodBuilder("createBinder")
                 .addModifiers(Modifier.PUBLIC)
-                .returns(TARGET_VIEW_BINDER);
+                .returns(targetViewBinderType);
 
         TypeName valueTypeName = WildcardTypeName.subtypeOf(Object.class);
         TypeName viewTypeName = WildcardTypeName.subtypeOf(Object.class);
@@ -87,7 +88,7 @@ public class TargetViewBinder {
                 .addMethod(describeTarget.build()).build();
 
         // Return
-        createBinder.addStatement("return new TargetViewBinder<$T, $T>($N, $L)",  targetTypeName, viewHolderClassName, "viewBinders", androidPrinter);
+        createBinder.addStatement("return new $T($N, $L)", targetViewBinderType, "viewBinders", androidPrinter);
         targetViewBinder.addMethod(createBinder.build());
 
         return targetViewBinder.build();

@@ -5,48 +5,40 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.List;
 
 import se.snylt.witch.viewbinder.TargetViewBinder;
 import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
+import se.snylt.witchprocessortest.utils.TestBinderHelper;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-// import static se.snylt.witchprocessortest.utils.TestViewBinderUtils.viewFinderWithView;
+import static org.mockito.Mockito.verify;
 
-/*
-public class BindInOrderViewModelViewModelTest extends TestBase {
 
-    @Override
-    protected void testBind(List<ViewBinder> binder, Object viewHolder) {
-        // NA
-    }
+public class BindInOrderViewModelViewModelTest {
 
     @Test
-    public void binds_ShouldBindInOrder() {
+    public void testBindInOrder() {
         BindInOrderViewModel model = new BindInOrderViewModel();
-        EditText view = mock(EditText.class);
-        InOrder inOrder = Mockito.inOrder(view);
-        Object viewHolder = getViewHolder();
-        ViewFinder viewFinder = viewFinderWithView(view);
-        for(ViewBinder binder : getTargetViewBinder().getViewBinders()) {
-            binder.bind(viewHolder, viewFinder, model);
-        }
-        inOrder.verify(view).setText("first");
-        inOrder.verify(view).setText("second");
-        inOrder.verify(view).setText("third");
-    }
+        TestBinderHelper<BindInOrderViewModel, BindInOrderViewModel_ViewHolder> helper
+                = new TestBinderHelper<>(
+                new BindInOrderViewModel_ViewHolder(),
+                new BindInOrderViewModel_ViewBinder().createBinder());
 
-    @Override
-    protected Object getViewHolder() {
-        return new BindInOrderViewModel_ViewHolder();
-    }
+        View viewOne = helper.mockViewForId(R.id.testIdOne, TextView.class);
+        View viewTwo = helper.mockViewForId(R.id.testIdTwo, TextView.class);
+        View viewThree = helper.mockViewForId(R.id.testIdThree, TextView.class);
+        InOrder inOrder = Mockito.inOrder(viewOne, viewTwo, viewThree);
+        helper.bind(model);
 
-    @Override
-    protected TargetViewBinder getTargetViewBinder() {
-        return new BindInOrderViewModel_ViewBinder().createBinder();
+        inOrder.verify((TextView)helper.getView(R.id.testIdOne)).setText(eq(model.first));
+        inOrder.verify((TextView)helper.getView(R.id.testIdTwo)).setText(eq(model.second));
+        inOrder.verify((TextView)helper.getView(R.id.testIdThree)).setText(eq(model.third));
     }
 }
-*/

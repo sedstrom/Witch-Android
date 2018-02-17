@@ -1,93 +1,78 @@
-/*
+
 package se.snylt.witchprocessortest;
 
 
 import org.junit.Test;
 
-import android.view.View;
+import android.widget.TextView;
 
-import java.util.List;
-
-import se.snylt.witch.viewbinder.TargetViewBinder;
-import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
-import se.snylt.witchprocessortest.utils.TestViewBinderUtils;
+import se.snylt.witchprocessortest.utils.TestBinderHelper;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class BindWhenViewModelTest extends TestBase {
+public class BindWhenViewModelTest {
 
-    @Override
-    protected void testBind(List<ViewBinder> binder, Object viewHolder) {
-        // NA
+    private TestBinderHelper<BindWhenViewModel, BindWhenViewModel_ViewHolder> helper() {
+        TestBinderHelper<BindWhenViewModel, BindWhenViewModel_ViewHolder> helper = new TestBinderHelper<>(
+                new BindWhenViewModel_ViewHolder(),
+                new BindWhenViewModel_ViewBinder().createBinder());
+
+        helper.mockViewForId(R.id.testIdOne, TextView.class);
+        helper.mockViewForId(R.id.testIdTwo, TextView.class);
+        helper.mockViewForId(R.id.testIdThree, TextView.class);
+
+        return helper;
     }
 
     @Test
     public void bindWhen_Always() {
-        String value = "foo";
         BindWhenViewModel model = new BindWhenViewModel();
-        TargetViewBinder viewBinder = getTargetViewBinder();
-        model.always = value;
-        doBind(viewBinder, model, verifyPostBindContentDescription(1, android.R.id.button1, value));
-        doBind(viewBinder, model, verifyPostBindContentDescription(1, android.R.id.button1, value));
+        TestBinderHelper<BindWhenViewModel, BindWhenViewModel_ViewHolder> helper = helper();
+        model.always = "foo";
+        helper.bind(model);
+        helper.bind(model);
+        verify((TextView)helper.getView(R.id.testIdOne), times(2)).setText(eq("foo"));
     }
 
     @Test
     public void bindWhen_NotEquals() {
         BindWhenViewModel model = new BindWhenViewModel();
-        TargetViewBinder viewBinder = getTargetViewBinder();
+        TestBinderHelper<BindWhenViewModel, BindWhenViewModel_ViewHolder> helper = helper();
+
         model.notEquals = "foo";
-        doBind(viewBinder, model, verifyPostBindContentDescription(1, android.R.id.button3, "foo"));
+        helper.bind(model);
+        verify((TextView)helper.getView(R.id.testIdTwo), times(1)).setText(eq("foo"));
+
         model.notEquals = "foo";
-        doBind(viewBinder, model, verifyPostBindContentDescription(0, android.R.id.button3, "foo"));
+        helper.bind(model);
+        verify((TextView)helper.getView(R.id.testIdTwo), times(1)).setText(eq("foo"));
+
         model.notEquals = "bar";
-        doBind(viewBinder, model, verifyPostBindContentDescription(1, android.R.id.button3, "bar"));
+        helper.bind(model);
+        verify((TextView)helper.getView(R.id.testIdTwo), times(1)).setText(eq("bar"));
     }
 
     @Test
     public void bindWhen_NotSame() {
         AlwaysEquals foo = new AlwaysEquals();
         AlwaysEquals equalsFoo = new AlwaysEquals();
-        TargetViewBinder viewBinder = getTargetViewBinder();
         BindWhenViewModel model = new BindWhenViewModel();
+        TestBinderHelper<BindWhenViewModel, BindWhenViewModel_ViewHolder> helper = helper();
+
         model.notSame = foo;
-        doBind(viewBinder, model, verifyPostBindSetTag(1, android.R.id.button2, foo));
+        helper.bind(model);
+        verify((TextView)helper.getView(R.id.testIdThree), times(1)).setTag(same(foo));
+
+        model.notSame = foo;
+        helper.bind(model);
+        verify((TextView)helper.getView(R.id.testIdThree), times(1)).setTag(same(foo));
+
         model.notSame = equalsFoo;
-        doBind(viewBinder, model, verifyPostBindSetTag(1, android.R.id.button2, equalsFoo));
-    }
-
-    private TestViewBinderUtils.VerifyPostBind<BindWhenViewModel> verifyPostBindContentDescription(final int times, final int id, final String value) {
-        return new TestViewBinderUtils.VerifyPostBind<BindWhenViewModel>() {
-            @Override
-            public void onPostBind(View mockedView, BindWhenViewModel viewModel, int viewId) {
-                if(viewId == id) {
-                    verify(mockedView, times(times)).setContentDescription(eq(value));
-                }
-            }
-        };
-    }
-
-    private TestViewBinderUtils.VerifyPostBind<BindWhenViewModel> verifyPostBindSetTag(final int times, final int id, final Object value) {
-        return new TestViewBinderUtils.VerifyPostBind<BindWhenViewModel>() {
-            @Override
-            public void onPostBind(View mockedView, BindWhenViewModel viewModel, int viewId) {
-                if(viewId == id) {
-                    verify(mockedView, times(times)).setTag(same(value));
-                }
-            }
-        };
-    }
-
-    @Override
-    protected Object getViewHolder() {
-        return new BindWhenViewModel_ViewHolder();
-    }
-
-    @Override
-    protected TargetViewBinder getTargetViewBinder() {
-        return new BindWhenViewModel_ViewBinder().createBinder();
+        helper.bind(model);
+        verify((TextView)helper.getView(R.id.testIdThree), times(1)).setTag(same(equalsFoo));
     }
 
     private class AlwaysEquals extends Object {
@@ -97,4 +82,4 @@ public class BindWhenViewModelTest extends TestBase {
             return true;
         }
     }
-}*/
+}
