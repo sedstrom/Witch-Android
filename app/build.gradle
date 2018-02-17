@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
         applicationId "com.example.witch"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -11,6 +11,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -24,20 +25,12 @@ android {
 }
 
 dependencies {
-    // Witch
-    compile project(path: ':witch')
-    annotationProcessor project(path: ':witch-processor')
-
-    // Support
-    compile rootProject.ext.deps.supportAppCompat
-    compile rootProject.ext.deps.supportDesign
-
-    // Square
-    compile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-
-    testCompile rootProject.ext.deps.junit
-
+    annotationProcessor "se.snylt:witch-processor:1.0-SNAPSHOT"
+    implementation "se.snylt:witch:1.0-SNAPSHOT"
+    // annotationProcessor project(":witch-processor")
+    // implementation project(":witch")
+    implementation rootProject.ext.deps.supportAppCompat
+    implementation rootProject.ext.deps.supportDesign
+    implementation 'com.squareup.leakcanary:leakcanary-android:1.5'
+    testImplementation rootProject.ext.deps.junit
 }

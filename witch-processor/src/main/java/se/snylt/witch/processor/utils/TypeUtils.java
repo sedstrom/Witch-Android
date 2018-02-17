@@ -9,18 +9,13 @@ import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import se.snylt.witch.processor.WitchException;
-
 public class TypeUtils {
-
-
 
     private final Types types;
 
@@ -28,15 +23,9 @@ public class TypeUtils {
 
     public static final TypeName STRING = ClassName.bestGuess("String");
 
-    public static final TypeName HASH_MAP_STRINGS = ParameterizedTypeName.get(ClassName.get("java.util","HashMap"), STRING, STRING);
+    private final static String LIBRARY_PACKAGE = "se.snylt.witchcore";
 
-    private final static String LIBRARY_PACKAGE = "se.snylt.witch.viewbinder";
-
-    private final static String LIBRARY_VIEW_BINDER_PACKAGE = "se.snylt.witch.viewbinder.viewbinder";
-
-    private final static String LIBRARY_BIND_ACTIONS_PACKAGE = "se.snylt.witch.viewbinder.bindaction";
-
-    public static final ClassName ANDROID_PRINTER = ClassName.get(LIBRARY_PACKAGE, "AndroidTargetPrinter");
+    private final static String LIBRARY_VIEW_BINDER_PACKAGE = "se.snylt.witchcore.viewbinder";
 
     public static final ClassName LIST = ClassName.get(List.class);
 
@@ -44,21 +33,15 @@ public class TypeUtils {
 
     public final static ClassName VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "ViewBinder");
 
-    public final static TypeName VALUE = ClassName.get(LIBRARY_PACKAGE, "Value");
+    public final static TypeName DIFF_UTILS = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffUtils");
 
-    public final static TypeName DIFF_VALUE = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue");
+    public final static TypeName DIFF_UTILS_NO_DATA = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffUtils.NO_DATA");
 
-    public static final TypeName TARGET_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinder");
+    public static final ClassName TARGET_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinder");
 
     public final static TypeName TARGET_VIEW_BINDER_FACTORY = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinderFactory");
 
-    public final static TypeName BINDER = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "Binder");
-
     public static final TypeName ANDROID_VIEW = ClassName.get("android.view", "View");
-
-    public static final ClassName ON_BIND = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "OnBind");
-
-    public static final ClassName SYNC_ON_BIND = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "SyncOnBind");
 
     public TypeUtils(Types types, Elements elements) {
         this.types = types;
@@ -69,60 +52,56 @@ public class TypeUtils {
         return types;
     }
 
-    private String asString(ClassName className) {
-        return className.packageName() + "." + className.simpleName();
-    }
-
-    public TypeMirror onBindDeclaredType() {
-        return declared(ON_BIND);
-    }
-
-    private TypeMirror declared(ClassName name) {
-        return types.getDeclaredType(elements.getTypeElement(asString(name)),
-                types.getWildcardType(null, null),
-                types.getWildcardType(null, null));
-    }
-
-    TypeMirror typeMirror(TypeName typeName) {
+    public TypeMirror typeMirror(TypeName typeName) {
         return types.getDeclaredType(elements.getTypeElement(typeName.toString()));
     }
 
-    boolean isValueContainer(TypeMirror type) {
-        TypeMirror valueType = typeMirror(VALUE);
-        return types.isAssignable(type, valueType);
-    }
-
-    public boolean isValueContainer(Element element) {
-        return isValueContainer(getType(element));
-    }
-
-    public TypeMirror getType(Element element) throws WitchException {
+    public TypeMirror getBoxedReturnTypeMirror(Element element) {
         if (element.getKind().isField()) {
-            return element.asType();
+            return boxed(element.asType());
         } else if (element.getKind() == ElementKind.METHOD) {
             ExecutableType ext = (ExecutableType) element.asType();
-            return ext.getReturnType();
+            return boxed(ext.getReturnType());
         }
         return null;
     }
 
-    public TypeName getValueType(Element value) {
+    public static String getReturnTypeDescription(Element element) {
+        if (element.getKind().isField()) {
+            return element.asType().toString();
+        } else if (element.getKind() == ElementKind.METHOD) {
+            ExecutableType ext = (ExecutableType) element.asType();
+            return ext.getReturnType().toString();
+        }
+        return "";
+    }
 
-        TypeMirror type = getType(value);
+    public TypeName getReturnTypeName(Element element) {
+        return TypeName.get(getBoxedReturnTypeMirror(element));
+    }
+
+    TypeMirror boxed(TypeMirror type) {
 
         // Box if primitive
         if(type.getKind() != null && type.getKind().isPrimitive()) {
-            type = types.boxedClass((PrimitiveType) type).asType();
+            return types.boxedClass((PrimitiveType) type).asType();
         }
-
-        // Get generic type if value container
-        if(isValueContainer(type)) {
-            DeclaredType declaredType = (DeclaredType) type;
-            TypeMirror genericParameter = declaredType.getTypeArguments().get(0);
-            return TypeName.get(genericParameter);
-        }
-
-        return TypeName.get(type);
+        return type;
     }
 
+    public boolean isAssignable(TypeName one, TypeName two) {
+        return isAssignable(typeMirror(one), typeMirror(two));
+    }
+
+    public boolean isAssignable(TypeMirror one, TypeMirror two) {
+        return types.isAssignable(boxed(one), boxed(two));
+    }
+
+    public boolean isSubtype(TypeMirror one, TypeMirror two) {
+        return types.isSubtype(one, two);
+    }
+
+    public boolean isSameType(TypeMirror one, TypeMirror two) {
+        return types.isSameType(one, two);
+    }
 }

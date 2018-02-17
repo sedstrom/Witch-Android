@@ -4,7 +4,7 @@ sourceCompatibility = rootProject.ext.sourceCompatibilityVersion
 targetCompatibility = rootProject.ext.targetCompatibilityVersion
 
 dependencies {
-    compile rootProject.ext.deps.supportAnnotations
+    implementation rootProject.ext.deps.supportAnnotations
 }
 
 apply from: rootProject.file('gradle-mvn-push.gradle')

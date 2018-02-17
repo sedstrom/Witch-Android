@@ -1,0 +1,4 @@
+@Setup(id = R.id.button)
+fun setupButton(button: Button) {
+  button.setOnClickListener { /* Ohoy! */ }
+}

@@ -1,25 +1,9 @@
-class Post {
+class PostBinder extends WitchRecyclerViewAdapter.Binder<Post> {
 
-  private final String title;
+    private PostBinder() { super(R.layout.post, Post.class); }
 
-  Post(String title) {
-    this.title = title;
-  }
-
-  static class Binder extends RecyclerViewBinderAdapter.Binder<Post> {
-
-    Binder() {
-      super(R.layout.post);
+    @Bind(id = R.id.title)
+    void bindText(TextView title) {
+      title.setText(item.title);
     }
-
-    @BindToTextView(id = R.id.title)
-    String title() {
-      return item.title;
-    }
-
-    @Override
-    public boolean bindsItem(Object item) {
-      return item.getClass() == Post.class;
-    }
-  }
 }

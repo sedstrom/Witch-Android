@@ -1,6 +1,3 @@
-RecyclerViewBinderAdapter<Post> adapter =
-        new RecyclerViewBinderAdapter.Builder<Post>()
-        .binder(new Post.Binder())
+new WitchRecyclerViewAdapter.Builder()
+        .binder(new PostBinder())
         .build();
-
-recyclerView.setAdapter(adapter);

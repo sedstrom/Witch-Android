@@ -1,0 +1,9 @@
+@Bind(id = R.id.image)
+@BindNull
+fun bindImageUrl(image: ImageView, url: String) {
+  if(url == null) {
+    image.imageDrawable = null
+  } else {
+    // Load image from url
+  }
+}

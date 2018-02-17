@@ -1,7 +1,2 @@
-class ViewState {
-  val title = "Hello Witch!"
-  @BindToTextView(id = R.id.title) get // Annotate getter for public access
-}
-...
-
-Witch.bind(viewState, activity)
+binder.user = User(name: "Harry Potter")
+Witch.bind(binder, activity)

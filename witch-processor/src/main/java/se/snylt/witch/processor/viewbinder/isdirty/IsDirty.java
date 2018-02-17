@@ -1,16 +1,15 @@
 package se.snylt.witch.processor.viewbinder.isdirty;
 
-
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
-
 import javax.lang.model.element.Modifier;
-
 import se.snylt.witch.processor.viewbinder.MethodSpecModule;
 
 public abstract class IsDirty implements MethodSpecModule {
 
     private final TypeName targetTypeName;
+
+    private boolean bindNull = false;
 
     protected IsDirty(TypeName targetTypeName) {
         this.targetTypeName = targetTypeName;
@@ -22,8 +21,18 @@ public abstract class IsDirty implements MethodSpecModule {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(targetTypeName, "target")
                 .returns(boolean.class);
-        return addReturnStatement(builder).build();
+        if (!bindNull) {
+            builder.addCode("if(getData(target) == null) { return false; } else { return $N; }", getIsDirty());
+        } else {
+            builder.addCode("return $N;", getIsDirty());
+        }
+
+        return builder.build();
     }
 
-    abstract MethodSpec.Builder addReturnStatement(MethodSpec.Builder builder);
+    public void setBindNull(boolean bindNull) {
+        this.bindNull = bindNull;
+    }
+
+    abstract String getIsDirty();
 }

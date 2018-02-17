@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="test_id" type="id">1</item>
+    <item name="testIdOne" type="id"/>
+    <item name="testIdTwo" type="id"/>
+    <item name="testIdThree" type="id"/>
+    <item name="testIdFour" type="id"/>
+    <item name="testIdFive" type="id"/>
+    <item name="testIdSix" type="id"/>
 </resources>

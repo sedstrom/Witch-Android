@@ -1,3 +1,0 @@
-// Custom functions as extensions of Binder gives a
-// clean and readable chain
-Binder.create().picassoLoad().invisibleIfNull()

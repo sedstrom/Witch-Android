@@ -1,0 +1,3 @@
+WitchRecyclerViewAdapter.Builder()
+        .binder(PostBinder())
+        .build()

@@ -1,0 +1,7 @@
+class PostBinder() : WitchRecyclerViewAdapter.Binder<Post>(R.layout.post, Post::class.java) {
+
+    @Bind(id = R.id.title)
+    fun bindText(title: TextView) {
+        title.text = item.title
+    }
+}

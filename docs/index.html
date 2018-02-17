@@ -6,8 +6,9 @@ layout: main
     <a class="button plain u-pull-right" href="https://www.github.com/sedstrom/Witch-Android">
       GITHUB
     </a>
-    <a class="button plain u-pull-right right-20" href="https://www.github.com/sedstrom/Witch-Android-Samples">
+    <!--<a class="button plain u-pull-right right-20" href="https://www.github.com/sedstrom/Witch-Android-Samples">
       EXAMPLES
+      -->
     </a>
   </div>
 </div>
@@ -41,219 +42,211 @@ layout: main
     </div>
   </div>
 </div>
-<!-- Binding data -->
 <div class="section divider-top">
   <div class="container top-30">
+    <!-- Introduction -->
     <div class="row">
       <div class="twelve columns">
-        <h4>
-          Binding data to a view
-        </h4>
-        <p>
-          Data is bound by annotating a field or a method with any of the
-          <b>BindTo</b>-annotaitons with a provided view id. Passing the instance containing the
-          data and a view finder (an activity or a view containing the view) will fulfill the binding.
-        </p>
+          <h2>
+            Why Witch?
+          </h2>
+          <p>
+            Witch is a light weight and performant view-data binding framework that helps building predictable UI:s.
+            <br/><br/>
+            Unlike the <a href="https://developer.android.com/topic/libraries/data-binding/">Data binding library</a> that is part of jetpack, there are no bindings declared in the layout xml and there are no binding adapters. 
+            Witch has less ceremony, is simpler to use and dictates no underlying architecture.
+          </p>
+      </div>
+    </div>
+    <!-- Binder -->
+    <div class="row">
+      <div class="twelve columns">
+          <h2>
+            Binder
+          </h2>
+          <p>
+            A binder (or whatever you may call it) is the core class you need to define in order to bind data to views. It's just a plain class
+            with annotations declaring data and bindings. Below is a small example of a binder binding a user model to a text view:
+          </p>
       </div>
     </div>
     <div class="row code-container">
-      <div class="code java">
-{% highlight java linenos %}
-{% include snippets/bind-to-view.java %}
-{% endhighlight %}
-      </div>
-      <div class="code kotlin">
-{% highlight kotlin linenos %}
-{% include snippets/bind-to-view.kotlin %}
-{% endhighlight %}
-      </div>
-    </div>
-    <!-- Setter -->
-    <div class="row">
-      <div class="twelve columns">
-        <h4>
-          Custom setter
-        </h4>
-        <p>
-          Most <b>BindTo</b>-annotations are configured with a default setter that
-          will be used when bound. This can be altered by specifying a custom
-          set-paramter. A custom set-paramter must be backed up by a public
-          setter on the view type used.
-        </p>
-      </div>
-    </div>
-    <div class="row code-container">
-      <div class="code java">
-{% highlight java linenos %}
-{% include snippets/set-property.java %}
-{% endhighlight %}
-      </div>
-    </div>
-    <!-- Custom view -->
-    <div class="row">
-      <div class="twelve columns">
-        <h4>
-          Custom view type
-        </h4>
-        <p>
-          Views that are not backed up by an annotation, can be bound to by using
-          a custom view parameter.
-        </p>
-      </div>
-    </div>
-    <div class="row code-container">
-      <div class="code java">
-{% highlight java linenos %}
-{% include snippets/custom-view.java %}
-{% endhighlight %}
-      </div>
-    </div>
-    <!-- Annotate methods-->
-    <div class="row">
-      <div class="twelve columns">
-        <h4>
-          Annotate methods
-        </h4>
-        <p>
-          Methods can be annotated for dynamic values.
-        </p>
-      </div>
-    </div>
-    <div class="row code-container">
-      <div class="code java">
-{% highlight java linenos %}
-{% include snippets/annotate-method.java %}
-{% endhighlight %}
-      </div>
-      <div class="code kotlin">
-{% highlight kotlin linenos %}
-{% include snippets/annotate-method.kotlin %}
-{% endhighlight %}
-      </div>
-    </div>
-    <!-- Custom binder -->
-    <div class="row">
-      <div class="twelve columns">
-        <h4>
-          Custom binder
-        </h4>
-        <p>
-          For more advanced bindings, a custom binder can be provided with the
-          <b>@Binds</b> annotation. The binder is mapped to the annotated value by prefixing
-          the the binder property with <b>binds</b>[Property]. In the code sample <b>bindsTitle</b> provides
-          binder for <b>title</b>.
-        </p>
-      </div>
-    </div>
-    <div class="row code-container">
-      <div class="code java">
-{% highlight java linenos %}
-{% include snippets/binder.java %}
-{% endhighlight %}
-      </div>
       <div class="code kotlin">
 {% highlight kotlin linenos %}
 {% include snippets/binder.kotlin %}
 {% endhighlight %}
       </div>
+      <div class="code java">
+{% highlight java linenos %}
+{% include snippets/binder.java %}
+{% endhighlight %}
+      </div>
     </div>
-    <!-- Bind order -->
+    <!-- Execute binding -->
     <div class="row">
       <div class="twelve columns">
-        <h4>
-          Bind order
-        </h4>
+        <h2>
+          Execute binding
+        </h2>
         <p>
-          Values are bound in same order as they are declared.
+          Data is bound when a binder and a view (or an activity) is passed to <b>Witch.bind()</b>.
         </p>
       </div>
     </div>
     <div class="row code-container">
-      <div class="code java">
-{% highlight java linenos %}
-{% include snippets/bind-order.java %}
-{% endhighlight %}
-      </div>
-    </div>
-    <!-- Advanced binder -->
-    <div class="row">
-      <div class="twelve columns">
-        <h4>
-          Compose bind chains
-        </h4>
-        <p>
-          Bind functions can be re-used and composed in chains. This makes it
-          easy to add custom behaviour to a binding, like toggling visiblitiy
-          based on the state of the data.
-        </p>
-      </div>
-    </div>
-    <div class="row code-container">
-      <div class="code java">
-{% highlight java linenos %}
-{% include snippets/bind-chains.java %}
-{% endhighlight %}
-      </div>
       <div class="code kotlin">
 {% highlight kotlin linenos %}
-{% include snippets/bind-chains.kotlin %}
+{% include snippets/bind-to-view.kotlin %}
 {% endhighlight %}
       </div>
-    </div>
-    <!-- Simple bind control -->
-    <div class="row">
-      <div class="twelve columns">
-        <h4>
-          Simple bind control
-        </h4>
-        <p>
-          Witch is designed to bind only values that has changed since last bind.
-          This behaviour can be altered by using the <b>@BindWhen</b> annotation.
-          The default strategy for all values is <b>BindWhen.NOT_EQUALS</b> described below.
-        </p>
-      </div>
-    </div>
-    <div class="row code-container">
-      <div class="code java twelve columns">
-{% highlight java linenos %}
-{% include snippets/bind-when.java %}
-{% endhighlight %}
-      </div>
-    </div>
-    <!-- Advanced bind control -->
-    <div class="row">
-      <div class="twelve columns top-10">
-        <h4>
-          Advanced bind control
-        </h4>
-        <p>
-          If non of the bind strategies provided is enough, a <b>Value</b>-container
-          can be used to get full control over when binding should happen.
-        </p>
-      </div>
-    </div>
-    <div class="row code-container">
       <div class="code java">
 {% highlight java linenos %}
-{% include snippets/value-container.java %}
+{% include snippets/bind-to-view.java %}
+{% endhighlight %}
+      </div>
+    </div>
+    <!-- Data -->
+    <div class="row">
+      <div class="twelve columns">
+        <h2>
+          @Data
+        </h2>
+        <p>
+          The @Data-annotation is used to declare data properties. Only data properties can be used in bind methods. // Under observation of witch and only bound when changed.
+          <br/><br/>
+          In the above example, the entire user model is declared a data property despite only the user name is bound to a view. 
+          This might be OK in some cases, but if the user model is frequently updated, the name will be repeatedly bound without being changed.
+          Since the @Data-annotation can be used on methods, we can create a data property just for the user name. This way the name is only bound 
+          when actually changed.
+        </p>
+      </div>
+    </div>
+    <div class="row code-container">
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/data.kotlin %}
+{% endhighlight %}
+      </div>
+      <div class="code java">
+{% highlight java linenos %}
+{% include snippets/data.java %}
+{% endhighlight %}
+      </div>
+    </div>
+    <!-- Bind -->
+    <div class="row">
+      <div class="twelve columns">
+        <h2>
+          @Bind
+        </h2>
+        <p>
+          The @Bind-annotation is used to declare bind methods. This is how data gets bound to a view. The view is looked up (once) with the id defined in the annotation.
+          Data passed to the bind method is mapped using type and name of any data property in the same class.
+        </p>
+      </div>
+    </div>
+    <div class="row code-container">
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/bind.kotlin %}
+{% endhighlight %}
+      </div>
+      <div class="code java">
+{% highlight java linenos %}
+{% include snippets/bind.java %}
+{% endhighlight %}
+      </div>
+    </div>
+    <!-- BindData-->
+    <div class="row">
+      <div class="twelve columns">
+        <h2>
+          @BindData
+        </h2>
+        <p>
+          If a binding is simply setting data on a view the @Data and @Bind-annotation can be merged to a @BindData-annotation. 
+          The annotation must define a view type and what property to set. 
+        </p>
+      </div>
+    </div>
+    <div class="row code-container">
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/bind-data.kotlin %}
+{% endhighlight %}
+      </div>
+      <div class="code java">
+{% highlight java linenos %}
+{% include snippets/bind-data.java %}
+{% endhighlight %}
+      </div>
+    </div>
+    <!-- Setup-->
+    <div class="row">
+      <div class="twelve columns">
+        <h2>
+          @Setup
+        </h2>
+        <p>
+          The @Setup-annotation is used to declare bind methods that should only run once. Setup methods will always run before any bind methods.
+        </p>
+      </div>
+    </div>
+    <div class="row code-container">
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/setup.kotlin %}
+{% endhighlight %}
+      </div>
+      <div class="code java">
+{% highlight java linenos %}
+{% include snippets/setup.java %}
+{% endhighlight %}
+      </div>
+    </div>
+     <!-- BindNull-->
+     <div class="row">
+      <div class="twelve columns">
+        <h2>
+          @BindNull
+        </h2>
+        <p>
+          The @BindNull-annotation enables null values to be used in bind methods. By default, null values are ignored.
+        </p>
+      </div>
+    </div>
+    <div class="row code-container">
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/bindnull.kotlin %}
+{% endhighlight %}
+      </div>
+      <div class="code java">
+{% highlight java linenos %}
+{% include snippets/bindnull.java %}
 {% endhighlight %}
       </div>
     </div>
     <!-- View holders built in -->
     <div class="row">
       <div class="twelve columns top-10">
-        <h4>
-          Bind adapter views
-        </h4>
+        <h2>
+          Adapter views
+        </h2>
         <p>
-          Witch will create view holders for all annotated views. This eliminates
-          the need for creating additional view holders for adapter views.
-          Simply use the RecyclerViewBinderAdapter that requires no
-          implementation besides the actual data binding.
+          Witch will create view holders for all annotated views. This eliminates the need for creating additional 
+          view holders for adapter views. <br/><br/> 
+          
+          <b>WitchRecyclerViewAdapter</b> makes it easy implement data bindings for a recycler view.
         </p>
       </div>
     </div>
     <div class="row code-container">
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/recycler-view-binder.kotlin %}
+{% endhighlight %}
+      </div>
       <div class="code java">
 {% highlight java linenos %}
 {% include snippets/recycler-view-binder.java %}
@@ -264,13 +257,19 @@ layout: main
     <div class="row top-10">
       <div class="twelve columns">
         <p>
-          Since binder will handle binding of <b><i>all items of type Post</i></b> in adapter, it's important to separate
-          binder from item. Binder will be updated with a new item before each bind.
-          This happens under the hood and is handled entirely by Witch.
+          Binders must extend <b>WitchRecyclerViewAdapter.Binder</b>. In this case, the PostBinder will handle binding of 
+          <b><i>all items of type Post</i></b> in the adapters data set. For each position, the binder will be updated 
+          with the corresponding data item that will be accassible through the magical property <b>item</b> and should 
+          only be reference from within a bind method.
         </p>
       </div>
     </div>
     <div class="row code-container">
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/post-binder.kotlin %}
+{% endhighlight %}
+      </div>
       <div class="code java">
 {% highlight java linenos %}
 {% include snippets/post-binder.java %}
@@ -281,49 +280,103 @@ layout: main
     <div class="row top-10">
       <div class="twelve columns">
         <p>
-          If your data set consists of multiple types, simply provide multiple
-          binders to adapter.
+          Multiple data types are supported by simply providing multiple binders to the adapter.
         </p>
       </div>
     </div>
     <div class="row code-container">
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/multiple-binders.kotlin %}
+{% endhighlight %}
+      </div>
       <div class="code java">
 {% highlight java linenos %}
 {% include snippets/multiple-binders.java %}
 {% endhighlight %}
       </div>
     </div>
+    <!-- Bind order -->
+    <div class="row">
+      <div class="twelve columns">
+        <h2>
+          Bind order
+        </h2>
+        <p>
+          Data is bound in same order as the <i>bind methods</i> are defined.
+        </p>
+      </div>
+    </div>
+    <div class="row code-container">
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/bind-order.kotlin %}
+{% endhighlight %}
+      </div>
+      <div class="code java">
+{% highlight java linenos %}
+{% include snippets/bind-order.java %}
+{% endhighlight %}
+      </div>
+    </div>
+    <!-- Simple bind control -->
+    <div class="row">
+      <div class="twelve columns">
+        <h2>
+          Bind control
+        </h2>
+        <p>
+          From a performance perspective, it is important that views are not updated unnecessarily. 
+          Updating views can cause chains of measure and layout passes and should be avoided if possible. 
+          Witch is designed to only bind data that has changed since last bind pass. Besides positive effect on performance, 
+          this alows for things like animations to be executed from bind methods with no risk of running when data has not changed. 
+          <br/><br/>
+          This behaviour can be altered by using the <b>@BindWhen</b> annotation.
+          The default strategy for all values is <b>BindWhen.NOT_EQUALS</b> described below.
+        </p>
+      </div>
+    </div>
+    <div class="row code-container">
+      <div class="code kotlin twelve columns">
+{% highlight kotlin linenos %}
+{% include snippets/bind-when.kotlin %}
+{% endhighlight %}
+      </div>
+      <div class="code java twelve columns">
+{% highlight java linenos %}
+{% include snippets/bind-when.java %}
+{% endhighlight %}
+      </div>
+    </div>
     <!-- Debugging -->
     <div class="row top-10">
       <div class="twelve columns">
-        <h4>
+        <h2>
           Debugging
-        </h4>
+        </h2>
         <p>
           Enable logging to get readable representations of all targets when bound.
         </p>
       </div>
     </div>
     <div class="row code-container">
+      <div class="code kotlin">
+{% highlight kotlin linenos %}
+{% include snippets/logging.kotlin %}
+{% endhighlight %}
+      </div>
       <div class="code java">
 {% highlight java linenos %}
 {% include snippets/logging.java %}
 {% endhighlight %}
       </div>
     </div>
-    <div class="row code-container top-10">
-      <div class="code json">
-{% highlight json %}
-{% include snippets/log.json %}
-{% endhighlight %}
-      </div>
-    </div>
     <!-- Install -->
     <div class="row" id="install">
       <div class="twelve columns">
-        <h4>
+        <h2>
           Gradle
-        </h4>
+        </h2>
       </div>
     </div>
     <div class="row top-10 code-container">
@@ -338,7 +391,6 @@ layout: main
 {% endhighlight %}
       </div>
     </div>
-
   </div>
 </div>
 

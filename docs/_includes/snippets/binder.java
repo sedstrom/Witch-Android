@@ -1,10 +1,10 @@
-@BindTo(R.id.title)
-String title = "Abra cadabra!";
+class MyBinder {
+  
+  @Data
+  User user;
 
-@Binds
-Binder<TextView, String> bindsTitle = Binder.create(new SyncOnBind<TextView, String>() {
-  @Override
-  public void onBind(TextView view, String title) {
-    view.setText(title);
+  @Bind(id = R.id.name)
+  void bindName(TextView name, User user) {
+    name.setText(user.getName());
   }
-});
+}

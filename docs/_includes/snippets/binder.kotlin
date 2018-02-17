@@ -1,8 +1,10 @@
-val title: String = "Abra cadabra!" @BindTo(R.id.title) get
+class MyBinder {
+  
+  @Data
+  lateinit var user: User
 
-val bindsTitle = Binder.create(object: SyncOnBind<TextView, String>() {
-  override fun onBind(view: TextView , title: String) {
-    view.text = title
+  @Bind(id = R.id.name)
+  fun bindName(name: TextView, user: User) {
+    name.text = user.name
   }
-})
-@Binds get
+}
