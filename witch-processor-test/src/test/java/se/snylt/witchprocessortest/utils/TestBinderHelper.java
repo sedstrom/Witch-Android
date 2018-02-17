@@ -13,17 +13,17 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TestBinderHelper {
+public class TestBinderHelper<Target, ViewHolder> {
 
-    private final Object viewHolder;
+    private final ViewHolder viewHolder;
 
-    private final TargetViewBinder targetViewBinder;
+    private final TargetViewBinder<Target, ViewHolder> targetViewBinder;
 
     private final ViewFinder viewFinder;
 
     private final HashMap<Integer, View> views = new HashMap<>();
 
-    public TestBinderHelper(Object viewHolder, TargetViewBinder targetViewBinder) {
+    public TestBinderHelper(ViewHolder viewHolder, TargetViewBinder<Target, ViewHolder> targetViewBinder) {
         this.viewHolder = viewHolder;
         this.targetViewBinder = targetViewBinder;
         this.viewFinder = mock(ViewFinder.class);
@@ -40,8 +40,8 @@ public class TestBinderHelper {
         return this;
     }
 
-    public void bind(Object target) {
-        for(ViewBinder binder: targetViewBinder.getViewBinders()) {
+    public void bind(Target target) {
+        for(ViewBinder<Target, ?, ?, ViewHolder> binder: targetViewBinder.getViewBinders()) {
             binder.bind(viewHolder, viewFinder, target);
         }
     }

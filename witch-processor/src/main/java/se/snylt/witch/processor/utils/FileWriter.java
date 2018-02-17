@@ -27,7 +27,8 @@ public class FileWriter {
     public void writeTargetViewBinder(Element target, HashMap<Element, List<ViewBinder.Builder>> targetViewBinders) {
         ClassName targetViewBinderClassName = ClassUtils.getTargetViewBinderClassName(target);
         TypeName targetTypeName = TypeName.get(target.asType());
-        TypeSpec targetViewBinderTypeSpec = new TargetViewBinder(targetViewBinders.get(target), targetViewBinderClassName, targetTypeName).create();
+        ClassName viewHolderClassName = ClassUtils.getBindingViewHolderName(target);
+        TypeSpec targetViewBinderTypeSpec = new TargetViewBinder(targetViewBinders.get(target), targetViewBinderClassName, targetTypeName, viewHolderClassName).create();
         JavaFile bindingJavaFile = JavaFile.builder(targetViewBinderClassName.packageName(), targetViewBinderTypeSpec).build();
         try {
             bindingJavaFile.writeTo(filer);

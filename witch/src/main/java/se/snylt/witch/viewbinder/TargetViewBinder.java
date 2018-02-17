@@ -5,23 +5,23 @@ import java.util.List;
 import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
-public class TargetViewBinder {
+public class TargetViewBinder<Target, ViewHolder> {
 
-    private final List<ViewBinder> viewBinders;
+    private final List<ViewBinder<Target, ?, ?, ViewHolder>> viewBinders;
 
-    private final TargetPrinter printer;
+    private final TargetPrinter<Target> printer;
 
-    public TargetViewBinder(List<ViewBinder> viewBinders, TargetPrinter printer) {
+    public TargetViewBinder(List<ViewBinder<Target, ?, ?, ViewHolder>> viewBinders, TargetPrinter<Target> printer) {
         this.viewBinders = viewBinders;
         this.printer = printer;
     }
 
-    public TargetViewBinder(List<ViewBinder> viewBinders) {
+    public TargetViewBinder(List<ViewBinder<Target, ?, ?,ViewHolder>> viewBinders) {
         this(viewBinders, null);
     }
 
-    public void bind(Object viewHolder, ViewFinder viewFinder, Object target) {
-        for (ViewBinder viewBinder : viewBinders) {
+    public void bind(ViewHolder viewHolder, ViewFinder viewFinder, Target target) {
+        for (ViewBinder<Target, ?, ?, ViewHolder> viewBinder : viewBinders) {
             viewBinder.bind(viewHolder, viewFinder, target);
         }
 
@@ -31,7 +31,7 @@ public class TargetViewBinder {
     }
 
     // Test
-    public final List<ViewBinder> getViewBinders() {
+    public final List<ViewBinder<Target, ?, ?, ViewHolder>> getViewBinders() {
         return viewBinders;
     }
 }

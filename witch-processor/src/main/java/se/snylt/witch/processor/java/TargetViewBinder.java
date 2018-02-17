@@ -5,11 +5,14 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.WildcardTypeName;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
+import se.snylt.witch.processor.utils.ClassUtils;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
 
 import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_PRINTER;
@@ -24,20 +27,23 @@ public class TargetViewBinder {
 
     private final List<ViewBinder.Builder> viewBinders;
 
-    private final ClassName binderClassName;
+    private final ClassName targetViewBinderClassName;
 
     private final TypeName targetTypeName;
 
-    public TargetViewBinder(List<ViewBinder.Builder> viewBinders, ClassName binderClassName, TypeName targetTypeName) {
+    private final ClassName viewHolderClassName;
+
+    public TargetViewBinder(List<ViewBinder.Builder> viewBinders, ClassName targetViewBinderClassName, TypeName targetTypeName, ClassName viewHolderClassName) {
         this.viewBinders = viewBinders;
-        this.binderClassName = binderClassName;
+        this.targetViewBinderClassName = targetViewBinderClassName;
         this.targetTypeName = targetTypeName;
+        this.viewHolderClassName = viewHolderClassName;
     }
 
     public TypeSpec create() {
 
         TypeSpec.Builder targetViewBinder =
-                TypeSpec.classBuilder(binderClassName)
+                TypeSpec.classBuilder(targetViewBinderClassName)
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addSuperinterface(TARGET_VIEW_BINDER_FACTORY);
 
@@ -45,7 +51,10 @@ public class TargetViewBinder {
                 .addModifiers(Modifier.PUBLIC)
                 .returns(TARGET_VIEW_BINDER);
 
-        createBinder.addStatement("$T viewBinders = new $T<>()", ParameterizedTypeName.get(LIST, VIEW_BINDER), ARRAY_LIST);
+        TypeName valueTypeName = WildcardTypeName.subtypeOf(Object.class);
+        TypeName viewTypeName = WildcardTypeName.subtypeOf(Object.class);
+        TypeName viewBinderType = ParameterizedTypeName.get(VIEW_BINDER, targetTypeName, viewTypeName, valueTypeName, viewHolderClassName);
+        createBinder.addStatement("$T viewBinders = new $T<>()", ParameterizedTypeName.get(LIST, viewBinderType), ARRAY_LIST);
         createBinder.addCode("\n");
 
         // Description
@@ -73,12 +82,12 @@ public class TargetViewBinder {
         }
 
         // Printer
-        TypeSpec.Builder androidPrinter = TypeSpec.anonymousClassBuilder("")
-                .addSuperinterface(ParameterizedTypeName.get(ANDROID_PRINTER, targetTypeName));
-        androidPrinter.addMethod(describeTarget.build());
+        TypeSpec androidPrinter = TypeSpec.anonymousClassBuilder("")
+                .addSuperinterface(ParameterizedTypeName.get(ANDROID_PRINTER, targetTypeName))
+                .addMethod(describeTarget.build()).build();
 
         // Return
-        createBinder.addStatement("return new TargetViewBinder($N, $L)", "viewBinders", androidPrinter.build());
+        createBinder.addStatement("return new TargetViewBinder<$T, $T>($N, $L)",  targetTypeName, viewHolderClassName, "viewBinders", androidPrinter);
         targetViewBinder.addMethod(createBinder.build());
 
         return targetViewBinder.build();

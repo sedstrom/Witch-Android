@@ -1,6 +1,7 @@
 package se.snylt.witch.processor.utils;
 
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
