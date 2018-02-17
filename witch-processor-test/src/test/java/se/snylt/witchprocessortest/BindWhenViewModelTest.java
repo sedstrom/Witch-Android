@@ -19,11 +19,9 @@ public class BindWhenViewModelTest {
         TestBinderHelper<BindWhenViewModel, BindWhenViewModel_ViewHolder> helper = new TestBinderHelper<>(
                 new BindWhenViewModel_ViewHolder(),
                 new BindWhenViewModel_ViewBinder().createBinder());
-
         helper.mockViewForId(R.id.testIdOne, TextView.class);
         helper.mockViewForId(R.id.testIdTwo, TextView.class);
         helper.mockViewForId(R.id.testIdThree, TextView.class);
-
         return helper;
     }
 

@@ -1,13 +1,8 @@
 package se.snylt.witchprocessortest;
 
-
-import android.view.View;
 import android.widget.TextView;
 
 import org.junit.Test;
-import java.util.List;
-import se.snylt.witch.viewbinder.TargetViewBinder;
-import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 import se.snylt.witchprocessortest.utils.TestBinderHelper;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;

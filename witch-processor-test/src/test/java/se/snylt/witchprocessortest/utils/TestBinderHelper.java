@@ -1,17 +1,10 @@
 package se.snylt.witchprocessortest.utils;
 
-
 import android.view.View;
-
-import org.mockito.InOrder;
-import org.mockito.Mockito;
-
 import java.util.HashMap;
-
 import se.snylt.witch.viewbinder.TargetViewBinder;
 import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
-
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

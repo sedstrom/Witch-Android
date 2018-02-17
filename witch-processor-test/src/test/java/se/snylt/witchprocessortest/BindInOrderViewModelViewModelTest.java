@@ -1,25 +1,12 @@
 package se.snylt.witchprocessortest;
 
-
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
-
-import java.util.List;
-
-import se.snylt.witch.viewbinder.TargetViewBinder;
-import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
-import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 import se.snylt.witchprocessortest.utils.TestBinderHelper;
-
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 
 public class BindInOrderViewModelViewModelTest {
 
