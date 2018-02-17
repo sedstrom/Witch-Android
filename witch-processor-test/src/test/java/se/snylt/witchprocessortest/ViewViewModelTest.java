@@ -1,3 +1,4 @@
+/*
 package se.snylt.witchprocessortest;
 
 import android.view.View;
@@ -38,4 +39,4 @@ public class ViewViewModelTest extends TestBase {
     protected TargetViewBinder getTargetViewBinder() {
         return new ViewViewModel_ViewBinder().createBinder();
     }
-}
+}*/

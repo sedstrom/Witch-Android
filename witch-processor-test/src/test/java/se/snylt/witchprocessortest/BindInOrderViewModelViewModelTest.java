@@ -14,8 +14,9 @@ import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
 import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
 
 import static org.mockito.Mockito.mock;
-import static se.snylt.witchprocessortest.utils.TestViewBinderUtils.viewFinderWithView;
+// import static se.snylt.witchprocessortest.utils.TestViewBinderUtils.viewFinderWithView;
 
+/*
 public class BindInOrderViewModelViewModelTest extends TestBase {
 
     @Override
@@ -48,3 +49,4 @@ public class BindInOrderViewModelViewModelTest extends TestBase {
         return new BindInOrderViewModel_ViewBinder().createBinder();
     }
 }
+*/

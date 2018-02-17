@@ -16,11 +16,11 @@ public class SetViewHolderView implements MethodSpecModule {
 
     private final TypeName viewHolderTypeName;
 
-    private final PropertyAccessor valueAccessor;
+    private final String propertyName;
 
-    public SetViewHolderView(TypeName viewHolderTypeName, PropertyAccessor valueAccessor) {
+    public SetViewHolderView(TypeName viewHolderTypeName, String propertyName) {
         this.viewHolderTypeName = viewHolderTypeName;
-        this.valueAccessor = valueAccessor;
+        this.propertyName = propertyName;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class SetViewHolderView implements MethodSpecModule {
                 .addParameter(viewHolderTypeName, "viewHolder")
                 .addParameter(viewTypeName, "view")
                 .returns(void.class)
-                .addStatement("viewHolder.$N = $N", valueAccessor.viewHolderFieldName(), "view")
+                .addStatement("viewHolder.$N = $N", propertyName, "view")
                 .build();
     }
 }

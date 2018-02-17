@@ -14,8 +14,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import se.snylt.witch.annotations.BindTo;
-import se.snylt.witch.annotations.Binds;
+import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.viewbinder.Value;
 import se.snylt.witch.viewbinder.Witch;
 import se.snylt.witch.viewbinder.bindaction.Binder;
@@ -23,7 +22,6 @@ import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
 
 public class ValueFragment extends Fragment {
 
-    @BindTo(R.id.value_view_fragment_input)
     final TextWatcher textWatcher = new TextWatcherAdapter() {
 
         @Override
@@ -34,7 +32,7 @@ public class ValueFragment extends Fragment {
         }
     };
 
-    @Binds
+    @Bind
     Binder<EditText, TextWatcher> bindsTextWatcher = Binder.create(new SyncOnBind<EditText, TextWatcher>() {
         @Override
         public void onBind(EditText editText, TextWatcher textWatcher) {
@@ -42,10 +40,9 @@ public class ValueFragment extends Fragment {
         }
     });
 
-    @BindTo(R.id.value_view_fragment_text)
     final Value<Model> text = new Value<>(new Model());
 
-    @Binds
+    @Bind
     Binder<TextView, Model> bindsText = Binder.create(new SyncOnBind<TextView, Model>() {
         @Override
         public void onBind(TextView textView, Model m) {

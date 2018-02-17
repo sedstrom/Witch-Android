@@ -3,7 +3,7 @@ package se.snylt.witch.viewbinder.bindaction;
 import java.util.LinkedList;
 
 /**
- * Binds a generic value to a generic target through one ore more chained {@link OnBind} actions.
+ * Bind a generic value to a generic target through one ore more chained {@link OnBind} actions.
  *
  * @param <Target> target to be bound with value.
  * @param <Value>  value to be bound to target.

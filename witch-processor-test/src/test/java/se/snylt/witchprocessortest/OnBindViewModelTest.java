@@ -1,3 +1,4 @@
+/*
 package se.snylt.witchprocessortest;
 
 
@@ -7,7 +8,6 @@ import java.util.List;
 
 import se.snylt.witch.viewbinder.TargetViewBinder;
 import se.snylt.witch.viewbinder.viewbinder.ViewBinder;
-import se.snylt.witchprocessortest.bindactions.TestOnBind;
 import se.snylt.witchprocessortest.utils.TestViewBinderUtils;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -48,4 +48,4 @@ public class OnBindViewModelTest extends TestBase {
     protected TargetViewBinder getTargetViewBinder() {
         return new OnBindViewModel_ViewBinder().createBinder();
     }
-}
+}*/

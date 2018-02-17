@@ -1,3 +1,4 @@
+/*
 package se.snylt.witchprocessortest;
 
 
@@ -96,4 +97,4 @@ public class BindWhenViewModelTest extends TestBase {
             return true;
         }
     }
-}
+}*/

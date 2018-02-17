@@ -125,4 +125,20 @@ public class TypeUtils {
         return TypeName.get(type);
     }
 
+    public TypeName getPropertyMethodViewType(Element element) {
+        if (element.getKind() == ElementKind.METHOD) {
+            ExecutableType type = (ExecutableType) element.asType();
+            return TypeName.get(type.getParameterTypes().get(0));
+        }
+        throw new WitchException("Element is not a method");
+    }
+
+    public TypeName getPropertyMethodValueType(Element element) {
+        if (element.getKind() == ElementKind.METHOD) {
+            ExecutableType type = (ExecutableType) element.asType();
+            return TypeName.get(type.getParameterTypes().get(1));
+        }
+        throw new WitchException("Element is not a method");
+    }
+
 }

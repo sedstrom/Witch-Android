@@ -10,9 +10,8 @@ import android.view.View;
 
 import java.util.Stack;
 
-import se.snylt.witch.annotations.BindTo;
-import se.snylt.witch.annotations.BindToView;
-import se.snylt.witch.annotations.Binds;
+import se.snylt.witch.annotations.Bind;
+import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.viewbinder.Witch;
 import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
@@ -69,10 +68,9 @@ public class MainActivity extends AppCompatActivity implements OnExampleFragment
 
     class ViewModel {
 
-        @BindTo(R.id.main_activity_fragment_container)
         final Fragment fragment;
 
-        @Binds
+        @Bind
         Binder<View, Fragment> bindsFragment = Binder.create(new SyncOnBind<View, Fragment>() {
                 @Override
                 public void onBind(View view, Fragment fragment) {
@@ -83,10 +81,9 @@ public class MainActivity extends AppCompatActivity implements OnExampleFragment
                 }
             });
 
-        @BindTo(R.id.main_activity_toolbar)
         final boolean displayHomeAsUp;
 
-        @Binds
+        @Bind
         final Binder<View, Boolean> bindsDisplayHomeAsUp = Binder.create(new SyncOnBind<View, Boolean>() {
             @Override
             public void onBind(View view, Boolean enabled) {
@@ -94,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnExampleFragment
             }
         });
 
-        @BindToView(id = R.id.main_activity_toolbar, view = Toolbar.class, set = "title")
+        @BindData(id = R.id.main_activity_toolbar, view = Toolbar.class, set = "title")
         final String title;
 
         ViewModel(Fragment fragment, boolean displayHomeAsUp, String title) {

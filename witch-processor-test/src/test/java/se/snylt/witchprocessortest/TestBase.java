@@ -18,10 +18,8 @@ public abstract class TestBase {
     Object viewHolder;
 
 
-
     @Before
-    public void setup(){
-    }
+    public void setup(){}
 
     @Test
     public void testSimpleBind(){

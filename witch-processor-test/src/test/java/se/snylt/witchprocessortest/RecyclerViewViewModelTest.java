@@ -1,3 +1,4 @@
+/*
 package se.snylt.witchprocessortest;
 
 
@@ -55,4 +56,4 @@ public class RecyclerViewViewModelTest extends TestBase {
             }
         };
     }
-}
+}*/

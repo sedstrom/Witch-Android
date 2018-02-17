@@ -9,9 +9,4 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
-public @interface BindToImageView {
-
-    @IdRes int id();
-
-    String set() default "imageResource";
-}
+public @interface Data { }

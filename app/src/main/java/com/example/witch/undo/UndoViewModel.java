@@ -4,20 +4,17 @@ import com.example.witch.R;
 
 import android.view.View;
 
-import se.snylt.witch.annotations.BindToEditText;
-import se.snylt.witch.annotations.BindToView;
+import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.BindWhen;
 
 public class UndoViewModel {
 
-    @BindToView(id = R.id.undo_fragment_undo_button, view = View.class, set = "enabled")
+    @BindData(id = R.id.undo_fragment_undo_button, view = View.class, set = "enabled")
     public final Boolean undoEnabled;
 
-    @BindToEditText(id = R.id.undo_fragment_add_edittext)
     @BindWhen(BindWhen.NOT_EQUALS)
     public final String text;
 
-    @BindToEditText(id = R.id.undo_fragment_add_edittext, set = "selection")
     public final Integer selection;
 
     public UndoViewModel(String text, boolean undoEnabled) {

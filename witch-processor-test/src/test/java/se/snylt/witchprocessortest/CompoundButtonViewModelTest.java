@@ -1,3 +1,4 @@
+/*
 package se.snylt.witchprocessortest;
 
 import android.view.View;
@@ -46,4 +47,4 @@ public class CompoundButtonViewModelTest extends TestBase {
     protected TargetViewBinder getTargetViewBinder() {
         return new CompoundButtonViewModel_ViewBinder().createBinder();
     }
-}
+}*/

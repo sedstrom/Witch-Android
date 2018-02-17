@@ -1,3 +1,4 @@
+/*
 package se.snylt.witchprocessortest;
 
 
@@ -47,4 +48,4 @@ public class ImageViewViewModelTest extends TestBase {
     protected TargetViewBinder getTargetViewBinder() {
         return new ImageViewViewModel_ViewBinder().createBinder();
     }
-}
+}*/

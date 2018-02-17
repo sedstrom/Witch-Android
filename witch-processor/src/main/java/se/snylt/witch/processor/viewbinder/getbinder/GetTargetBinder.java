@@ -24,12 +24,18 @@ public class GetTargetBinder extends GetBinder {
 
     @Override
     public MethodSpec create() {
-        return MethodSpec.methodBuilder("getBinder")
-                .addModifiers(Modifier.PUBLIC)
-                .addParameter(targetTypeName, "target")
-                .returns(BINDER)
-                .addStatement("return target.$N", binderAccessor.accessPropertyString())
-                .build();
+
+        MethodSpec.Builder builder =
+                MethodSpec.methodBuilder("getBinder")
+                        .addModifiers(Modifier.PUBLIC)
+                        .addParameter(targetTypeName, "target")
+                        .returns(BINDER)
+                        .addCode("if(binder != null) { return binder; }\n")
+                        .addStatement("$N = $T.create()", "binder", BINDER);
+
+        builder = builder.addStatement("return binder");
+
+        return builder.build();
     }
 
     @Override

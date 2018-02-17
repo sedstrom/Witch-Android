@@ -52,7 +52,7 @@ public class Witch {
     }
 
     /**
-     * Binds annotated values in {@code target} to views in {@code activity}
+     * Bind annotated values in {@code target} to views in {@code activity}
      *
      * @param target view model
      * @param activity activity containing views specified in {@code target}
@@ -69,7 +69,7 @@ public class Witch {
     }
 
     /**
-     * Binds annotated values in {@code target} to views in {@code view}
+     * Bind annotated values in {@code target} to views in {@code view}
      *
      * @param target view model
      * @param view view containing child-views specified in {@code target}

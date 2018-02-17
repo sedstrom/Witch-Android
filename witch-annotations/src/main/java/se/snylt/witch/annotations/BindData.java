@@ -9,7 +9,11 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
-public @interface BindTo {
+public @interface BindData {
 
-    @IdRes int value();
+    @IdRes int id();
+
+    Class view();
+
+    String set();
 }

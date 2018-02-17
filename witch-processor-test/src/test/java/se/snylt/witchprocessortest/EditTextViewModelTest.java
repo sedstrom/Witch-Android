@@ -1,3 +1,4 @@
+/*
 package se.snylt.witchprocessortest;
 
 
@@ -47,4 +48,4 @@ public class EditTextViewModelTest extends TestBase {
     protected TargetViewBinder getTargetViewBinder() {
         return new EditTextViewModel_ViewBinder().createBinder();
     }
-}
+}*/

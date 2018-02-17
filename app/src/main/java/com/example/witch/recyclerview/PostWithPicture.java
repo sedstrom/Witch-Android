@@ -6,10 +6,8 @@ import com.squareup.picasso.Picasso;
 import android.view.View;
 import android.widget.ImageView;
 
-import se.snylt.witch.annotations.BindTo;
-import se.snylt.witch.annotations.BindToTextView;
-import se.snylt.witch.annotations.BindToView;
-import se.snylt.witch.annotations.Binds;
+import se.snylt.witch.annotations.Bind;
+import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.viewbinder.bindaction.Binder;
 import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
 import se.snylt.witch.viewbinder.recyclerview.RecyclerViewBinderAdapter;
@@ -33,27 +31,24 @@ class PostWithPicture extends Post {
             super(R.layout.recycler_view_item);
         }
 
-        @BindToTextView(id = R.id.my_item_title)
         String title(){
             return item.title;
         }
 
-        @BindToTextView(id = R.id.my_item_subtitle)
         String subtitle() {
             return item.subtitle;
         }
 
-        @BindToView(id = R.id.my_item_container, view = View.class, set = "onClickListener")
+        @BindData(id = R.id.my_item_container, view = View.class, set = "onClickListener")
         View.OnClickListener listener(){
             return item.listener;
         }
 
-        @BindTo(R.id.my_item_image)
         String image() {
             return item.imageUrl;
         }
 
-        @Binds
+        @Bind
         Binder<ImageView, String> bindsImage = Binder.create(
                 new SyncOnBind<ImageView, String>() {
                     @Override

@@ -1,3 +1,4 @@
+/*
 package se.snylt.witchprocessortest;
 
 import android.support.v4.view.ViewPager;
@@ -54,4 +55,4 @@ public class ViewPagerViewModelTest extends TestBase {
             }
         };
     }
-}
+}*/

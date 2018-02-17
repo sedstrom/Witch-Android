@@ -1,14 +1,19 @@
 package se.snylt.witch.processor.utils;
 
+import com.squareup.javapoet.TypeName;
+
 import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
 
 import se.snylt.witch.processor.valueaccessor.FieldAccessor;
 import se.snylt.witch.processor.valueaccessor.MethodAccessor;
 import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
+
 
 public class PropertyUtils {
 
@@ -43,6 +48,10 @@ public class PropertyUtils {
 
     private static boolean isAccessibleField(Element value) {
         return value.getKind().isField() && notPrivateOrProtected(value);
+    }
+
+    public static String getPropertyName(Element element) {
+        return element.getSimpleName().toString();
     }
 
     public static PropertyAccessor getPropertyAccessor(Element element) {

@@ -9,7 +9,7 @@ import javax.lang.model.element.Modifier;
 import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 import se.snylt.witch.processor.viewbinder.MethodSpecModule;
 
-public class GetTargetValueValue implements MethodSpecModule {
+public class GetTargetValueValue implements GetValue {
 
     private final TypeName targetTypeName;
 
@@ -31,5 +31,20 @@ public class GetTargetValueValue implements MethodSpecModule {
                 .returns(valueTypeName)
                 .addStatement("return target.$N.take()", valueAccessor.accessPropertyString())
                 .build();
+    }
+
+    @Override
+    public TypeName getValueTypeName() {
+        return valueTypeName;
+    }
+
+    @Override
+    public PropertyAccessor getValueAccessor() {
+        return valueAccessor;
+    }
+
+    @Override
+    public String describeValue() {
+        return "target." + valueAccessor.accessPropertyString() + ".get()";
     }
 }

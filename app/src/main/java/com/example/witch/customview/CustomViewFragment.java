@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import se.snylt.witch.annotations.BindToView;
+import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.viewbinder.Witch;
 
 public class CustomViewFragment extends Fragment {
@@ -34,7 +34,7 @@ public class CustomViewFragment extends Fragment {
 
     static class CustomViewModel {
 
-        @BindToView(id=R.id.custom_view_fragment_custom_view, view = CustomView.class, set = "myData")
+        @BindData(id=R.id.custom_view_fragment_custom_view, view = CustomView.class, set = "myData")
         final String data;
 
         CustomViewModel(String data) {

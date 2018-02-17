@@ -1,3 +1,4 @@
+/*
 package se.snylt.witchprocessortest;
 
 
@@ -64,4 +65,4 @@ public class PrimitiveBindViewModelTest extends TestBase {
     protected TargetViewBinder getTargetViewBinder() {
         return new PrimitiveBindViewModel_ViewBinder().createBinder();
     }
-}
+}*/

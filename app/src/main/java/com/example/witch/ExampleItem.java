@@ -2,8 +2,7 @@ package com.example.witch;
 
 import android.view.View;
 
-import se.snylt.witch.annotations.BindToTextView;
-import se.snylt.witch.annotations.BindToView;
+import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.viewbinder.recyclerview.RecyclerViewBinderAdapter;
 
 class ExampleItem {
@@ -26,17 +25,15 @@ class ExampleItem {
             super(R.layout.example_list_item);
         }
 
-        @BindToView(id = R.id.example_list_item_container, view = View.class, set = "onClickListener")
+        @BindData(id = R.id.example_list_item_container, view = View.class, set = "onClickListener")
         final View.OnClickListener clickListener() {
             return item.clickListener;
         }
 
-        @BindToTextView(id=R.id.example_list_item_title)
         final String title() {
             return item.title;
         }
 
-        @BindToTextView(id=R.id.example_list_item_subtitle)
         final String subTitle() {
             return item.subTitle;
         }

@@ -36,7 +36,7 @@ public class TargetViewBinder {
 
     public TypeSpec create() {
 
-        TypeSpec.Builder builder =
+        TypeSpec.Builder targetViewBinder =
                 TypeSpec.classBuilder(binderClassName)
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addSuperinterface(TARGET_VIEW_BINDER_FACTORY);
@@ -48,12 +48,25 @@ public class TargetViewBinder {
         createBinder.addStatement("$T viewBinders = new $T<>()", ParameterizedTypeName.get(LIST, VIEW_BINDER), ARRAY_LIST);
         createBinder.addCode("\n");
 
-        // All viewbinders
-        for (ViewBinder.Builder viewBinder: viewBinders) {
-            String value = viewBinder.getValueAccessor().accessPropertyString();
+        // Description
+        MethodSpec.Builder describeTarget = MethodSpec.methodBuilder("describeTarget")
+                .addParameter(targetTypeName, "target")
+                .addParameter(HASH_MAP_STRINGS, "out")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(TypeName.VOID);
+
+        // All view binders
+        for (ViewBinder.Builder builder: viewBinders) {
+            ViewBinder binder = builder.build();
+            String value = builder.getPropertyName();
             createBinder.addComment("===========================================");
             createBinder.addComment("Binder - " + value + " BEGIN");
-            createBinder.addStatement("viewBinders.add($L)", viewBinder.build().newInstance());
+            createBinder.addStatement("viewBinders.add($L)", binder.newInstance());
+
+            String valueName = binder.getValueName();
+            String accessValue = binder.getAccessValue();
+            describeTarget.addStatement("out.put(\"$N\", \"\" + $N)", valueName, accessValue);
+
             createBinder.addComment("Binder - " + value + " END");
             createBinder.addComment("===========================================");
             createBinder.addCode("\n");
@@ -62,23 +75,12 @@ public class TargetViewBinder {
         // Printer
         TypeSpec.Builder androidPrinter = TypeSpec.anonymousClassBuilder("")
                 .addSuperinterface(ParameterizedTypeName.get(ANDROID_PRINTER, targetTypeName));
-
-        MethodSpec.Builder describeTarget = MethodSpec.methodBuilder("describeTarget")
-                .addParameter(targetTypeName, "target")
-                .addParameter(HASH_MAP_STRINGS, "out")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(TypeName.VOID);
-
-        for(ViewBinder.Builder viewBinder: viewBinders) {
-            String property = viewBinder.getValueAccessor().accessPropertyString();
-            describeTarget.addStatement("out.put(\"$N\", \"\" + target.$N)", property, property);
-        }
         androidPrinter.addMethod(describeTarget.build());
 
         // Return
         createBinder.addStatement("return new TargetViewBinder($N, $L)", "viewBinders", androidPrinter.build());
-        builder.addMethod(createBinder.build());
+        targetViewBinder.addMethod(createBinder.build());
 
-        return builder.build();
+        return targetViewBinder.build();
     }
 }

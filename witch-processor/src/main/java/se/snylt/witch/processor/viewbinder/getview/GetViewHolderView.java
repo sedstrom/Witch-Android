@@ -16,11 +16,11 @@ public class GetViewHolderView implements MethodSpecModule {
 
     private final TypeName viewHolderTypeName;
 
-    private final PropertyAccessor valueAccessor;
+    private final String propertyName;
 
-    public GetViewHolderView(TypeName viewHolderTypeName, PropertyAccessor valueAccessor) {
+    public GetViewHolderView(TypeName viewHolderTypeName, String propertyName) {
         this.viewHolderTypeName = viewHolderTypeName;
-        this.valueAccessor = valueAccessor;
+        this.propertyName = propertyName;
     }
 
     @Override
@@ -29,7 +29,15 @@ public class GetViewHolderView implements MethodSpecModule {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(viewHolderTypeName, "viewHolder")
                 .returns(viewTypeName)
-                .addStatement("return viewHolder.$N", valueAccessor.viewHolderFieldName())
+                .addStatement("return viewHolder.$N", propertyName)
                 .build();
+    }
+
+    public TypeName getViewTypeName() {
+        return viewTypeName;
+    }
+
+    public TypeName getViewHolderTypeName() {
+        return viewHolderTypeName;
     }
 }

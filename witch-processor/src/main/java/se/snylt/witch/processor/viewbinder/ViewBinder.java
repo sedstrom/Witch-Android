@@ -7,6 +7,9 @@ import com.squareup.javapoet.TypeSpec;
 import se.snylt.witch.processor.binding.OnBind;
 import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 import se.snylt.witch.processor.viewbinder.getbinder.GetBinder;
+import se.snylt.witch.processor.viewbinder.getvalue.GetValue;
+import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
+import se.snylt.witch.processor.viewbinder.newinstance.NewViewBinderInstance;
 
 public class ViewBinder {
 
@@ -16,7 +19,7 @@ public class ViewBinder {
 
     private final MethodSpecModule setView;
 
-    private final MethodSpecModule getValue;
+    private final GetValue getValue;
 
     private final MethodSpecModule getBinder;
 
@@ -26,7 +29,7 @@ public class ViewBinder {
             TypeSpecModule newInstance,
             MethodSpecModule getView,
             MethodSpecModule setView,
-            MethodSpecModule getValue,
+            GetValue getValue,
             MethodSpecModule getBinder,
             MethodSpecModule isDirty) {
         this.newInstance = newInstance;
@@ -47,21 +50,29 @@ public class ViewBinder {
                 .build();
     }
 
+    public String getValueName() {
+        return getValue.getValueAccessor().accessPropertyString();
+    }
+
+    public String getAccessValue() {
+        return getValue.describeValue();
+    }
+
     public static class Builder {
 
-        private TypeSpecModule newInstance;
+        private int viewId;
 
-        private MethodSpecModule getView;
+        private String propertyName;
+
+        private GetViewHolderView getView;
 
         private MethodSpecModule setView;
 
-        private MethodSpecModule getValue;
+        private GetValue getValue;
 
         private GetBinder getBinder;
 
         private MethodSpecModule isDirty;
-
-        private PropertyAccessor valueAccessor;
 
         private TypeName targetTypeName;
 
@@ -69,17 +80,12 @@ public class ViewBinder {
             this.targetTypeName = targetTypeName;
         }
 
-        public Builder setNewInstance(TypeSpecModule newInstance) {
-            this.newInstance = newInstance;
+        public Builder setPropertyName(String propertyName) {
+            this.propertyName = propertyName;
             return this;
         }
 
-        public Builder setValueAccessor(PropertyAccessor valueAccessor) {
-            this.valueAccessor = valueAccessor;
-            return this;
-        }
-
-        public Builder setGetView(MethodSpecModule getView) {
+        public Builder setGetView(GetViewHolderView getView) {
             this.getView = getView;
             return this;
         }
@@ -89,7 +95,7 @@ public class ViewBinder {
             return this;
         }
 
-        public Builder setGetValue(MethodSpecModule getValue) {
+        public Builder setGetValue(GetValue getValue) {
             this.getValue = getValue;
             return this;
         }
@@ -104,18 +110,24 @@ public class ViewBinder {
             return this;
         }
 
-        public PropertyAccessor getValueAccessor() {
-            return valueAccessor;
-        }
-
         public ViewBinder build() {
             return new ViewBinder(
-                    newInstance,
+                    newInstance(),
                     getView,
                     setView,
                     getValue,
                     getBinder,
                     isDirty);
+        }
+
+        private TypeSpecModule newInstance() {
+            return new NewViewBinderInstance(
+                viewId,
+                    getView.getViewTypeName(),
+                    getView.getViewHolderTypeName(),
+                    targetTypeName,
+                    getValue.getValueTypeName()
+            );
         }
 
         public void addOnBind(OnBind onBind) {
@@ -125,16 +137,30 @@ public class ViewBinder {
         @Override
         public boolean equals(Object obj) {
             if(obj instanceof ViewBinder.Builder) {
-                return ((ViewBinder.Builder) obj).getValueAccessor().equals(getValueAccessor());
+                if (propertyName != null && ((Builder) obj).propertyName != null) {
+                    return propertyName.equals(((Builder) obj).propertyName);
+                }
             }
-            if(obj instanceof PropertyAccessor) {
-                return obj.equals(getValueAccessor());
+
+            if(obj instanceof String) {
+                if (propertyName != null) {
+                    return propertyName.equals(obj);
+                }
             }
-            return super.equals(obj);
+            return false;
         }
 
         public TypeName getTargetTypeName() {
             return targetTypeName;
+        }
+
+        public String getPropertyName() {
+            return propertyName;
+        }
+
+        public Builder setViewId(int viewId) {
+            this.viewId = viewId;
+            return this;
         }
     }
 

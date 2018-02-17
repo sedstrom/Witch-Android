@@ -32,16 +32,23 @@ public class TestViewBinderUtils {
         // Check correct view and value
         for (ViewBinder binder : viewBinders) {
             View view = viewMocker.mockView();
-            ViewFinder viewFinder = viewFinderWithView(view);
+            ViewFinder viewFinder = mockViewFinder(view);
             binder.bind(viewHolder, viewFinder, viewModel);
             verifyPostBind.onPostBind(view, viewModel, binder.viewId);
         }
     }
 
-    public static ViewFinder viewFinderWithView(View view) {
+    public static ViewFinder mockViewFinder(View view) {
         ViewFinder finder = mock(ViewFinder.class);
-        when(finder.findViewById(anyInt())).thenReturn(view);
         return finder;
+    }
+
+    public static void addViewForId(ViewFinder viewFinder, View view, int id) {
+        when(viewFinder.findViewById(id)).thenReturn(view);
+    }
+
+    public static void addViewForAnyId(ViewFinder viewFinder, View view) {
+        when(viewFinder.findViewById(anyInt())).thenReturn(view);
     }
 
     private static class DefaultViewMocker implements ViewMocker {

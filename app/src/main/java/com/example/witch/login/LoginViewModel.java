@@ -1,17 +1,13 @@
 package com.example.witch.login;
 
 import com.example.witch.R;
-import com.example.witch.utils.ToastShort;
 
 import android.view.View;
 
 import java.util.PriorityQueue;
 
-import se.snylt.witch.annotations.BindTo;
-import se.snylt.witch.annotations.BindToEditText;
-import se.snylt.witch.annotations.BindToView;
+import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.BindWhen;
-import se.snylt.witch.annotations.OnBind;
 
 class LoginViewModel {
 
@@ -30,7 +26,6 @@ class LoginViewModel {
         this.password = password;
     }
 
-    @BindToEditText(id = R.id.login_fragment_password)
     String password() {
         return password;
     }
@@ -39,7 +34,6 @@ class LoginViewModel {
         this.password = password;
     }
 
-    @BindToEditText(id = R.id.login_fragment_username)
     String username() {
         return username;
     }
@@ -52,34 +46,30 @@ class LoginViewModel {
         this.isError = isError;
     }
 
-    @BindTo(R.id.login_fragment_password)
-    @OnBind(EditTextValidOnBind.class)
     boolean passwordValid() {
         return !isError;
     }
 
-    @BindToView(id = R.id.login_fragment_button, view = View.class, set = "enabled")
+    @BindData(id = R.id.login_fragment_button, view = View.class, set = "enabled")
     Boolean loginButtonEnabled() {
         return !isLoggingIn;
     }
 
-    @BindTo(R.id.login_fragment_username)
-    @OnBind(EditTextValidOnBind.class)
     boolean usernameValid() {
         return !isError;
     }
 
-    @BindToView(id = R.id.login_fragment_username, view = View.class, set = "enabled")
+    @BindData(id = R.id.login_fragment_username, view = View.class, set = "enabled")
     Boolean usernameEnabled() {
         return !isLoggingIn;
     }
 
-    @BindToView(id = R.id.login_fragment_password, view = View.class, set = "enabled")
+    @BindData(id = R.id.login_fragment_password, view = View.class, set = "enabled")
     Boolean passwordEnabled() {
         return !isLoggingIn;
     }
 
-    @BindToView(id = R.id.login_fragment_progress_view, view = View.class, set = "visibility")
+    @BindData(id = R.id.login_fragment_progress_view, view = View.class, set = "visibility")
     Integer progressVisible() {
         return isLoggingIn ? View.VISIBLE : View.INVISIBLE;
     }
@@ -88,8 +78,6 @@ class LoginViewModel {
         this.isLoggingIn = isLoggingIn;
     }
 
-    @BindTo(R.id.login_fragment_container)
-    @OnBind(ToastShort.class)
     @BindWhen(BindWhen.ALWAYS)
     String message() {
         return message.isEmpty() ? null : message.poll();

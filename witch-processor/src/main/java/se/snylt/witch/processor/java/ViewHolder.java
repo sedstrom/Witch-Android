@@ -28,7 +28,7 @@ public class ViewHolder {
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         for (ViewBinder.Builder viewBinder : viewBinders) {
-            viewHolder.addField(ANDROID_VIEW, viewBinder.getValueAccessor().viewHolderFieldName(), Modifier.PUBLIC);
+            viewHolder.addField(ANDROID_VIEW, viewBinder.getPropertyName(), Modifier.PUBLIC);
         }
 
         return viewHolder.build();
