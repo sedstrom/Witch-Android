@@ -11,7 +11,7 @@ public class IsDirtyNever extends IsDirty {
     }
 
     @Override
-    MethodSpec.Builder addReturnStatement(MethodSpec.Builder builder) {
-        return builder.addStatement("return false");
+    String getIsDirty() {
+        return "false;";
     }
 }

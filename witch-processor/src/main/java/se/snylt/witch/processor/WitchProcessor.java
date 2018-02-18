@@ -56,7 +56,8 @@ import static se.snylt.witch.processor.utils.PropertyUtils.bindsValue;
         SupportedAnnotations.Data.name,
         SupportedAnnotations.BindData.name,
         SupportedAnnotations.Bind.name,
-        SupportedAnnotations.BindWhen.name
+        SupportedAnnotations.BindWhen.name,
+        SupportedAnnotations.BindNull.name
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class WitchProcessor extends AbstractProcessor {
@@ -83,6 +84,7 @@ public class WitchProcessor extends AbstractProcessor {
         processBind(viewBinders, roundEnv);
         processData(viewBinders, roundEnv);
         processBindWhens(viewBinders, roundEnv);
+        processBindNull(viewBinders, roundEnv);
         writeFiles(viewBinders);
         return true;
     }
@@ -181,6 +183,13 @@ public class WitchProcessor extends AbstractProcessor {
                     binder.setIsDirty(new IsDirtyIfNotSame(binder.getTargetTypeName()));
                 }
             }
+        }
+    }
+
+    private void processBindNull(HashMap<Element, List<ViewBinder.Builder>> viewBinders, RoundEnvironment roundEnv) {
+        for (Element bindWhen: roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.BindNull.class)) {
+            ViewBinder.Builder binder = getViewBinderForProperty(bindWhen, viewBinders);
+            binder.getIsDirty().setBindNull(true);
         }
     }
 

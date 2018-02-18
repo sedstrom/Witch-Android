@@ -16,7 +16,7 @@ public class IsValueDirty extends IsDirty {
     }
 
     @Override
-    MethodSpec.Builder addReturnStatement(MethodSpec.Builder builder) {
-        return builder.addStatement("return target.$N.isDirty()", valueAccessor.accessPropertyString());
+    String getIsDirty() {
+        return String.format("target.%s.isDirty()",  valueAccessor.accessPropertyString());
     }
 }

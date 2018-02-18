@@ -75,6 +75,11 @@ class SupportedAnnotations {
         final static String name = "se.snylt.witch.annotations.BindWhen";
     }
 
+    // BindNull
+    final static class BindNull {
+        final static String name = "se.snylt.witch.annotations.BindNull";
+    }
+
     // All annotations that bind to a view id
     final static HasViewId[] ALL_BIND_VIEW = new HasViewId[] {
             new BindData(),

@@ -13,8 +13,7 @@ public class IsDirtyIfNotSame extends IsDirty {
     }
 
     @Override
-    MethodSpec.Builder addReturnStatement(MethodSpec.Builder builder) {
-        return builder.addStatement("return $N",
-                TypeUtils.DIFF_VALUE.toString() + ".notSame(getValue(target), historyValue)");
+    String getIsDirty() {
+        return TypeUtils.DIFF_VALUE.toString() + ".notSame(getValue(target), historyValue)";
     }
 }

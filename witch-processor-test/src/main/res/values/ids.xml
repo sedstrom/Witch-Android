@@ -5,4 +5,5 @@
     <item name="testIdThree" type="id"/>
     <item name="testIdFour" type="id"/>
     <item name="testIdFive" type="id"/>
+    <item name="testIdSix" type="id"/>
 </resources>

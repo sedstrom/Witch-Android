@@ -9,6 +9,7 @@ import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 import se.snylt.witch.processor.viewbinder.getbinder.GetBinder;
 import se.snylt.witch.processor.viewbinder.getvalue.GetValue;
 import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
+import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
 import se.snylt.witch.processor.viewbinder.newinstance.NewViewBinderInstance;
 
 public class ViewBinder {
@@ -72,7 +73,7 @@ public class ViewBinder {
 
         private GetBinder getBinder;
 
-        private MethodSpecModule isDirty;
+        private IsDirty isDirty;
 
         private TypeName targetTypeName;
 
@@ -105,9 +106,13 @@ public class ViewBinder {
             return this;
         }
 
-        public Builder setIsDirty(MethodSpecModule isDirty) {
+        public Builder setIsDirty(IsDirty isDirty) {
             this.isDirty = isDirty;
             return this;
+        }
+
+        public IsDirty getIsDirty() {
+            return isDirty;
         }
 
         public ViewBinder build() {

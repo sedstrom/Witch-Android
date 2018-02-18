@@ -12,6 +12,8 @@ public abstract class IsDirty implements MethodSpecModule {
 
     private final TypeName targetTypeName;
 
+    private boolean bindNull = false;
+
     protected IsDirty(TypeName targetTypeName) {
         this.targetTypeName = targetTypeName;
     }
@@ -22,8 +24,18 @@ public abstract class IsDirty implements MethodSpecModule {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(targetTypeName, "target")
                 .returns(boolean.class);
-        return addReturnStatement(builder).build();
+        if (!bindNull) {
+            builder.addCode("if(getValue(target) == null) { return false; } else { return $N; }", getIsDirty());
+        } else {
+            builder.addCode("return $N;", getIsDirty());
+        }
+
+        return builder.build();
     }
 
-    abstract MethodSpec.Builder addReturnStatement(MethodSpec.Builder builder);
+    public void setBindNull(boolean bindNull) {
+        this.bindNull = bindNull;
+    }
+
+    abstract String getIsDirty();
 }

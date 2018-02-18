@@ -1,103 +1,60 @@
 package com.example.witch;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 import se.snylt.witch.annotations.Bind;
-import se.snylt.witch.annotations.BindData;
+import se.snylt.witch.annotations.Data;
 import se.snylt.witch.viewbinder.Witch;
-import se.snylt.witch.viewbinder.bindaction.Binder;
-import se.snylt.witch.viewbinder.bindaction.SyncOnBind;
+import se.snylt.witch.viewbinder.recyclerview.RecyclerViewBinderAdapter;
 
-public class MainActivity extends AppCompatActivity implements OnExampleFragmentSelected {
+public class MainActivity extends AppCompatActivity {
 
-    // Fragments back stack
-    Stack<ViewModel> models = new Stack<>();
+    MainActivityViewModel viewModel = new MainActivityViewModel();
 
-    private int transaction;
+    @Data
+    MainActivity setup = this;
+
+    @Bind(id = R.id.list)
+    void setup(RecyclerView list, MainActivity activity) {
+        list.setLayoutManager(new LinearLayoutManager(activity));
+        list.setAdapter(new RecyclerViewBinderAdapter.Builder<ApiData>()
+        .binder(new DataBinder())
+        .build());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar((Toolbar) findViewById(R.id.main_activity_toolbar));
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        // Initial fragment
-        addFragment(Fragment.instantiate(this, ExampleListFragment.class.getName()), "Pick an example", false);
+        Witch.bind(this, this);
+        Witch.bind(viewModel, this);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    void updateSuccess(View button) {
+        fetch(true);
     }
 
-    private void addFragment(Fragment fragment, String title, boolean displayHomeAsUp) {
-        models.add(new ViewModel(fragment, displayHomeAsUp, title));
-        transaction = FragmentTransaction.TRANSIT_FRAGMENT_OPEN;
-        Witch.spellBind(models.peek(), this);
+    void updateFail(View button) {
+        fetch(false);
     }
 
-    @Override
-    public void onExampleFragmentSelected(String fragment, String title) {
-        addFragment(Fragment.instantiate(this, fragment), title, true);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(models.size() > 1) {
-            models.pop();
-            transaction = FragmentTransaction.TRANSIT_FRAGMENT_CLOSE;
-            Witch.spellBind(models.peek(), this);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    class ViewModel {
-
-        final Fragment fragment;
-
-        @Bind
-        Binder<View, Fragment> bindsFragment = Binder.create(new SyncOnBind<View, Fragment>() {
-                @Override
-                public void onBind(View view, Fragment fragment) {
-                    getSupportFragmentManager().beginTransaction()
-                            .setTransition(transaction)
-                            .replace(view.getId(), fragment)
-                            .commit();
-                }
-            });
-
-        final boolean displayHomeAsUp;
-
-        @Bind
-        final Binder<View, Boolean> bindsDisplayHomeAsUp = Binder.create(new SyncOnBind<View, Boolean>() {
+    private void fetch(boolean success) {
+        viewModel.fetchingData = true;
+        Witch.bind(viewModel, this);
+        new Api().getData(new Api.ApiCallback<Api.Result<List<ApiData>>>() {
             @Override
-            public void onBind(View view, Boolean enabled) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
+            public void onResult(Api.Result<List<ApiData>> result) {
+                viewModel.fetchingData = false;
+                viewModel.apiResult = result;
+                Witch.bind(viewModel, MainActivity.this);
             }
-        });
-
-        @BindData(id = R.id.main_activity_toolbar, view = Toolbar.class, set = "title")
-        final String title;
-
-        ViewModel(Fragment fragment, boolean displayHomeAsUp, String title) {
-            this.fragment = fragment;
-            this.displayHomeAsUp = displayHomeAsUp;
-            this.title = title;
-        }
+        }, success);
     }
 }
