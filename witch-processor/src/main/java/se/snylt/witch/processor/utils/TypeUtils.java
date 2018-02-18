@@ -110,10 +110,7 @@ public class TypeUtils {
 
         TypeMirror type = getType(value);
 
-        // Box if primitive
-        if(type.getKind() != null && type.getKind().isPrimitive()) {
-            type = types.boxedClass((PrimitiveType) type).asType();
-        }
+        type = boxed(type);
 
         // Get generic type if value container
         if(isValueContainer(type)) {
@@ -125,10 +122,19 @@ public class TypeUtils {
         return TypeName.get(type);
     }
 
+    private TypeMirror boxed(TypeMirror type) {
+
+        // Box if primitive
+        if(type.getKind() != null && type.getKind().isPrimitive()) {
+            return types.boxedClass((PrimitiveType) type).asType();
+        }
+        return type;
+    }
+
     public TypeName getPropertyMethodViewType(Element element) {
         if (element.getKind() == ElementKind.METHOD) {
             ExecutableType type = (ExecutableType) element.asType();
-            return TypeName.get(type.getParameterTypes().get(0));
+            return TypeName.get(boxed(type.getParameterTypes().get(0)));
         }
         throw new WitchException("Element is not a method");
     }
@@ -136,7 +142,7 @@ public class TypeUtils {
     public TypeName getPropertyMethodValueType(Element element) {
         if (element.getKind() == ElementKind.METHOD) {
             ExecutableType type = (ExecutableType) element.asType();
-            return TypeName.get(type.getParameterTypes().get(1));
+            return TypeName.get(boxed(type.getParameterTypes().get(1)));
         }
         throw new WitchException("Element is not a method");
     }

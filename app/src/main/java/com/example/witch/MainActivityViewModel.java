@@ -52,7 +52,7 @@ class MainActivityViewModel {
     }
 
     @Bind(id = R.id.buttonPanel)
-    void buttonsEnabled(View view, Boolean enabled) {
+    void buttonsEnabled(View view, boolean enabled) {
         if(enabled) {
             ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0)
                     .setDuration(300)

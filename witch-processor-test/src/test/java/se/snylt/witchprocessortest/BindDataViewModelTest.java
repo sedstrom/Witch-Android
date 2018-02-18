@@ -24,6 +24,6 @@ public class BindDataViewModelTest {
 
         verify((TextView)helper.getView(R.id.testIdOne)).setText(eq(model.foo));
         verify((TextView)helper.getView(R.id.testIdTwo)).setText(eq(model.bar()));
-        verify((TextView)helper.getView(R.id.testIdThree)).setText(eq(model.doe.get()));
+        verify((TextView)helper.getView(R.id.testIdThree)).setText(eq(model.abra()));
     }
 }

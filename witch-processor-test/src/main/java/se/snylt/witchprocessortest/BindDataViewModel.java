@@ -20,8 +20,13 @@ class BindDataViewModel {
         view.setText(bar);
     }
 
-    @BindData(id = R.id.testIdThree, view = TextView.class, set = "text")
-    Value<String> doe = new Value<>("doe");
+    @Data
+    int abra() { return 1; }
+
+    @Bind(id = R.id.testIdThree)
+    void abra(TextView view, int doe) {
+        view.setText(doe);
+    }
 
 
 }
