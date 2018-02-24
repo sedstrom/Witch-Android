@@ -15,6 +15,7 @@ import se.snylt.witchcore.viewfinder.ViewFinder;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -100,7 +101,7 @@ public class WitchTest {
         Witch.setLoggingEnabled(true);
 
         // Then
-        assertTrue(Witch.isLoggingEnabled());
+        verify(core).setLoggingEnabled(eq(true));
     }
 
     @Test
@@ -109,7 +110,7 @@ public class WitchTest {
         Witch.setLoggingEnabled(false);
 
         // Then
-        assertFalse(Witch.isLoggingEnabled());
+        verify(core).setLoggingEnabled(eq(false));
     }
 
     private ViewFinder viewFinderWithTag(final int tag) {

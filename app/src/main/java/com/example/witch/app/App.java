@@ -12,7 +12,7 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
 
-        Witch.setLoggingEnabled(false);
+        Witch.setLoggingEnabled(true);
 
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return;

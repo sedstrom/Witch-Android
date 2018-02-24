@@ -4,30 +4,39 @@ import se.snylt.witchcore.viewfinder.ViewFinder;
 
 public class WitchCore {
 
-    private static boolean loggingEnabled = false;
+    private boolean loggingEnabled = false;
 
+    private final Logger logger;
 
     private final ViewHolderFactory viewHolderFactory;
 
     private final BinderFactory binderFactory;
 
-    public WitchCore(ViewHolderFactory viewHolderFactory, BinderFactory binderFactory) {
+
+
+    public WitchCore(ViewHolderFactory viewHolderFactory, BinderFactory binderFactory, Logger logger) {
         this.viewHolderFactory = viewHolderFactory;
         this.binderFactory = binderFactory;
+        this.logger = logger;
     }
 
-    public static boolean isLoggingEnabled() {
+    public boolean isLoggingEnabled() {
         return loggingEnabled;
     }
 
-    public static void setLoggingEnabled(boolean loggingEnabled) {
-        WitchCore.loggingEnabled = loggingEnabled;
+    public void setLoggingEnabled(boolean loggingEnabled) {
+        this.loggingEnabled = loggingEnabled;
     }
 
     public void doBind(Object target, ViewFinder viewFinder) {
         Object viewHolder = getOrCreateViewHolder(target, viewFinder);
         TargetViewBinder targetViewBinder = getOrCreateBinder(target, viewFinder);
         targetViewBinder.bind(viewHolder, viewFinder, target);
+
+        if (loggingEnabled && logger != null) {
+            String description = targetViewBinder.describeTarget(target);
+            logger.v(description);
+        }
     }
 
     private Object getOrCreateViewHolder(Object target, ViewFinder viewFinder) {

@@ -37,7 +37,13 @@ public class TargetViewBinderTest {
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
-        targetViewBinder = new TargetViewBinder(Arrays.asList(viewBinderOne, viewBinderTwo), printer);
+        targetViewBinder = new TargetViewBinder(Arrays.asList(viewBinderOne, viewBinderTwo)) {
+
+            @Override
+            public String describeTarget(Object o) {
+                return "Test";
+            }
+        };
     }
 
     @Test
@@ -48,26 +54,6 @@ public class TargetViewBinderTest {
         // Then
         verify(viewBinderOne).bind(same(viewHolder), same(viewFinder), same(target));
         verify(viewBinderTwo).bind(same(viewHolder), same(viewFinder), same(target));
-    }
-
-    @Test
-    public void bind_When_LoggingEnabled_Should_Log(){
-        // When
-        WitchCore.setLoggingEnabled(true);
-        targetViewBinder.bind(viewHolder, viewFinder, target);
-
-        // Then
-        verify(printer).printTarget(same(target));
-    }
-
-    @Test
-    public void bind_When_LoggingDisabled_Should_Never_Log(){
-        // When
-        WitchCore.setLoggingEnabled(false);
-        targetViewBinder.bind(viewHolder, viewFinder, target);
-
-        // Then
-        verify(printer, never()).printTarget(same(target));
     }
 
 }

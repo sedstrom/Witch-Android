@@ -17,6 +17,7 @@ import static se.snylt.witch.processor.utils.TypeUtils.PRINTER;
 import static se.snylt.witch.processor.utils.TypeUtils.ARRAY_LIST;
 import static se.snylt.witch.processor.utils.TypeUtils.HASH_MAP_STRINGS;
 import static se.snylt.witch.processor.utils.TypeUtils.LIST;
+import static se.snylt.witch.processor.utils.TypeUtils.STRING;
 import static se.snylt.witch.processor.utils.TypeUtils.TARGET_VIEW_BINDER;
 import static se.snylt.witch.processor.utils.TypeUtils.TARGET_VIEW_BINDER_FACTORY;
 import static se.snylt.witch.processor.utils.TypeUtils.VIEW_BINDER;
@@ -40,11 +41,12 @@ public class TargetViewBinder {
 
     public TypeSpec create() {
 
-        TypeSpec.Builder targetViewBinder =
+        TypeSpec.Builder targetViewBinderFactory =
                 TypeSpec.classBuilder(targetViewBinderClassName)
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addSuperinterface(TARGET_VIEW_BINDER_FACTORY);
 
+        // TODO
         TypeName targetViewBinderType = ParameterizedTypeName.get(TARGET_VIEW_BINDER, targetTypeName, viewHolderClassName);
         MethodSpec.Builder createBinder = MethodSpec.methodBuilder("createBinder")
                 .addModifiers(Modifier.PUBLIC)
@@ -56,12 +58,16 @@ public class TargetViewBinder {
         createBinder.addStatement("$T viewBinders = new $T<>()", ParameterizedTypeName.get(LIST, viewBinderType), ARRAY_LIST);
         createBinder.addCode("\n");
 
+        TypeSpec.Builder targetViewBinder =
+                TypeSpec.anonymousClassBuilder("viewBinders")
+                        .addSuperinterface(targetViewBinderType);
+
         // Description
         MethodSpec.Builder describeTarget = MethodSpec.methodBuilder("describeTarget")
                 .addParameter(targetTypeName, "target")
-                .addParameter(HASH_MAP_STRINGS, "out")
                 .addModifiers(Modifier.PUBLIC)
-                .returns(TypeName.VOID);
+                .addStatement("$T description = \"\"", STRING)
+                .returns(STRING);
 
         // All view binders
         for (ViewBinder.Builder builder: viewBinders) {
@@ -73,28 +79,21 @@ public class TargetViewBinder {
 
             String valueName = binder.getValueName();
             String accessValue = binder.getAccessValue();
-            describeTarget.addStatement("out.put(\"$N\", \"\" + $N)", valueName, accessValue);
+            describeTarget.addStatement("description += \"$N : \" + \"\" + $N", valueName, accessValue);
+            describeTarget.addStatement("description += \"\\n\"");
 
             createBinder.addComment("Binder - " + value + " END");
             createBinder.addComment("===========================================");
             createBinder.addCode("\n");
         }
 
-        // TODO
-        MethodSpec.Builder temp = MethodSpec.methodBuilder("printTarget")
-                .addParameter(targetTypeName, "target")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(TypeName.VOID);
-
-        // Printer
-        TypeSpec androidPrinter = TypeSpec.anonymousClassBuilder("")
-                .addSuperinterface(ParameterizedTypeName.get(PRINTER, targetTypeName))
-                .addMethod(temp.build()).build();
+        describeTarget.addStatement("return description");
+        targetViewBinder.addMethod(describeTarget.build());
 
         // Return
-        createBinder.addStatement("return new $T($N, $L)", targetViewBinderType, "viewBinders", androidPrinter);
-        targetViewBinder.addMethod(createBinder.build());
+        createBinder.addStatement("return $L", targetViewBinder.build());
+        targetViewBinderFactory.addMethod(createBinder.build());
 
-        return targetViewBinder.build();
+        return targetViewBinderFactory.build();
     }
 }

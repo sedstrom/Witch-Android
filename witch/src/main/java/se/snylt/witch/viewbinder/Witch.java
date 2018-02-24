@@ -18,7 +18,7 @@ public class Witch {
 
     private static WitchCore witch() {
         if(INSTANCE == null) {
-            INSTANCE = new WitchCore(new ViewHolderFactory(), new BinderFactory());
+            INSTANCE = new WitchCore(new ViewHolderFactory(), new BinderFactory(), new AndroidLogger());
         }
         return INSTANCE;
     }
@@ -33,14 +33,14 @@ public class Witch {
      * Enable or disable logging.
      */
     public static void setLoggingEnabled(boolean enabled) {
-        WitchCore.setLoggingEnabled(enabled);
+        witch().setLoggingEnabled(enabled);
     }
 
     /**
      * Check if logging is enabled
      */
     public static boolean isLoggingEnabled() {
-        return WitchCore.isLoggingEnabled();
+        return witch().isLoggingEnabled();
     }
 
 
