@@ -1,6 +1,5 @@
 package se.snylt.witchprocessortest;
 
-import android.view.View;
 import android.widget.TextView;
 import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;

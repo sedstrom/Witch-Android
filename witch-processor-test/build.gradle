@@ -18,9 +18,11 @@ dependencies {
     compile project(path: ':witch')
     annotationProcessor project(':witch-processor')
 
-    compile rootProject.ext.deps.supportRecyclerView
+    /*
+    testCompile project(path: ':witch-processor')
     testCompile rootProject.ext.deps.mockitoCore
     testCompile rootProject.ext.deps.junit
+    testCompile 'com.google.testing.compile:compile-testing:0.15'*/
 }
 repositories {
     mavenCentral()

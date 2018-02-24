@@ -7,6 +7,8 @@ import android.util.Log;
 
 import java.util.HashMap;
 
+import se.snylt.witchcore.TargetPrinter;
+
 public abstract class AndroidTargetPrinter<T> implements TargetPrinter<T> {
 
     private final HashMap<String, String> out = new HashMap<>();

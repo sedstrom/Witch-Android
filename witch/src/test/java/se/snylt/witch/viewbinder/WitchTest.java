@@ -9,7 +9,8 @@ import org.mockito.MockitoAnnotations;
 import android.app.Activity;
 import android.view.View;
 
-import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
+import se.snylt.witchcore.WitchCore;
+import se.snylt.witchcore.viewfinder.ViewFinder;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;

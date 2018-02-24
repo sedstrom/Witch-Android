@@ -59,7 +59,7 @@ import static se.snylt.witch.processor.utils.PropertyUtils.bindsValue;
         SupportedAnnotations.BindWhen.name,
         SupportedAnnotations.BindNull.name
 })
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class WitchProcessor extends AbstractProcessor {
 
     private TypeUtils typeUtils;
@@ -199,12 +199,16 @@ public class WitchProcessor extends AbstractProcessor {
         TypeName valueTypeName = typeUtils.getValueType(data);
         TypeName targetTypeName = binder.getTargetTypeName();
 
+
+        binder.setGetValue(new GetTargetValue(targetTypeName, valueAccessor, valueTypeName));
+
+        /*
         if(typeUtils.isValueContainer(data)) {
             binder.setIsDirty(new IsValueDirty(targetTypeName, valueAccessor))
                     .setGetValue(new GetTargetValueValue(targetTypeName, valueAccessor, valueTypeName));
         } else {
-            binder.setGetValue(new GetTargetValue(targetTypeName, valueAccessor, valueTypeName));
-        }
+
+        }*/
     }
 
     private ViewBinder.Builder getViewBinderForProperty(Element property, Map<Element, List<ViewBinder.Builder>> targetViewBinders) {

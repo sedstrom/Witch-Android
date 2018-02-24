@@ -30,13 +30,13 @@ public class TypeUtils {
 
     public static final TypeName HASH_MAP_STRINGS = ParameterizedTypeName.get(ClassName.get("java.util","HashMap"), STRING, STRING);
 
-    private final static String LIBRARY_PACKAGE = "se.snylt.witch.viewbinder";
+    private final static String LIBRARY_PACKAGE = "se.snylt.witchcore";
 
-    private final static String LIBRARY_VIEW_BINDER_PACKAGE = "se.snylt.witch.viewbinder.viewbinder";
+    private final static String LIBRARY_VIEW_BINDER_PACKAGE = "se.snylt.witchcore.viewbinder";
 
-    private final static String LIBRARY_BIND_ACTIONS_PACKAGE = "se.snylt.witch.viewbinder.bindaction";
+    private final static String LIBRARY_BIND_ACTIONS_PACKAGE = "se.snylt.witchcore.bindaction";
 
-    public static final ClassName ANDROID_PRINTER = ClassName.get(LIBRARY_PACKAGE, "AndroidTargetPrinter");
+    public static final ClassName PRINTER = ClassName.get(LIBRARY_PACKAGE, "TargetPrinter");
 
     public static final ClassName LIST = ClassName.get(List.class);
 
@@ -113,11 +113,11 @@ public class TypeUtils {
         type = boxed(type);
 
         // Get generic type if value container
-        if(isValueContainer(type)) {
+        /*if(isValueContainer(type)) {
             DeclaredType declaredType = (DeclaredType) type;
             TypeMirror genericParameter = declaredType.getTypeArguments().get(0);
             return TypeName.get(genericParameter);
-        }
+        }*/
 
         return TypeName.get(type);
     }

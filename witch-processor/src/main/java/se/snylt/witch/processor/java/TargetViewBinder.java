@@ -7,15 +7,13 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.WildcardTypeName;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import se.snylt.witch.processor.utils.ClassUtils;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
 
-import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_PRINTER;
+import static se.snylt.witch.processor.utils.TypeUtils.PRINTER;
 import static se.snylt.witch.processor.utils.TypeUtils.ARRAY_LIST;
 import static se.snylt.witch.processor.utils.TypeUtils.HASH_MAP_STRINGS;
 import static se.snylt.witch.processor.utils.TypeUtils.LIST;
@@ -82,10 +80,16 @@ public class TargetViewBinder {
             createBinder.addCode("\n");
         }
 
+        // TODO
+        MethodSpec.Builder temp = MethodSpec.methodBuilder("printTarget")
+                .addParameter(targetTypeName, "target")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(TypeName.VOID);
+
         // Printer
         TypeSpec androidPrinter = TypeSpec.anonymousClassBuilder("")
-                .addSuperinterface(ParameterizedTypeName.get(ANDROID_PRINTER, targetTypeName))
-                .addMethod(describeTarget.build()).build();
+                .addSuperinterface(ParameterizedTypeName.get(PRINTER, targetTypeName))
+                .addMethod(temp.build()).build();
 
         // Return
         createBinder.addStatement("return new $T($N, $L)", targetViewBinderType, "viewBinders", androidPrinter);

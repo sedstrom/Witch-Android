@@ -5,6 +5,10 @@ dependencies {
     compile rootProject.ext.deps.googleAutoService
     compile rootProject.ext.deps.javapoet
     compile rootProject.ext.deps.junit
+
+    testImplementation 'com.google.testing.compile:compile-testing:0.15'
+    testCompile 'com.google.android:android:4.1.1.4'
+    testCompile project(':witch-core')
 }
 
 apply from: rootProject.file('gradle-mvn-push.gradle')

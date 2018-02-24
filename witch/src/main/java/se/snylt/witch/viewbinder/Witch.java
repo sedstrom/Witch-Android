@@ -3,8 +3,10 @@ package se.snylt.witch.viewbinder;
 import android.app.Activity;
 import android.view.View;
 
-import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
-import se.snylt.witch.viewbinder.viewfinder.ViewViewFinder;
+import se.snylt.witchcore.BinderFactory;
+import se.snylt.witchcore.ViewHolderFactory;
+import se.snylt.witchcore.WitchCore;
+import se.snylt.witchcore.viewfinder.ViewFinder;
 
 public class Witch {
 
@@ -13,8 +15,6 @@ public class Witch {
     static LooperHelper looperHelper = new AndroidLooperHelper();
 
     public final static int VIEW_HOLDER_TAG_DEFAULT = Integer.MIN_VALUE;
-
-    private static boolean loggingEnabled = false;
 
     private static WitchCore witch() {
         if(INSTANCE == null) {
@@ -33,14 +33,14 @@ public class Witch {
      * Enable or disable logging.
      */
     public static void setLoggingEnabled(boolean enabled) {
-        loggingEnabled = enabled;
+        WitchCore.setLoggingEnabled(enabled);
     }
 
     /**
      * Check if logging is enabled
      */
     public static boolean isLoggingEnabled() {
-        return loggingEnabled;
+        return WitchCore.isLoggingEnabled();
     }
 
 

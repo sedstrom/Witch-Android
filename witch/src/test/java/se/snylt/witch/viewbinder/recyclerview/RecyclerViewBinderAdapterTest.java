@@ -17,10 +17,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.snylt.witch.viewbinder.WitchCore;
 import se.snylt.witch.viewbinder.WitchTestUtils;
-import se.snylt.witch.viewbinder.viewfinder.TagContainer;
-import se.snylt.witch.viewbinder.viewfinder.ViewFinder;
+import se.snylt.witchcore.WitchCore;
+import se.snylt.witchcore.viewfinder.TagContainer;
+import se.snylt.witchcore.viewfinder.ViewFinder;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertSame;

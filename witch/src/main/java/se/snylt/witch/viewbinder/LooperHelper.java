@@ -1,6 +1,6 @@
 package se.snylt.witch.viewbinder;
 
-interface LooperHelper {
+public interface LooperHelper {
 
     boolean isCurrentLooperMainLooper();
 

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+// apply plugin: 'java'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -20,6 +21,7 @@ android {
 
 dependencies {
     compile project(':witch-annotations')
+    compile project(':witch-core')
     compile rootProject.ext.deps.commonsLang
     compile rootProject.ext.deps.supportRecyclerView
 

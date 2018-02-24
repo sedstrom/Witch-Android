@@ -1,0 +1,11 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testCompile rootProject.ext.deps.mockitoCore
+    testCompile rootProject.ext.deps.junit
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
