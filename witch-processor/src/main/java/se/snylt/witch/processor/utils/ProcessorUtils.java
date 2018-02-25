@@ -1,16 +1,31 @@
 package se.snylt.witch.processor.utils;
 
+import com.squareup.javapoet.TypeName;
+
+import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.ExecutableType;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
+
+import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.processor.WitchException;
 import se.snylt.witch.processor.valueaccessor.FieldAccessor;
 import se.snylt.witch.processor.valueaccessor.MethodAccessor;
 import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 
+import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_VIEW;
 
 public class ProcessorUtils {
+
+    private final TypeUtils typeUtils;
+
+    public ProcessorUtils(TypeUtils typeUtils) {
+        this.typeUtils = typeUtils;
+    }
 
     public static String getPropertySetter(String property) {
         return "set" + capitalize(property);
@@ -47,5 +62,46 @@ public class ProcessorUtils {
         }
 
         throw WitchException.invalidValueAccessor(element);
+    }
+
+    public TypeName[] getBindMethodTypeNames(Element bindMethod) throws WitchException {
+        TypeMirror[] typeMirrors = getBindMethodTypeMirrors(bindMethod);
+        return new TypeName[]{TypeName.get(typeMirrors[0]), TypeName.get(typeMirrors[1])};
+    }
+
+    public TypeMirror[] getBindMethodTypeMirrors(Element bindMethod) throws WitchException {
+
+        if(!isAccessibleMethod(bindMethod)) {
+            throw WitchException.bindMethodNotAccessible(bindMethod);
+        }
+
+        ExecutableType type = (ExecutableType) bindMethod.asType();
+        List<? extends TypeMirror> parameters = type.getParameterTypes();
+        if(parameters.size() != 2) {
+            throw WitchException.bindMethodWrongArgumentCount(bindMethod);
+        }
+
+        // View
+        TypeMirror view = parameters.get(0);
+        if(!typeUtils.isSubtype(view, typeUtils.typeMirror(ANDROID_VIEW))) {
+            throw WitchException.bindMethodWrongViewType(bindMethod);
+        }
+
+        // Data
+        TypeMirror data = typeUtils.boxed(parameters.get(1));
+
+        return new TypeMirror[]{view, data};
+
+    }
+
+    public TypeName getBindDataViewTypeName(Element action) {
+        TypeMirror bindClass;
+        try {
+            action.getAnnotation(BindData.class).view();
+            return null;
+        } catch (MirroredTypeException mte) {
+            bindClass = mte.getTypeMirror();
+        }
+        return TypeName.get(bindClass);
     }
 }

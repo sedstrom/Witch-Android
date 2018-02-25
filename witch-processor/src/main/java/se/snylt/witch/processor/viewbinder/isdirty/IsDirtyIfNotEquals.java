@@ -1,7 +1,5 @@
 package se.snylt.witch.processor.viewbinder.isdirty;
 
-
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
 import se.snylt.witch.processor.utils.TypeUtils;

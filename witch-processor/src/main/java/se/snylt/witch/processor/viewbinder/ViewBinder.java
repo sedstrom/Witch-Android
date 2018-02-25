@@ -14,6 +14,7 @@ import se.snylt.witch.processor.viewbinder.getbinder.GetTargetMethodBinder;
 import se.snylt.witch.processor.viewbinder.getdata.GetData;
 import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
+import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
 import se.snylt.witch.processor.viewbinder.newinstance.NewViewBinderInstance;
 
 public class ViewBinder {
@@ -79,10 +80,14 @@ public class ViewBinder {
 
         private IsDirty isDirty;
 
+        private IsDirty defaultDirty;
+
         private TypeName targetTypeName;
 
         public Builder(TypeName targetTypeName) {
             this.targetTypeName = targetTypeName;
+            isDirty = new IsDirtyIfNotEquals(targetTypeName);
+            defaultDirty = isDirty;
         }
 
         public Builder setPropertyName(String propertyName) {
@@ -113,6 +118,10 @@ public class ViewBinder {
         public Builder setIsDirty(IsDirty isDirty) {
             this.isDirty = isDirty;
             return this;
+        }
+
+        public boolean isDirtySet() {
+            return isDirty != null && isDirty != defaultDirty;
         }
 
         public IsDirty getIsDirty() {

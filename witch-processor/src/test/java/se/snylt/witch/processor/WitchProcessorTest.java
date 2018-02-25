@@ -111,5 +111,20 @@ public class WitchProcessorTest {
         assertThat(compilation).succeeded();
     }
 
+    @Test
+    public void errorInvalidBindWhen() {
+        Compilation compilation = compile("ErrorInvalidBindWhen.java");
+        assertThat(compilation).hadErrorContaining("ErrorInvalidBindWhen");
+        assertThat(compilation).hadErrorContaining("text has invalid value \"sometimes\" for @BindWhen.");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+    }
+
+    @Test
+    public void errorConflictingBindWhen() {
+        Compilation compilation = compile("ErrorConflictingBindWhen.java");
+        assertThat(compilation).hadErrorContaining("ErrorConflictingBindWhen");
+        assertThat(compilation).hadErrorContaining("@BindWhen is defined multiple times at text(android.view.View,java.lang.String).");Fars
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+    }
 
 }

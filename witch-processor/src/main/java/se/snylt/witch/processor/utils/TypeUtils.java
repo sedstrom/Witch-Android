@@ -74,16 +74,9 @@ public class TypeUtils {
         return className.packageName() + "." + className.simpleName();
     }
 
-    private TypeMirror declared(ClassName name) {
-        return types.getDeclaredType(elements.getTypeElement(asString(name)),
-                types.getWildcardType(null, null),
-                types.getWildcardType(null, null));
-    }
-
     public TypeMirror typeMirror(TypeName typeName) {
         return types.getDeclaredType(elements.getTypeElement(typeName.toString()));
     }
-
 
     public TypeMirror getReturnTypeMirror(Element element) {
         if (element.getKind().isField()) {
@@ -99,7 +92,7 @@ public class TypeUtils {
         return TypeName.get(getReturnTypeMirror(element));
     }
 
-    private TypeMirror boxed(TypeMirror type) {
+    TypeMirror boxed(TypeMirror type) {
 
         // Box if primitive
         if(type.getKind() != null && type.getKind().isPrimitive()) {
@@ -116,45 +109,8 @@ public class TypeUtils {
         return types.isAssignable(boxed(one), boxed(two));
     }
 
-    public TypeName[] getBindMethodTypeNames(Element bindMethod) throws WitchException {
-        TypeMirror[] typeMirrors = getBindMethodTypeMirrors(bindMethod);
-        return new TypeName[]{TypeName.get(typeMirrors[0]), TypeName.get(typeMirrors[1])};
-    }
-
-    public TypeMirror[] getBindMethodTypeMirrors(Element bindMethod) throws WitchException {
-
-        if(!isAccessibleMethod(bindMethod)) {
-            throw WitchException.bindMethodNotAccessible(bindMethod);
-        }
-
-        ExecutableType type = (ExecutableType) bindMethod.asType();
-        List<? extends TypeMirror> parameters = type.getParameterTypes();
-        if(parameters.size() != 2) {
-            throw WitchException.bindMethodWrongArgumentCount(bindMethod);
-        }
-
-        // View
-        TypeMirror view = parameters.get(0);
-        if(!types.isSubtype(view, typeMirror(ANDROID_VIEW))) {
-            throw WitchException.bindMethodWrongViewType(bindMethod);
-        }
-
-        // Data
-        TypeMirror data = boxed(parameters.get(1));
-
-        return new TypeMirror[]{view, data};
-
-    }
-
-    public static TypeName getBindDataViewTypeName(Element action) {
-        TypeMirror bindClass;
-        try {
-            action.getAnnotation(BindData.class).view();
-            return null;
-        } catch (MirroredTypeException mte) {
-            bindClass = mte.getTypeMirror();
-        }
-        return TypeName.get(bindClass);
+    public boolean isSubtype(TypeMirror one, TypeMirror two) {
+        return types.isSubtype(one, two);
     }
 
 }

@@ -18,11 +18,11 @@ public class FileUtils {
 
     private final static char DOT = '.';
 
-    static String getViewHolderName(Element element) {
+    private static String getViewHolderName(Element element) {
         return getEncodedElementClassName(element) + VIEW_HOLDER_SUFFIX;
     }
 
-    static String getBinderName(Element element) {
+    private static String getBinderName(Element element) {
         return getEncodedElementClassName(element) + VIEW_BINDER_SUFFIX;
     }
 
@@ -32,11 +32,11 @@ public class FileUtils {
         return className.substring(packageName.length() + 1).replace(DOT, NOT_A_DOT);
     }
 
-    static String getTargetName(Element element) {
+    private static String getTargetName(Element element) {
         return ((TypeElement) element).getQualifiedName().toString();
     }
 
-    static String getElementPackage(Element element) {
+    private static String getElementPackage(Element element) {
         while (element.getKind() != PACKAGE) {
             element = element.getEnclosingElement();
         }
@@ -49,7 +49,7 @@ public class FileUtils {
         return ClassName.get(packageName, className);
     }
 
-    public static ClassName getTargetViewBinderClassName(Element target) {
+    static ClassName getTargetViewBinderClassName(Element target) {
         String className = FileUtils.getBinderName(target);
         String packageName = FileUtils.getElementPackage(target);
         return ClassName.get(packageName, className);

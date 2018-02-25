@@ -6,7 +6,7 @@ public class WitchException extends Exception {
 
     private final static String readMore = "Read more at: https://sedstrom.github.io/Witch-Android/";
 
-    public WitchException(String message) {
+    WitchException(String message) {
         super(message);
     }
 
@@ -34,7 +34,7 @@ public class WitchException extends Exception {
         );
     }
 
-    public static WitchException noBindForData(Element data) {
+    static WitchException noBindForData(Element data) {
         return new WitchException(
                 String.format(
                         "%s Missing @Bind for @Data %s. " + readMore
@@ -68,6 +68,25 @@ public class WitchException extends Exception {
                         , errorForElementParent(bindMethod)
                         , data
                         , bindMethod)
+        );
+    }
+
+    static WitchException invalidBindWhenValue(Element bindWhen, String bindWhenValue) {
+        return new WitchException(
+                String.format(
+                        "%s %s has invalid value \"%s\" for @BindWhen. " + readMore
+                        , errorForElementParent(bindWhen)
+                        , bindWhen
+                        , bindWhenValue)
+        );
+    }
+
+    public static WitchException conflictingBindWhen(Element element) {
+        return new WitchException(
+                String.format(
+                        "%s @BindWhen is defined multiple times at %s. " + readMore
+                        , errorForElementParent(element)
+                        , element)
         );
     }
 }
