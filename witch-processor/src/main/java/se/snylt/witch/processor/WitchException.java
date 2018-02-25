@@ -17,7 +17,7 @@ public class WitchException extends Exception {
     public static WitchException invalidValueAccessor(Element value) {
         return new WitchException(
                 String.format(
-                        "%s. %s cannot be annotated with @Data. " +
+                        "%s %s cannot be annotated with @Data. " +
                             "Make sure value is a public or protected field or method. " + readMore
                             , errorForElementParent(value)
                             , value)
@@ -27,7 +27,7 @@ public class WitchException extends Exception {
     public static WitchException bindMethodNotAccessible(Element method) {
         return new WitchException(
                 String.format(
-                        "%s. %s is not accessible. " +
+                        "%s %s is not accessible. " +
                                 "Make sure method is not private. " + readMore
                         , errorForElementParent(method)
                         , method)
@@ -37,7 +37,7 @@ public class WitchException extends Exception {
     public static WitchException noBindForData(Element data) {
         return new WitchException(
                 String.format(
-                        "%s. Missing @Bind for @Data %s. " + readMore
+                        "%s Missing @Bind for @Data %s. " + readMore
                         , errorForElementParent(data)
                         , data)
         );
@@ -46,7 +46,7 @@ public class WitchException extends Exception {
     public static WitchException bindMethodWrongArgumentCount(Element bindMethod) {
         return new WitchException(
                 String.format(
-                        "%s. %s has wrong number of parameters. " + readMore
+                        "%s %s has wrong number of parameters. " + readMore
                         , errorForElementParent(bindMethod)
                         , bindMethod)
         );
@@ -55,8 +55,18 @@ public class WitchException extends Exception {
     public static WitchException bindMethodWrongViewType(Element bindMethod) {
         return new WitchException(
                 String.format(
-                        "%s. %s has invalid view type. " + readMore
+                        "%s %s has invalid view type. " + readMore
                         , errorForElementParent(bindMethod)
+                        , bindMethod)
+        );
+    }
+
+    public static WitchException incompatibleDataTypes(Element data, Element bindMethod) {
+        return new WitchException(
+                String.format(
+                        "%s %s and %s have incompatible data types. " + readMore
+                        , errorForElementParent(bindMethod)
+                        , data
                         , bindMethod)
         );
     }

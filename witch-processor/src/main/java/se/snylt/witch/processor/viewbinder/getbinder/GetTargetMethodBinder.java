@@ -5,27 +5,34 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeMirror;
 
-import se.snylt.witch.processor.binding.OnBind;
 import se.snylt.witch.processor.utils.TypeUtils;
 
 import static se.snylt.witch.processor.utils.TypeUtils.BINDER;
 
-public class GetMethodBinder extends GetBinder {
+public class GetTargetMethodBinder extends GetBinder {
+
+    private final Element element;
 
     private final TypeName targetTypeName;
 
     private final TypeName viewTypeName;
 
-    private final TypeName valueTypeName;
+    private final TypeName dataTypeName;
+
+    private final TypeMirror dataTypeMirror;
 
     private final String propertyName;
 
-    public GetMethodBinder(TypeName targetTypeName, TypeName viewTypeName, TypeName valueTypeName, String propertyName) {
+    public GetTargetMethodBinder(Element element, TypeName targetTypeName, TypeName viewTypeName, TypeName dataTypeName, TypeMirror dataTypeMirror, String propertyName) {
+        this.element = element;
         this.targetTypeName = targetTypeName;
         this.viewTypeName = viewTypeName;
-        this.valueTypeName = valueTypeName;
+        this.dataTypeName = dataTypeName;
+        this.dataTypeMirror = dataTypeMirror;
         this.propertyName = propertyName;
     }
 
@@ -36,13 +43,13 @@ public class GetMethodBinder extends GetBinder {
         MethodSpec method = MethodSpec.methodBuilder("onBind")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(viewTypeName, "view")
-                .addParameter(valueTypeName, "value")
+                .addParameter(dataTypeName, "value")
                 .returns(void.class)
                 .addStatement("$N.$N(view, value)", "target", propertyName)
                 .build();
 
         TypeSpec anonymous = TypeSpec.anonymousClassBuilder("")
-                .addSuperinterface(ParameterizedTypeName.get(TypeUtils.SYNC_ON_BIND, viewTypeName, valueTypeName))
+                .addSuperinterface(ParameterizedTypeName.get(TypeUtils.SYNC_ON_BIND, viewTypeName, dataTypeName))
                 .addMethod(method)
                 .build();
 
@@ -59,7 +66,17 @@ public class GetMethodBinder extends GetBinder {
     }
 
     @Override
-    public void addOnBind(OnBind onBind) {
-        throw new IllegalAccessError("Not supported");
+    public Element getElement() {
+        return element;
+    }
+
+    @Override
+    public TypeName getDataTypeName() {
+        return dataTypeName;
+    }
+
+    @Override
+    public TypeMirror getDataTypeMirror() {
+        return dataTypeMirror;
     }
 }

@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.PrimitiveType;
@@ -81,36 +80,23 @@ public class TypeUtils {
                 types.getWildcardType(null, null));
     }
 
-    TypeMirror typeMirror(TypeName typeName) {
+    public TypeMirror typeMirror(TypeName typeName) {
         return types.getDeclaredType(elements.getTypeElement(typeName.toString()));
     }
 
-    boolean isValueContainer(TypeMirror type) {
-        TypeMirror valueType = typeMirror(VALUE);
-        return types.isAssignable(type, valueType);
-    }
 
-    public boolean isValueContainer(Element element) {
-        return isValueContainer(getType(element));
-    }
-
-    public TypeMirror getType(Element element) {
+    public TypeMirror getReturnTypeMirror(Element element) {
         if (element.getKind().isField()) {
-            return element.asType();
+            return boxed(element.asType());
         } else if (element.getKind() == ElementKind.METHOD) {
             ExecutableType ext = (ExecutableType) element.asType();
-            return ext.getReturnType();
+            return boxed(ext.getReturnType());
         }
         return null;
     }
 
-    public TypeName getValueType(Element value) {
-
-        TypeMirror type = getType(value);
-
-        type = boxed(type);
-
-        return TypeName.get(type);
+    public TypeName getReturnTypeName(Element element) {
+        return TypeName.get(getReturnTypeMirror(element));
     }
 
     private TypeMirror boxed(TypeMirror type) {
@@ -122,7 +108,20 @@ public class TypeUtils {
         return type;
     }
 
+    public boolean isAssignable(TypeName one, TypeName two) {
+        return isAssignable(typeMirror(one), typeMirror(two));
+    }
+
+    public boolean isAssignable(TypeMirror one, TypeMirror two) {
+        return types.isAssignable(boxed(one), boxed(two));
+    }
+
     public TypeName[] getBindMethodTypeNames(Element bindMethod) throws WitchException {
+        TypeMirror[] typeMirrors = getBindMethodTypeMirrors(bindMethod);
+        return new TypeName[]{TypeName.get(typeMirrors[0]), TypeName.get(typeMirrors[1])};
+    }
+
+    public TypeMirror[] getBindMethodTypeMirrors(Element bindMethod) throws WitchException {
 
         if(!isAccessibleMethod(bindMethod)) {
             throw WitchException.bindMethodNotAccessible(bindMethod);
@@ -143,28 +142,11 @@ public class TypeUtils {
         // Data
         TypeMirror data = boxed(parameters.get(1));
 
-        return new TypeName[]{TypeName.get(view), TypeName.get(data)};
+        return new TypeMirror[]{view, data};
 
     }
 
-    public TypeName getPropertyMethodViewType(Element element){
-        if (element.getKind() == ElementKind.METHOD ) {
-            ExecutableType type = (ExecutableType) element.asType();
-            return TypeName.get(boxed(type.getParameterTypes().get(0)));
-        }
-
-        throw new IllegalArgumentException("Element is not a method");
-    }
-
-    public TypeName getPropertyMethodValueType(Element element) {
-        if (element.getKind() == ElementKind.METHOD) {
-            ExecutableType type = (ExecutableType) element.asType();
-            return TypeName.get(boxed(type.getParameterTypes().get(1)));
-        }
-        throw new IllegalArgumentException("Element is not a method");
-    }
-
-    public static TypeName getBindDataViewType(Element action) {
+    public static TypeName getBindDataViewTypeName(Element action) {
         TypeMirror bindClass;
         try {
             action.getAnnotation(BindData.class).view();

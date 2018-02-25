@@ -1,26 +1,33 @@
-package se.snylt.witch.processor.viewbinder.getvalue;
+package se.snylt.witch.processor.viewbinder.getdata;
 
 
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeMirror;
 
 import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
-import se.snylt.witch.processor.viewbinder.MethodSpecModule;
 
-public class GetTargetValue implements GetValue {
+public class GetTargetData implements GetData {
+
+    private final Element element;
 
     private final TypeName targetTypeName;
 
     private final PropertyAccessor valueAccessor;
 
-    private final TypeName valueTypeName;
+    private final TypeName dataTypeName;
 
-    public GetTargetValue(TypeName targetTypeName, PropertyAccessor valueAccessor, TypeName valueTypeName) {
+    private final TypeMirror dataTypeMirror;
+
+    public GetTargetData(Element element, TypeName targetTypeName, PropertyAccessor valueAccessor, TypeName dataTypeName, TypeMirror dataTypeMirror) {
+        this.element = element;
         this.targetTypeName = targetTypeName;
         this.valueAccessor = valueAccessor;
-        this.valueTypeName = valueTypeName;
+        this.dataTypeName = dataTypeName;
+        this.dataTypeMirror = dataTypeMirror;
     }
 
     @Override
@@ -28,14 +35,24 @@ public class GetTargetValue implements GetValue {
         return  MethodSpec.methodBuilder("getValue")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(targetTypeName, "target")
-                .returns(valueTypeName)
+                .returns(dataTypeName)
                 .addStatement("return target.$N", valueAccessor.accessPropertyString())
                 .build();
     }
 
     @Override
-    public TypeName getValueTypeName() {
-        return valueTypeName;
+    public Element getElement() {
+        return element;
+    }
+
+    @Override
+    public TypeMirror getDataTypeMirror() {
+        return dataTypeMirror;
+    }
+
+    @Override
+    public TypeName getDataTypeName() {
+        return dataTypeName;
     }
 
     @Override

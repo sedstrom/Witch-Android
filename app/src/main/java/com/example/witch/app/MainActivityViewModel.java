@@ -35,7 +35,7 @@ class MainActivityViewModel {
     }
 
     @Data
-    private String error() {
+    String error() {
         return error;
     }
 
@@ -85,7 +85,7 @@ class MainActivityViewModel {
     @Data
     List<ApiData> data() {
         return data;
-    };
+    }
 
     @BindNull
     @Bind(id = R.id.list)

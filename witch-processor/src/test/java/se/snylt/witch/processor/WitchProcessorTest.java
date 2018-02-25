@@ -4,9 +4,7 @@ import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
 
 import org.junit.Test;
-
 import javax.tools.JavaFileObject;
-
 import static com.google.testing.compile.CompilationSubject.assertThat;
 import static com.google.testing.compile.Compiler.javac;
 
@@ -86,5 +84,32 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("text(java.lang.String,android.view.View) has invalid view type.");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
+
+    @Test
+    public void errorIncompatibleDataTypes() {
+        Compilation compilation = compile("ErrorIncompatibleDataTypes.java");
+        assertThat(compilation).hadErrorContaining("ErrorIncompatibleDataTypes");
+        assertThat(compilation).hadErrorContaining("text and text(android.view.View,java.lang.Integer) have incompatible data types.");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+    }
+
+    @Test
+    public void superDataType() {
+        Compilation compilation = compile("SuperDataType.java");
+        assertThat(compilation).succeeded();
+    }
+
+    @Test
+    public void primitiveDataType() {
+        Compilation compilation = compile("PrimitiveDataType.java");
+        assertThat(compilation).succeeded();
+    }
+
+    @Test
+    public void parameterizedDataTypes() {
+        Compilation compilation = compile("ParemeterizedDataTypes.java");
+        assertThat(compilation).succeeded();
+    }
+
 
 }

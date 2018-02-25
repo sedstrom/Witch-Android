@@ -4,11 +4,14 @@ package se.snylt.witch.processor.viewbinder;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import se.snylt.witch.processor.WitchException;
-import se.snylt.witch.processor.binding.OnBind;
-import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
+import se.snylt.witch.processor.utils.TypeUtils;
 import se.snylt.witch.processor.viewbinder.getbinder.GetBinder;
-import se.snylt.witch.processor.viewbinder.getvalue.GetValue;
+import se.snylt.witch.processor.viewbinder.getbinder.GetTargetMethodBinder;
+import se.snylt.witch.processor.viewbinder.getdata.GetData;
 import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
 import se.snylt.witch.processor.viewbinder.newinstance.NewViewBinderInstance;
@@ -21,7 +24,7 @@ public class ViewBinder {
 
     private final MethodSpecModule setView;
 
-    private final GetValue getValue;
+    private final GetData getData;
 
     private final MethodSpecModule getBinder;
 
@@ -31,13 +34,13 @@ public class ViewBinder {
             TypeSpecModule newInstance,
             MethodSpecModule getView,
             MethodSpecModule setView,
-            GetValue getValue,
+            GetData getData,
             MethodSpecModule getBinder,
             MethodSpecModule isDirty) {
         this.newInstance = newInstance;
         this.getView = getView;
         this.setView = setView;
-        this.getValue = getValue;
+        this.getData = getData;
         this.getBinder = getBinder;
         this.isDirty = isDirty;
     }
@@ -46,18 +49,18 @@ public class ViewBinder {
         return newInstance.builder()
                 .addMethod(getView.create())
                 .addMethod(setView.create())
-                .addMethod(getValue.create())
+                .addMethod(getData.create())
                 .addMethod(getBinder.create())
                 .addMethod(isDirty.create())
                 .build();
     }
 
     public String getValueName() {
-        return getValue.getValueAccessor().accessPropertyString();
+        return getData.getValueAccessor().accessPropertyString();
     }
 
     public String getAccessValue() {
-        return getValue.describeValue();
+        return getData.describeValue();
     }
 
     public static class Builder {
@@ -70,7 +73,7 @@ public class ViewBinder {
 
         private MethodSpecModule setView;
 
-        private GetValue getValue;
+        private GetData getData;
 
         private GetBinder getBinder;
 
@@ -97,8 +100,8 @@ public class ViewBinder {
             return this;
         }
 
-        public Builder setGetValue(GetValue getValue) {
-            this.getValue = getValue;
+        public Builder setGetData(GetData getData) {
+            this.getData = getData;
             return this;
         }
 
@@ -117,12 +120,11 @@ public class ViewBinder {
         }
 
         public ViewBinder build() throws WitchException {
-            validate();
             return new ViewBinder(
                     newInstance(),
                     getView,
                     setView,
-                    getValue,
+                    getData,
                     getBinder,
                     isDirty);
         }
@@ -133,12 +135,8 @@ public class ViewBinder {
                     getView.getViewTypeName(),
                     getView.getViewHolderTypeName(),
                     targetTypeName,
-                    getValue.getValueTypeName()
+                    getData.getDataTypeName()
             );
-        }
-
-        public void addOnBind(OnBind onBind) {
-            getBinder.addOnBind(onBind);
         }
 
         @Override
@@ -170,13 +168,12 @@ public class ViewBinder {
             return this;
         }
 
-        public void validate() throws WitchException {
-            if (getValue != null && getBinder == null) {
-
-                /*
-                throw new WitchException(String.format("Could not find @Bind for %s",
-                        getValue.getValueAccessor().accessPropertyString()));
-                        */
+        public void validate(TypeUtils typeUtils) throws WitchException {
+            // Incompatible data types
+            if (getData != null && getBinder != null && getBinder instanceof GetTargetMethodBinder) {
+                if (!typeUtils.types().isAssignable(getData.getDataTypeMirror(), getBinder.getDataTypeMirror())) {
+                    throw WitchException.incompatibleDataTypes(getData.getElement(), getBinder.getElement());
+                }
             }
         }
     }
