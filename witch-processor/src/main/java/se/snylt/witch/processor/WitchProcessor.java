@@ -2,10 +2,8 @@ package se.snylt.witch.processor;
 
 import com.google.auto.service.AutoService;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,35 +19,28 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Elements;
-
 import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.BindWhen;
 import se.snylt.witch.processor.binding.OnBind;
 import se.snylt.witch.processor.binding.OnBindPropertySetter;
-import se.snylt.witch.processor.utils.AnnotationUtils;
-import se.snylt.witch.processor.utils.ClassUtils;
+import se.snylt.witch.processor.utils.FileUtils;
 import se.snylt.witch.processor.utils.FileWriter;
 import se.snylt.witch.processor.utils.Logger;
-import se.snylt.witch.processor.utils.PropertyUtils;
+import se.snylt.witch.processor.utils.ProcessorUtils;
 import se.snylt.witch.processor.utils.TypeUtils;
 import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
 import se.snylt.witch.processor.viewbinder.getbinder.GetBinderComposition;
 import se.snylt.witch.processor.viewbinder.getbinder.GetMethodBinder;
-import se.snylt.witch.processor.viewbinder.getbinder.GetTargetBinder;
 import se.snylt.witch.processor.viewbinder.getvalue.GetTargetValue;
-import se.snylt.witch.processor.viewbinder.getvalue.GetTargetValueValue;
 import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyAlways;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotSame;
-import se.snylt.witch.processor.viewbinder.isdirty.IsValueDirty;
-import se.snylt.witch.processor.viewbinder.newinstance.NewViewBinderInstance;
 import se.snylt.witch.processor.viewbinder.setview.SetViewHolderView;
-
-import static se.snylt.witch.processor.utils.PropertyUtils.bindsValue;
+// TOOD
+import static se.snylt.witch.processor.utils.TypeUtils.getBindDataViewType;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
@@ -81,8 +72,8 @@ public class WitchProcessor extends AbstractProcessor {
         HashMap<Element, List<ViewBinder.Builder>> viewBinders = new HashMap<>();
         collectAllTargets(viewBinders, roundEnv, SupportedAnnotations.ALL_BIND_VIEW);
         processBindData(viewBinders, roundEnv);
-        processBind(viewBinders, roundEnv);
         processData(viewBinders, roundEnv);
+        processBind(viewBinders, roundEnv);
         processBindWhens(viewBinders, roundEnv);
         processBindNull(viewBinders, roundEnv);
         writeFiles(viewBinders);
@@ -111,9 +102,9 @@ public class WitchProcessor extends AbstractProcessor {
                         if (!hasViewBinderForProperty(targetMember, targetViewBinders)) {
 
                             int viewId = viewIdAnnotation.getViewId(targetMember);
-                            String propertyName = PropertyUtils.getPropertyName(targetMember);
-                            TypeName viewHolderTypeName = ClassUtils.getBindingViewHolderName(target);
-                            TypeName targetTypeName = ClassUtils.getElementClassName(target);
+                            String propertyName = ProcessorUtils.getPropertyName(targetMember);
+                            TypeName viewHolderTypeName = FileUtils.getBindingViewHolderName(target);
+                            TypeName targetTypeName = FileUtils.getElementClassName(target);
 
                             ViewBinder.Builder builder = new ViewBinder.Builder(targetTypeName)
                                     .setViewId(viewId)
@@ -133,17 +124,22 @@ public class WitchProcessor extends AbstractProcessor {
 
     private void processBindData(Map<Element, List<ViewBinder.Builder>> viewBinders, RoundEnvironment roundEnv) {
         for (Element bindData: roundEnv.getElementsAnnotatedWith(BindData.class)) {
-            ViewBinder.Builder binder = getViewBinderForProperty(bindData, viewBinders);
 
-            // Bind
-            String property = bindData.getAnnotation(BindData.class).set();
-            TypeName viewType = AnnotationUtils.getBindDataViewType(bindData);
-            TypeName valueType = typeUtils.getValueType(bindData);
-            OnBind onBind = new OnBindPropertySetter(property, viewType, valueType);
-            binder.addOnBind(onBind);
+                // Bind
+                String property = bindData.getAnnotation(BindData.class).set();
+                TypeName viewType = getBindDataViewType(bindData);
+                TypeName valueType = typeUtils.getValueType(bindData);
+                OnBind onBind = new OnBindPropertySetter(property, viewType, valueType);
 
-            // Data
-            addGetValue(bindData, viewBinders);
+                try {
+                    ViewBinder.Builder binder = getViewBinderForProperty(bindData, viewBinders);
+                    binder.addOnBind(onBind);
+
+                    // Data
+                    addGetValue(bindData, viewBinders);
+                } catch (WitchException e) {
+                    logger.logWarn(String.format("No target found for %s.",  property));
+                }
         }
     }
 
@@ -155,16 +151,22 @@ public class WitchProcessor extends AbstractProcessor {
 
     private void processBind(Map<Element, List<ViewBinder.Builder>> viewBinders, RoundEnvironment roundEnv) {
         for (Element bind: roundEnv.getElementsAnnotatedWith(Bind.class)) {
-            ViewBinder.Builder viewBinder = getViewBinderForProperty(bind, viewBinders);
-            String propertyName = PropertyUtils.getPropertyName(bind);
-            TypeName targetTypeName = viewBinder.getTargetTypeName();
-            TypeName viewTypeName = typeUtils.getPropertyMethodViewType(bind);
-            TypeName valueTypeName = typeUtils.getPropertyMethodValueType(bind);
-            viewBinder.setGetBinder(new GetMethodBinder(targetTypeName, viewTypeName, valueTypeName, propertyName));
+            String propertyName = ProcessorUtils.getPropertyName(bind);
+            try {
+                ViewBinder.Builder viewBinder = getViewBinderForProperty(bind, viewBinders);
+                TypeName targetTypeName = viewBinder.getTargetTypeName();
+                TypeName[] bindMethodTypes = typeUtils.getBindMethodTypeNames(bind);
+                TypeName viewTypeName = bindMethodTypes[0];
+                TypeName valueTypeName = bindMethodTypes[1];
+                viewBinder.setGetBinder(new GetMethodBinder(targetTypeName, viewTypeName, valueTypeName, propertyName));
+            } catch (WitchException e) {
+                logger.log(e);
+            }
         }
     }
 
     private void processBindWhens(HashMap<Element, List<ViewBinder.Builder>> targetViewBinders, RoundEnvironment roundEnv) {
+        try {
         for (Element bindWhen: roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.BindWhen.class)) {
             String bindWhenValue =  bindWhen.getAnnotation(se.snylt.witch.annotations.BindWhen.class).value();
             switch (bindWhenValue) {
@@ -184,52 +186,68 @@ public class WitchProcessor extends AbstractProcessor {
                 }
             }
         }
+        } catch (WitchException e) {
+
+        }
     }
 
     private void processBindNull(HashMap<Element, List<ViewBinder.Builder>> viewBinders, RoundEnvironment roundEnv) {
+        try {
         for (Element bindWhen: roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.BindNull.class)) {
             ViewBinder.Builder binder = getViewBinderForProperty(bindWhen, viewBinders);
             binder.getIsDirty().setBindNull(true);
         }
+        } catch (WitchException e) {
+
+        }
     }
 
     private void addGetValue(Element data, Map<Element, List<ViewBinder.Builder>> targetViewBinders) {
-        ViewBinder.Builder binder = getViewBinderForProperty(data, targetViewBinders);
-        PropertyAccessor valueAccessor = PropertyUtils.getPropertyAccessor(data);
-        TypeName valueTypeName = typeUtils.getValueType(data);
-        TypeName targetTypeName = binder.getTargetTypeName();
-
-
-        binder.setGetValue(new GetTargetValue(targetTypeName, valueAccessor, valueTypeName));
-
-        /*
-        if(typeUtils.isValueContainer(data)) {
-            binder.setIsDirty(new IsValueDirty(targetTypeName, valueAccessor))
-                    .setGetValue(new GetTargetValueValue(targetTypeName, valueAccessor, valueTypeName));
-        } else {
-
-        }*/
+        try {
+            PropertyAccessor valueAccessor = ProcessorUtils.getPropertyAccessor(data);
+            try {
+                ViewBinder.Builder binder = getViewBinderForProperty(data, targetViewBinders);
+                TypeName valueTypeName = typeUtils.getValueType(data);
+                TypeName targetTypeName = binder.getTargetTypeName();
+                binder.setGetValue(new GetTargetValue(targetTypeName, valueAccessor, valueTypeName));
+            } catch (WitchException e) {
+                logger.log(WitchException.noBindForData(data));
+            }
+        }  catch (WitchException e) {
+            logger.log(e);
+        }
     }
 
-    private ViewBinder.Builder getViewBinderForProperty(Element property, Map<Element, List<ViewBinder.Builder>> targetViewBinders) {
+    private ViewBinder.Builder getViewBinderForProperty(Element property, Map<Element, List<ViewBinder.Builder>> targetViewBinders) throws WitchException {
         Element target = property.getEnclosingElement();
         List<ViewBinder.Builder> viewBinders = targetViewBinders.get(target);
-        String propertyName = PropertyUtils.getPropertyName(property);
+        if(viewBinders == null) {
+            throw new WitchException("Target binder for target " + target.getSimpleName() + " not found");
+        }
+        String propertyName = ProcessorUtils.getPropertyName(property);
         for (ViewBinder.Builder binder: viewBinders) {
             if (binder.getPropertyName().equals(propertyName)) {
                 return binder;
             }
         }
-        return null;
+        throw new WitchException("Target binder for target " + target.getSimpleName() + " not found");
     }
 
     private boolean hasViewBinderForProperty(Element property, Map<Element, List<ViewBinder.Builder>> targetViewBinders) {
-        return getViewBinderForProperty(property, targetViewBinders) != null;
+        try {
+            return getViewBinderForProperty(property, targetViewBinders) != null;
+        } catch (WitchException e) {
+            return false;
+        }
     }
 
     private void writeFiles(HashMap<Element, List<ViewBinder.Builder>> binders) {
         for (Element target : binders.keySet()) {
-            fileWriter.writeTargetViewBinder(target, binders);
+            try {
+                fileWriter.writeTargetViewBinder(target, binders);
+            } catch (WitchException e) {
+                logger.logError(e.getMessage());
+            }
         }
     }
 }

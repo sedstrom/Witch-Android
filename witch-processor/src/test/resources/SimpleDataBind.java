@@ -2,16 +2,13 @@ package com.example.witch.app;
 
 import android.view.View;
 import se.snylt.witch.annotations.Bind;
-import se.snylt.witch.annotations.BindWhen;
 import se.snylt.witch.annotations.Data;
 
-class Test {
+class SimpleDataBind {
 
     @Data
-    String error = "Error";
+    String text = "foo";
 
     @Bind(id = 0)
-    void error(View view, String error) {
-
-    }
+    void text(View view, String text) {}
 }

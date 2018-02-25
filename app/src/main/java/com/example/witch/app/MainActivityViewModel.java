@@ -35,7 +35,7 @@ class MainActivityViewModel {
     }
 
     @Data
-    String error() {
+    private String error() {
         return error;
     }
 

@@ -9,7 +9,7 @@ import javax.lang.model.element.Modifier;
 
 import se.snylt.witch.processor.utils.TypeUtils;
 
-import static se.snylt.witch.processor.utils.PropertyUtils.getPropertySetter;
+import static se.snylt.witch.processor.utils.ProcessorUtils.getPropertySetter;
 
 public class OnOnBindGetAdapterView extends OnBind {
 

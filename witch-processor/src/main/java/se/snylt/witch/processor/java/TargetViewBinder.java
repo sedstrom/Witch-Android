@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
+import se.snylt.witch.processor.WitchException;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
 
 import static se.snylt.witch.processor.utils.TypeUtils.PRINTER;
@@ -39,14 +40,13 @@ public class TargetViewBinder {
         this.viewHolderClassName = viewHolderClassName;
     }
 
-    public TypeSpec create() {
+    public TypeSpec create() throws WitchException {
 
         TypeSpec.Builder targetViewBinderFactory =
                 TypeSpec.classBuilder(targetViewBinderClassName)
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addSuperinterface(TARGET_VIEW_BINDER_FACTORY);
 
-        // TODO
         TypeName targetViewBinderType = ParameterizedTypeName.get(TARGET_VIEW_BINDER, targetTypeName, viewHolderClassName);
         MethodSpec.Builder createBinder = MethodSpec.methodBuilder("createBinder")
                 .addModifiers(Modifier.PUBLIC)

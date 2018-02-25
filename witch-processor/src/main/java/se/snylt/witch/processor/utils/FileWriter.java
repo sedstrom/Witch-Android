@@ -12,6 +12,7 @@ import java.util.List;
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Element;
 
+import se.snylt.witch.processor.WitchException;
 import se.snylt.witch.processor.java.TargetViewBinder;
 import se.snylt.witch.processor.java.ViewHolder;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
@@ -24,11 +25,11 @@ public class FileWriter {
         this.filer = filer;
     }
 
-    public void writeTargetViewBinder(Element target, HashMap<Element, List<ViewBinder.Builder>> targetViewBinders) {
+    public void writeTargetViewBinder(Element target, HashMap<Element, List<ViewBinder.Builder>> targetViewBinders) throws WitchException {
 
-        ClassName viewHolderClassName = ClassUtils.getBindingViewHolderName(target);
+        ClassName viewHolderClassName = FileUtils.getBindingViewHolderName(target);
         TypeSpec viewHolderTypeSpec = new ViewHolder(targetViewBinders.get(target), viewHolderClassName).create();
-        ClassName targetViewBinderClassName = ClassUtils.getTargetViewBinderClassName(target);
+        ClassName targetViewBinderClassName = FileUtils.getTargetViewBinderClassName(target);
         TypeName targetTypeName = TypeName.get(target.asType());
         TypeSpec targetViewBinderTypeSpec = new TargetViewBinder(targetViewBinders.get(target), targetViewBinderClassName, targetTypeName, viewHolderClassName).create();
         JavaFile bindingJavaFile = JavaFile.builder(targetViewBinderClassName.packageName(), targetViewBinderTypeSpec).build();

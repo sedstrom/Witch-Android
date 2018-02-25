@@ -3,6 +3,8 @@ package se.snylt.witch.processor.utils;
 import javax.annotation.processing.Messager;
 import javax.tools.Diagnostic;
 
+import se.snylt.witch.processor.WitchException;
+
 public class Logger {
 
     private final Messager messager;
@@ -23,8 +25,11 @@ public class Logger {
         messager.printMessage(Diagnostic.Kind.WARNING, message);
     }
 
-    public String logError(String message) {
+    public void logError(String message) {
         messager.printMessage(Diagnostic.Kind.ERROR, message);
-        return message;
+    }
+
+    public void log(WitchException e) {
+        logError(e.getMessage());
     }
 }

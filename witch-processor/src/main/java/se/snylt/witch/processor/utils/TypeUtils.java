@@ -11,16 +11,18 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.processor.WitchException;
 
+import static se.snylt.witch.processor.utils.ProcessorUtils.isAccessibleMethod;
+
 public class TypeUtils {
-
-
 
     private final Types types;
 
@@ -73,10 +75,6 @@ public class TypeUtils {
         return className.packageName() + "." + className.simpleName();
     }
 
-    public TypeMirror onBindDeclaredType() {
-        return declared(ON_BIND);
-    }
-
     private TypeMirror declared(ClassName name) {
         return types.getDeclaredType(elements.getTypeElement(asString(name)),
                 types.getWildcardType(null, null),
@@ -96,7 +94,7 @@ public class TypeUtils {
         return isValueContainer(getType(element));
     }
 
-    public TypeMirror getType(Element element) throws WitchException {
+    public TypeMirror getType(Element element) {
         if (element.getKind().isField()) {
             return element.asType();
         } else if (element.getKind() == ElementKind.METHOD) {
@@ -112,13 +110,6 @@ public class TypeUtils {
 
         type = boxed(type);
 
-        // Get generic type if value container
-        /*if(isValueContainer(type)) {
-            DeclaredType declaredType = (DeclaredType) type;
-            TypeMirror genericParameter = declaredType.getTypeArguments().get(0);
-            return TypeName.get(genericParameter);
-        }*/
-
         return TypeName.get(type);
     }
 
@@ -131,12 +122,38 @@ public class TypeUtils {
         return type;
     }
 
-    public TypeName getPropertyMethodViewType(Element element) {
-        if (element.getKind() == ElementKind.METHOD) {
+    public TypeName[] getBindMethodTypeNames(Element bindMethod) throws WitchException {
+
+        if(!isAccessibleMethod(bindMethod)) {
+            throw WitchException.bindMethodNotAccessible(bindMethod);
+        }
+
+        ExecutableType type = (ExecutableType) bindMethod.asType();
+        List<? extends TypeMirror> parameters = type.getParameterTypes();
+        if(parameters.size() != 2) {
+            throw WitchException.bindMethodWrongArgumentCount(bindMethod);
+        }
+
+        // View
+        TypeMirror view = parameters.get(0);
+        if(!types.isSubtype(view, typeMirror(ANDROID_VIEW))) {
+            throw WitchException.bindMethodWrongViewType(bindMethod);
+        }
+
+        // Data
+        TypeMirror data = boxed(parameters.get(1));
+
+        return new TypeName[]{TypeName.get(view), TypeName.get(data)};
+
+    }
+
+    public TypeName getPropertyMethodViewType(Element element){
+        if (element.getKind() == ElementKind.METHOD ) {
             ExecutableType type = (ExecutableType) element.asType();
             return TypeName.get(boxed(type.getParameterTypes().get(0)));
         }
-        throw new WitchException("Element is not a method");
+
+        throw new IllegalArgumentException("Element is not a method");
     }
 
     public TypeName getPropertyMethodValueType(Element element) {
@@ -144,7 +161,18 @@ public class TypeUtils {
             ExecutableType type = (ExecutableType) element.asType();
             return TypeName.get(boxed(type.getParameterTypes().get(1)));
         }
-        throw new WitchException("Element is not a method");
+        throw new IllegalArgumentException("Element is not a method");
+    }
+
+    public static TypeName getBindDataViewType(Element action) {
+        TypeMirror bindClass;
+        try {
+            action.getAnnotation(BindData.class).view();
+            return null;
+        } catch (MirroredTypeException mte) {
+            bindClass = mte.getTypeMirror();
+        }
+        return TypeName.get(bindClass);
     }
 
 }

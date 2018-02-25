@@ -4,6 +4,7 @@ package se.snylt.witch.processor.viewbinder;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import se.snylt.witch.processor.WitchException;
 import se.snylt.witch.processor.binding.OnBind;
 import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 import se.snylt.witch.processor.viewbinder.getbinder.GetBinder;
@@ -115,7 +116,8 @@ public class ViewBinder {
             return isDirty;
         }
 
-        public ViewBinder build() {
+        public ViewBinder build() throws WitchException {
+            validate();
             return new ViewBinder(
                     newInstance(),
                     getView,
@@ -166,6 +168,16 @@ public class ViewBinder {
         public Builder setViewId(int viewId) {
             this.viewId = viewId;
             return this;
+        }
+
+        public void validate() throws WitchException {
+            if (getValue != null && getBinder == null) {
+
+                /*
+                throw new WitchException(String.format("Could not find @Bind for %s",
+                        getValue.getValueAccessor().accessPropertyString()));
+                        */
+            }
         }
     }
 
