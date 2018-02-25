@@ -120,7 +120,7 @@ public class ViewBinder {
             return this;
         }
 
-        public boolean isDirtySet() {
+        public boolean isIsDirtySet() {
             return isDirty != null && isDirty != defaultDirty;
         }
 

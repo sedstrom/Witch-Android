@@ -6,7 +6,6 @@ import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.BindNull;
 import se.snylt.witch.annotations.Data;
-import se.snylt.witch.viewbinder.Value;
 
 class BindNullViewModel {
 

@@ -123,7 +123,7 @@ public class WitchProcessorTest {
     public void errorConflictingBindWhen() {
         Compilation compilation = compile("ErrorConflictingBindWhen.java");
         assertThat(compilation).hadErrorContaining("ErrorConflictingBindWhen");
-        assertThat(compilation).hadErrorContaining("@BindWhen is defined multiple times at text(android.view.View,java.lang.String).");Fars
+        assertThat(compilation).hadErrorContaining("@BindWhen is defined multiple times at text(android.view.View,java.lang.String).");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 

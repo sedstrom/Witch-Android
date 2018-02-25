@@ -193,7 +193,7 @@ public class WitchProcessor extends AbstractProcessor {
                     continue;
                 }
 
-                if (binder.isDirtySet()) {
+                if (binder.isIsDirtySet()) {
                     logger.log(WitchException.conflictingBindWhen(bindWhen));
                     continue;
                 }
@@ -215,7 +215,6 @@ public class WitchProcessor extends AbstractProcessor {
                 logger.logWarn(e.getMessage());
             }
         }
-
     }
 
     private void addGetData(Element data, Map<Element, List<ViewBinder.Builder>> targetViewBinders) {

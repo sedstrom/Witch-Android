@@ -2,7 +2,8 @@ package se.snylt.witchprocessortest.utils;
 
 import android.view.View;
 import java.util.HashMap;
-import se.snylt.witch.viewbinder.TargetViewBinder;
+
+import se.snylt.witchcore.TargetViewBinder;
 import se.snylt.witchcore.viewbinder.ViewBinder;
 import se.snylt.witchcore.viewfinder.ViewFinder;
 import static org.mockito.ArgumentMatchers.eq;
