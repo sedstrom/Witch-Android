@@ -14,13 +14,17 @@ public class WitchException extends Exception {
         return String.format("Error in %s:", child.getEnclosingElement());
     }
 
-    public static WitchException invalidValueAccessor(Element value) {
+    public static WitchException invalidDataAccessor(Element value) {
         return new WitchException(
-                String.format(
-                        "%s %s cannot be annotated with @Data. " +
-                            "Make sure value is a public or protected field or method. " + readMore
-                            , errorForElementParent(value)
-                            , value)
+            String.format(
+                "%s\n"
+                    + "%s is not a valid data accessor.\n"
+                    + "Make sure member is:\n"
+                    + "* Field or method with zero parameters.\n"
+                    + "* Not private.\n"
+                    + readMore
+                    , errorForElementParent(value)
+                    , value)
         );
     }
 

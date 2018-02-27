@@ -1,10 +1,10 @@
 package se.snylt.witch.processor.valueaccessor;
 
-public abstract class PropertyAccessor {
+public abstract class DataAccessor {
 
     final String propertyAccessorName;
 
-    PropertyAccessor(String propertyAccessorName) {
+    DataAccessor(String propertyAccessorName) {
         this.propertyAccessorName = propertyAccessorName;
     }
 
@@ -14,8 +14,8 @@ public abstract class PropertyAccessor {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof PropertyAccessor) {
-            return ((PropertyAccessor) obj).propertyAccessorName.equals(propertyAccessorName);
+        if(obj instanceof DataAccessor) {
+            return ((DataAccessor) obj).propertyAccessorName.equals(propertyAccessorName);
         }
 
         return super.equals(obj);

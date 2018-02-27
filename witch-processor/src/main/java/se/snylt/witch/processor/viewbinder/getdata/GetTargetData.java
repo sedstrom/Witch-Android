@@ -8,7 +8,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
-import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
+import se.snylt.witch.processor.valueaccessor.DataAccessor;
 
 public class GetTargetData implements GetData {
 
@@ -16,13 +16,13 @@ public class GetTargetData implements GetData {
 
     private final TypeName targetTypeName;
 
-    private final PropertyAccessor valueAccessor;
+    private final DataAccessor valueAccessor;
 
     private final TypeName dataTypeName;
 
     private final TypeMirror dataTypeMirror;
 
-    public GetTargetData(Element element, TypeName targetTypeName, PropertyAccessor valueAccessor, TypeName dataTypeName, TypeMirror dataTypeMirror) {
+    public GetTargetData(Element element, TypeName targetTypeName, DataAccessor valueAccessor, TypeName dataTypeName, TypeMirror dataTypeMirror) {
         this.element = element;
         this.targetTypeName = targetTypeName;
         this.valueAccessor = valueAccessor;
@@ -56,7 +56,7 @@ public class GetTargetData implements GetData {
     }
 
     @Override
-    public PropertyAccessor getValueAccessor() {
+    public DataAccessor getValueAccessor() {
         return valueAccessor;
     }
 

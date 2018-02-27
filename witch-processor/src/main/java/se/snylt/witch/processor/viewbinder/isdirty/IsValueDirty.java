@@ -1,16 +1,15 @@
 package se.snylt.witch.processor.viewbinder.isdirty;
 
 
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
-import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
+import se.snylt.witch.processor.valueaccessor.DataAccessor;
 
 public class IsValueDirty extends IsDirty {
 
-    private final PropertyAccessor valueAccessor;
+    private final DataAccessor valueAccessor;
 
-    public IsValueDirty(TypeName targetTypeName, PropertyAccessor valueAccessor) {
+    public IsValueDirty(TypeName targetTypeName, DataAccessor valueAccessor) {
         super(targetTypeName);
         this.valueAccessor = valueAccessor;
     }

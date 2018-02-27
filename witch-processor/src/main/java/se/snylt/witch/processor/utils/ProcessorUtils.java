@@ -15,7 +15,7 @@ import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.processor.WitchException;
 import se.snylt.witch.processor.valueaccessor.FieldAccessor;
 import se.snylt.witch.processor.valueaccessor.MethodAccessor;
-import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
+import se.snylt.witch.processor.valueaccessor.DataAccessor;
 
 import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_VIEW;
 
@@ -44,6 +44,10 @@ public class ProcessorUtils {
         return e.getKind() == ElementKind.METHOD && notPrivateOrProtected(e);
     }
 
+    static boolean isAccessibleMethodWithZeroParameters(Element e) {
+        return isAccessibleMethod(e) && ((ExecutableType) e.asType()).getParameterTypes().isEmpty();
+    }
+
     private static boolean isAccessibleField(Element e) {
         return e.getKind().isField() && notPrivateOrProtected(e);
     }
@@ -52,8 +56,8 @@ public class ProcessorUtils {
         return element.getSimpleName().toString();
     }
 
-    public static PropertyAccessor getPropertyAccessor(Element element) throws WitchException {
-        if (isAccessibleMethod(element)) {
+    public static DataAccessor getDataAccessor(Element element) throws WitchException {
+        if (isAccessibleMethodWithZeroParameters(element)) {
             return new MethodAccessor(element.getSimpleName().toString());
         }
 
@@ -61,7 +65,7 @@ public class ProcessorUtils {
             return new FieldAccessor(element.getSimpleName().toString());
         }
 
-        throw WitchException.invalidValueAccessor(element);
+        throw WitchException.invalidDataAccessor(element);
     }
 
     public TypeName[] getBindMethodTypeNames(Element bindMethod) throws WitchException {

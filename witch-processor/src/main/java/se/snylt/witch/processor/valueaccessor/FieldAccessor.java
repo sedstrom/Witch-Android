@@ -1,6 +1,6 @@
 package se.snylt.witch.processor.valueaccessor;
 
-public class FieldAccessor extends PropertyAccessor {
+public class FieldAccessor extends DataAccessor {
 
     public FieldAccessor(String propertyAccessorName) {
         super(propertyAccessorName);

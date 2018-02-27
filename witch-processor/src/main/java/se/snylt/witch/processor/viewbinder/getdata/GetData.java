@@ -5,7 +5,7 @@ import com.squareup.javapoet.TypeName;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
+import se.snylt.witch.processor.valueaccessor.DataAccessor;
 import se.snylt.witch.processor.viewbinder.MethodSpecModule;
 
 public interface GetData extends MethodSpecModule {
@@ -16,7 +16,7 @@ public interface GetData extends MethodSpecModule {
 
     TypeName getDataTypeName();
 
-    PropertyAccessor getValueAccessor();
+    DataAccessor getValueAccessor();
 
     String describeValue();
 

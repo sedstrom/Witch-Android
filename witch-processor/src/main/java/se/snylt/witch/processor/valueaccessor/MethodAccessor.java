@@ -1,6 +1,6 @@
 package se.snylt.witch.processor.valueaccessor;
 
-public class MethodAccessor extends PropertyAccessor {
+public class MethodAccessor extends DataAccessor {
 
     public MethodAccessor(String propertyAccessorName) {
         super(propertyAccessorName);

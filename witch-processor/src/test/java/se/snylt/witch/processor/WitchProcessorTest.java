@@ -46,23 +46,23 @@ public class WitchProcessorTest {
     }
 
     @Test
-    public void errorDataMethodNotPrivate() {
+    public void errorDataMethodPrivate() {
         Compilation compilation = compile("ErrorDataMethodPrivate.java");
         assertThat(compilation).hadErrorContaining("ErrorDataMethodPrivate");
-        assertThat(compilation).hadErrorContaining("text() cannot be annotated with @Data.");
+        assertThat(compilation).hadErrorContaining("text() is not a valid data accessor");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 
     @Test
-    public void errorDataFieldNotPrivate() {
+    public void errorDataFieldPrivate() {
         Compilation compilation = compile("ErrorDataFieldPrivate.java");
         assertThat(compilation).hadErrorContaining("ErrorDataFieldPrivate");
-        assertThat(compilation).hadErrorContaining("text cannot be annotated with @Data.");
+        assertThat(compilation).hadErrorContaining("text is not a valid data accessor");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 
     @Test
-    public void errorBindMethodNotPrivate() {
+    public void errorBindMethodPrivate() {
         Compilation compilation = compile("ErrorBindMethodPrivate.java");
         assertThat(compilation).hadErrorContaining("ErrorBindMethodPrivate");
         assertThat(compilation).hadErrorContaining("text(android.view.View,java.lang.String) is not accessible.");
@@ -90,6 +90,14 @@ public class WitchProcessorTest {
         Compilation compilation = compile("ErrorIncompatibleDataTypes.java");
         assertThat(compilation).hadErrorContaining("ErrorIncompatibleDataTypes");
         assertThat(compilation).hadErrorContaining("text and text(android.view.View,java.lang.Integer) have incompatible data types.");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+    }
+
+    @Test
+    public void errorDataHasParameters() {
+        Compilation compilation = compile("ErrorDataHasParameters.java");
+        assertThat(compilation).hadErrorContaining("ErrorDataHasParameters");
+        assertThat(compilation).hadErrorContaining("text(java.lang.String) is not a valid data accessor.");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 

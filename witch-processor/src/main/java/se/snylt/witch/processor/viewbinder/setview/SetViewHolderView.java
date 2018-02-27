@@ -7,7 +7,6 @@ import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 
-import se.snylt.witch.processor.valueaccessor.PropertyAccessor;
 import se.snylt.witch.processor.viewbinder.MethodSpecModule;
 
 public class SetViewHolderView implements MethodSpecModule {
