@@ -41,7 +41,7 @@ public class WitchProcessorTest {
     public void errorDataMissingBind() {
         Compilation compilation = compile("ErrorDataMissingBind.java");
         assertThat(compilation).hadErrorContaining("ErrorDataMissingBind");
-        assertThat(compilation).hadErrorContaining("java.lang.String text is missing bind method");
+        assertThat(compilation).hadErrorContaining("java.lang.String text is missing a bind method");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 

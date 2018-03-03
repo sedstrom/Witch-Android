@@ -49,7 +49,7 @@ public class FileUtils {
         return ClassName.get(packageName, className);
     }
 
-    static ClassName getTargetViewBinderClassName(Element target) {
+    public static ClassName getTargetViewBinderClassName(Element target) {
         String className = FileUtils.getBinderName(target);
         String packageName = FileUtils.getElementPackage(target);
         return ClassName.get(packageName, className);

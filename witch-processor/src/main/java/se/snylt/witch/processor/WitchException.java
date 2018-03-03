@@ -10,7 +10,7 @@ public class WitchException extends Exception {
 
     private final static String readMore = "Read more at: https://sedstrom.github.io/Witch-Android/";
 
-    WitchException(String message) {
+    public WitchException(String message) {
         super(message);
     }
 
