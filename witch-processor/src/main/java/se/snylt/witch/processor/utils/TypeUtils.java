@@ -10,16 +10,10 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.ExecutableType;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-
-import se.snylt.witch.annotations.BindData;
-import se.snylt.witch.processor.WitchException;
-
-import static se.snylt.witch.processor.utils.ProcessorUtils.isAccessibleMethod;
 
 public class TypeUtils {
 
@@ -44,8 +38,6 @@ public class TypeUtils {
     public static final TypeName ARRAY_LIST = TypeName.get(ArrayList.class);
 
     public final static ClassName VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "ViewBinder");
-
-    public final static TypeName VALUE = ClassName.get(LIBRARY_PACKAGE, "Value");
 
     public final static TypeName DIFF_VALUE = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue");
 
@@ -78,7 +70,7 @@ public class TypeUtils {
         return types.getDeclaredType(elements.getTypeElement(typeName.toString()));
     }
 
-    public TypeMirror getReturnTypeMirror(Element element) {
+    public TypeMirror getBoxedReturnTypeMirror(Element element) {
         if (element.getKind().isField()) {
             return boxed(element.asType());
         } else if (element.getKind() == ElementKind.METHOD) {
@@ -88,8 +80,18 @@ public class TypeUtils {
         return null;
     }
 
+    public static String getReturnTypeDescription(Element element) {
+        if (element.getKind().isField()) {
+            return element.asType().toString();
+        } else if (element.getKind() == ElementKind.METHOD) {
+            ExecutableType ext = (ExecutableType) element.asType();
+            return ext.getReturnType().toString();
+        }
+        return "";
+    }
+
     public TypeName getReturnTypeName(Element element) {
-        return TypeName.get(getReturnTypeMirror(element));
+        return TypeName.get(getBoxedReturnTypeMirror(element));
     }
 
     TypeMirror boxed(TypeMirror type) {

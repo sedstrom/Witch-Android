@@ -2,6 +2,10 @@ package se.snylt.witch.processor;
 
 import javax.lang.model.element.Element;
 
+import se.snylt.witch.annotations.BindWhen;
+
+import static se.snylt.witch.processor.utils.TypeUtils.getReturnTypeDescription;
+
 public class WitchException extends Exception {
 
     private final static String readMore = "Read more at: https://sedstrom.github.io/Witch-Android/";
@@ -11,7 +15,13 @@ public class WitchException extends Exception {
     }
 
     private static String errorForElementParent(Element child) {
-        return String.format("Error in %s:", child.getEnclosingElement());
+        return String.format("Witch error in %s:\n", child.getEnclosingElement());
+    }
+
+    private static String withReturnType(Element child) {
+        String returnType = getReturnTypeDescription(child);
+        String childName = child.toString();
+        return String.format("%s %s", returnType, childName);
     }
 
     public static WitchException invalidDataAccessor(Element value) {
@@ -19,12 +29,14 @@ public class WitchException extends Exception {
             String.format(
                 "%s\n"
                     + "%s is not a valid data accessor.\n"
-                    + "Make sure member is:\n"
-                    + "* Field or method with zero parameters.\n"
-                    + "* Not private.\n"
+                    + "Make sure accessor conforms to:\n"
+                    + "- Is field or method\n"
+                    + "- Is not private nor protected\n"
+                    + "- Has no parameters\n"
+                    + "- Has a non-void return type\n"
                     + readMore
                     , errorForElementParent(value)
-                    , value)
+                    , withReturnType(value))
         );
     }
 
@@ -32,18 +44,18 @@ public class WitchException extends Exception {
         return new WitchException(
                 String.format(
                         "%s %s is not accessible. " +
-                                "Make sure method is not private. " + readMore
+                                "Make sure bind method is not private nor protected. " + readMore
                         , errorForElementParent(method)
-                        , method)
+                        , withReturnType(method))
         );
     }
 
     static WitchException noBindForData(Element data) {
         return new WitchException(
                 String.format(
-                        "%s Missing @Bind for @Data %s. " + readMore
+                        "%s %s is missing a bind method. " + readMore
                         , errorForElementParent(data)
-                        , data)
+                        , withReturnType(data))
         );
     }
 
@@ -52,7 +64,7 @@ public class WitchException extends Exception {
                 String.format(
                         "%s %s has wrong number of parameters. " + readMore
                         , errorForElementParent(bindMethod)
-                        , bindMethod)
+                        , withReturnType(bindMethod))
         );
     }
 
@@ -61,36 +73,43 @@ public class WitchException extends Exception {
                 String.format(
                         "%s %s has invalid view type. " + readMore
                         , errorForElementParent(bindMethod)
-                        , bindMethod)
+                        , withReturnType(bindMethod))
         );
     }
 
     public static WitchException incompatibleDataTypes(Element data, Element bindMethod) {
         return new WitchException(
                 String.format(
-                        "%s %s and %s have incompatible data types. " + readMore
+                        "%s%s\nis invalid bind method for:\n%s.\nData types are incompatible. " + readMore
                         , errorForElementParent(bindMethod)
-                        , data
-                        , bindMethod)
+                        , withReturnType(bindMethod)
+                        , withReturnType(data))
         );
     }
 
     static WitchException invalidBindWhenValue(Element bindWhen, String bindWhenValue) {
         return new WitchException(
                 String.format(
-                        "%s %s has invalid value \"%s\" for @BindWhen. " + readMore
+                        "%s %s has invalid value \"%s\" for @BindWhen.\nValid values are:\n%s\n%s\n%s\nFarsa" + readMore
                         , errorForElementParent(bindWhen)
                         , bindWhen
-                        , bindWhenValue)
+                        , bindWhenValue
+                        , "BindWhen.NOT_SAME"
+                        , "BindWhen.NOT_EQUALS"
+                        , "BindWhen.ALWAYS")
         );
     }
 
     public static WitchException conflictingBindWhen(Element element) {
         return new WitchException(
                 String.format(
-                        "%s @BindWhen is defined multiple times at %s. " + readMore
+                        "%s @BindWhen is defined multiple times for %s. " + readMore
                         , errorForElementParent(element)
-                        , element)
+                        , withReturnType(element))
         );
+    }
+
+    WitchRuntimeException toRuntimeException() {
+        return new WitchRuntimeException(getMessage());
     }
 }

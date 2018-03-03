@@ -52,6 +52,8 @@ import se.snylt.witch.processor.viewbinder.setview.SetViewHolderView;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class WitchProcessor extends AbstractProcessor {
 
+    private final boolean throwOnError;
+
     private TypeUtils typeUtils;
 
     private ProcessorUtils processorUtils;
@@ -59,6 +61,14 @@ public class WitchProcessor extends AbstractProcessor {
     private FileWriter fileWriter;
 
     private Logger logger;
+
+    public WitchProcessor() {
+        this(true);
+    }
+
+    WitchProcessor(boolean throwOnError) {
+        this.throwOnError = throwOnError;
+    }
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -82,7 +92,9 @@ public class WitchProcessor extends AbstractProcessor {
             writeFiles(viewBinders);
         } catch (WitchException e) {
             logger.log(e);
-            return false;
+            if(throwOnError) {
+                throw e.toRuntimeException();
+            }
         }
         return true;
     }
@@ -133,7 +145,7 @@ public class WitchProcessor extends AbstractProcessor {
 
             // Bind
             String property = bindData.getAnnotation(BindData.class).set();
-            TypeMirror dataTypeMirror = typeUtils.getReturnTypeMirror(bindData);
+            TypeMirror dataTypeMirror = typeUtils.getBoxedReturnTypeMirror(bindData);
             TypeName viewTypeName = processorUtils.getBindDataViewTypeName(bindData);
             TypeName dataTypeName = typeUtils.getReturnTypeName(bindData);
             GetBindDataBinder getBinder = new GetBindDataBinder(bindData, binder.getTargetTypeName(), property, viewTypeName, dataTypeName, dataTypeMirror);
@@ -185,13 +197,11 @@ public class WitchProcessor extends AbstractProcessor {
             }
 
             if (isDirty == null) {
-                logger.log(WitchException.invalidBindWhenValue(bindWhen, bindWhenValue));
-                continue;
+                throw WitchException.invalidBindWhenValue(bindWhen, bindWhenValue);
             }
 
             if (binder.isIsDirtySet()) {
-                logger.log(WitchException.conflictingBindWhen(bindWhen));
-                continue;
+                throw WitchException.conflictingBindWhen(bindWhen);
             }
 
             binder.setIsDirty(isDirty);
@@ -207,7 +217,7 @@ public class WitchProcessor extends AbstractProcessor {
 
     private void addGetData(Element data, Map<Element, List<ViewBinder.Builder>> targetViewBinders) throws WitchException {
         DataAccessor valueAccessor = ProcessorUtils.getDataAccessor(data);
-        TypeMirror dataTypeMirror = typeUtils.getReturnTypeMirror(data);
+        TypeMirror dataTypeMirror = typeUtils.getBoxedReturnTypeMirror(data);
         TypeName dataTypeName = typeUtils.getReturnTypeName(data);
 
         if(!hasViewBinderForMember(data, targetViewBinders)) {
@@ -242,26 +252,15 @@ public class WitchProcessor extends AbstractProcessor {
         }
     }
 
-    private void writeFiles(HashMap<Element, List<ViewBinder.Builder>> binders) {
+    private void writeFiles(HashMap<Element, List<ViewBinder.Builder>> binders) throws WitchException {
         for (Element target : binders.keySet()) {
 
             // Validate
             for (ViewBinder.Builder builder : binders.get(target)) {
-                try {
-                    builder.validate(typeUtils);
-                } catch (WitchException e) {
-                    logger.log(e);
-                    return;
-                }
+                builder.validate(typeUtils);
             }
 
-            try {
-                fileWriter.writeTargetViewBinder(target, binders);
-            } catch (WitchException e) {
-                logger.log(e);
-            } catch (Exception e) {
-                // TODO
-            }
+            fileWriter.writeTargetViewBinder(target, binders);
         }
     }
 }

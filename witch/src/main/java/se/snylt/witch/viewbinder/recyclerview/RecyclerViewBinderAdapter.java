@@ -43,10 +43,10 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
         return new EmptyViewHolder(inflater.inflate(viewType, viewGroup, false));
     }
 
-    private Binder<? extends Item> getBinder(Item item) {
+    private Binder<Item> getBinder(Item item) {
         for(Binder<? extends Item> binder: binders) {
             if(binder.bindsItem(item)) {
-                return binder;
+                return (Binder<Item>)binder;
             }
         }
         String itemType = item.getClass().getSimpleName();
@@ -134,8 +134,8 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
          * @param item item to be bound
          * @return Binder ready to bind {@param item}
          */
-        Binder take(Object item) {
-            this.item = (Item) item;
+        Binder take(Item item) {
+            this.item = item;
             return this;
         }
 
