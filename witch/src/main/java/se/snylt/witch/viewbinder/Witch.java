@@ -52,10 +52,10 @@ public class Witch {
     }
 
     /**
-     * Bind annotated values in {@code target} to views in {@code activity}
+     * Bind annotated values in {@code binder} to views in {@code activity}
      *
      * @param target view model
-     * @param activity activity containing views specified in {@code target}
+     * @param activity activity containing views specified in {@code binder}
      */
     public static void bind(Object target, Activity activity) {
         bind(target, viewFinder(activity));
@@ -69,24 +69,24 @@ public class Witch {
     }
 
     /**
-     * Bind annotated values in {@code target} to views in {@code view}
+     * Bind annotated values in {@code binder} to views in {@code view}
      *
      * @param target view model
-     * @param view view containing child-views specified in {@code target}
+     * @param view view containing child-views specified in {@code binder}
      */
     public static void bind(Object target, View view) {
         bind(target, viewFinder(view));
     }
 
-    private static ViewFinder viewFinder(Activity activity) {
+    static ViewFinder viewFinder(Activity activity) {
         return ViewViewFinder.from(activity.findViewById(android.R.id.content), VIEW_HOLDER_TAG_DEFAULT);
     }
 
-    private static ViewFinder viewFinder(View view) {
+    static ViewFinder viewFinder(View view) {
         return ViewViewFinder.from(view, VIEW_HOLDER_TAG_DEFAULT);
     }
 
-    private static void bind(Object target, ViewFinder viewFinder) {
+    static void bind(Object target, ViewFinder viewFinder) {
         assertMainThread();
         witch().doBind(target, viewFinder);
     }

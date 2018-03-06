@@ -7,7 +7,7 @@ import javax.lang.model.element.Element;
 /**
  *
  * Vision:
- * class ViewState {
+ * class ViewBinder {
 
     @BindData(id = R.id.name, view = View.class, set = “description”)
     String name = “Simon”;

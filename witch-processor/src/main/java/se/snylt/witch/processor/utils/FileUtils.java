@@ -14,6 +14,8 @@ public class FileUtils {
 
     private final static String VIEW_BINDER_SUFFIX = "_ViewBinder";
 
+    private final static String MAGIC_VIEW_BINDER_PREFIX = "Magic";
+
     private final static char NOT_A_DOT = '$';
 
     private final static char DOT = '.';
@@ -53,6 +55,12 @@ public class FileUtils {
         String className = FileUtils.getBinderName(target);
         String packageName = FileUtils.getElementPackage(target);
         return ClassName.get(packageName, className);
+    }
+
+    public static ClassName getMagicTargetViewBinderClassName(Element target) {
+        String className = MAGIC_VIEW_BINDER_PREFIX + target.getSimpleName().toString();
+        String packageName = FileUtils.getElementPackage(target);
+        return ClassName.get(packageName,className);
     }
 
     public static ClassName getElementClassName(Element target) {

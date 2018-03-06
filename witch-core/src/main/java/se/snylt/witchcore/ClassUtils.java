@@ -1,6 +1,6 @@
 package se.snylt.witchcore;
 
-public class ClassUtils {
+class ClassUtils {
 
     private final static String VIEW_HOLDER_SUFFIX = "_ViewHolder";
 

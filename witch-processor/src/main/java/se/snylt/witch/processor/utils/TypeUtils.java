@@ -23,15 +23,13 @@ public class TypeUtils {
 
     public static final TypeName STRING = ClassName.bestGuess("String");
 
-    public static final TypeName HASH_MAP_STRINGS = ParameterizedTypeName.get(ClassName.get("java.util","HashMap"), STRING, STRING);
-
     private final static String LIBRARY_PACKAGE = "se.snylt.witchcore";
+
+    private final static String ANDROID_LIBRARY_PACKAGE = "se.snylt.witch.viewbinder";
 
     private final static String LIBRARY_VIEW_BINDER_PACKAGE = "se.snylt.witchcore.viewbinder";
 
     private final static String LIBRARY_BIND_ACTIONS_PACKAGE = "se.snylt.witchcore.bindaction";
-
-    public static final ClassName PRINTER = ClassName.get(LIBRARY_PACKAGE, "TargetPrinter");
 
     public static final ClassName LIST = ClassName.get(List.class);
 
@@ -43,13 +41,15 @@ public class TypeUtils {
 
     public static final ClassName TARGET_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinder");
 
+    public static final ClassName MAGIC_TARGET_VIEW_BINDER = ClassName.get(ANDROID_LIBRARY_PACKAGE, "MagicTargetViewBinder");
+
     public final static TypeName TARGET_VIEW_BINDER_FACTORY = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinderFactory");
 
     public final static TypeName BINDER = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "Binder");
 
     public static final TypeName ANDROID_VIEW = ClassName.get("android.view", "View");
 
-    public static final ClassName ON_BIND = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "OnBind");
+    public static final TypeName ANDROID_ACTIVITY = ClassName.get("android.app", "Activity");
 
     public static final ClassName SYNC_ON_BIND = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "SyncOnBind");
 

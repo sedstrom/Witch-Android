@@ -276,6 +276,7 @@ public class WitchProcessor extends AbstractProcessor {
             try {
                 target.createBinderFactoryJavaFile(typeUtils).writeTo(filer);
                 target.createViewHolderJavaFile().writeTo(filer);
+                target.createMagicTargetViewBinderJavaFile().writeTo(filer);
             } catch (IOException e) {
                 logger.logError(e.getMessage());
             }
