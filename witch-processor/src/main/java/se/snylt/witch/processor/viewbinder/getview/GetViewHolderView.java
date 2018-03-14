@@ -1,23 +1,21 @@
 package se.snylt.witch.processor.viewbinder.getview;
 
-
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
-
 import javax.lang.model.element.Modifier;
 
 import se.snylt.witch.processor.viewbinder.MethodSpecModule;
 
 public class GetViewHolderView implements MethodSpecModule {
 
-    private final TypeName viewTypeName = ClassName.get("android.view", "View");
+    private final TypeName viewTypeName;
 
     private final TypeName viewHolderTypeName;
 
     private final String propertyName;
 
-    public GetViewHolderView(TypeName viewHolderTypeName, String propertyName) {
+    public GetViewHolderView(TypeName viewTypeName, TypeName viewHolderTypeName, String propertyName) {
+        this.viewTypeName = viewTypeName;
         this.viewHolderTypeName = viewHolderTypeName;
         this.propertyName = propertyName;
     }

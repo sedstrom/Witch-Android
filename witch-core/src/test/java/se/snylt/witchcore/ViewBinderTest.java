@@ -10,16 +10,17 @@ import org.mockito.MockitoAnnotations;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import se.snylt.witchcore.bindaction.Binder;
 import se.snylt.witchcore.viewbinder.ViewBinder;
 import se.snylt.witchcore.viewfinder.ViewFinder;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.TestCase.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -37,9 +38,6 @@ public class ViewBinderTest {
     @Mock
     Object bindView;
 
-    @Mock
-    Binder<Object, String> binder;
-
     private TestViewBinder viewBinder;
 
     private TestViewHolder viewHolder;
@@ -56,14 +54,15 @@ public class ViewBinderTest {
         viewFinder = spy(new TestViewFinder(rootView));
         viewFinder.childView(VIEW_ID, bindView);
         viewHolder = spy(new TestViewHolder());
-        viewBinder = spy(new TestViewBinder(VIEW_ID, binder));
+        viewBinder = spy(new TestViewBinder(VIEW_ID));
     }
 
     @Test
-    public void bind_Should_InOrder_FindViewInViewFinder_SetViewInViewHolder_GetValueFromTarget_RunBindWithValueAndView(){
-        InOrder inOrder = Mockito.inOrder(viewBinder, viewFinder, binder);
+    public void bind_Should_InOrder_FindViewInViewFinder_SetViewInViewHolder_GetValueFromTarget_RunBindWithTargetValueHistoryValueAndView(){
+        InOrder inOrder = Mockito.inOrder(viewBinder, viewFinder);
 
-        viewBinder.setValue("123");
+        Object value = new Object();
+        viewBinder.setValue(value);
 
         // When
         viewBinder.bind(viewHolder, viewFinder, target);
@@ -72,18 +71,19 @@ public class ViewBinderTest {
         inOrder.verify(viewFinder).findViewById(eq(VIEW_ID));
         inOrder.verify(viewBinder).setView(same(viewHolder), same(bindView));
         inOrder.verify(viewBinder).getValue(same(target));
-        inOrder.verify(binder).bind(same(bindView), eq("123"));
+        inOrder.verify(viewBinder).bind(same(target), same(bindView), same(value), isNull());
     }
 
     @Test
     public void bind_When_FirstValue_Should_RunBindWithValueAndView() {
-        viewBinder.setValue("123");
+        Object value = new Object();
+        viewBinder.setValue(value);
 
         // When
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
-        verify(binder).bind(same(bindView), eq("123"));
+        verify(viewBinder).bind(same(target), same(bindView), same(value), isNull());
     }
 
 
@@ -95,7 +95,7 @@ public class ViewBinderTest {
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
-        verify(binder, never()).bind(any(Object.class), anyString());
+        verify(viewBinder, never()).bind(any(Object.class), any(Object.class), anyString(), anyString());
         assertFalse(viewBinder.getHistoryValue().equals("123"));
     }
 
@@ -103,12 +103,31 @@ public class ViewBinderTest {
     public void bind_When_ValueDirty_Should_Bind_SaveHistoryValue() {
         // When
         when(viewBinder.isDirty(any(Object.class))).thenReturn(true);
-        viewBinder.setValue("123");
+        Object value = new Object();
+        viewBinder.setValue(value);
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
-        verify(binder).bind(any(Object.class), eq("123"));
-        assertEquals(viewBinder.getHistoryValue(), "123");
+        verify(viewBinder).bind(same(target), same(bindView), same(value), isNull());
+        assertSame(viewBinder.getHistoryValue(), value);
+    }
+
+    @Test
+    public void bindTwice_Should_BindWithHistoryNull_Then_HistoryValue() {
+        InOrder inOrder = Mockito.inOrder(viewBinder);
+        Object first = new Object();
+        Object second = new Object();
+
+        // When
+        when(viewBinder.isDirty(any(Object.class))).thenReturn(true);
+        viewBinder.setValue(first);
+        viewBinder.bind(viewHolder, viewFinder, target);
+        viewBinder.setValue(second);
+        viewBinder.bind(viewHolder, viewFinder, target);
+
+        // Then
+        inOrder.verify(viewBinder).bind(same(target), same(bindView), same(first), isNull());
+        inOrder.verify(viewBinder).bind(same(target), same(bindView), same(second), same(first));
     }
 
     @Test
@@ -124,18 +143,6 @@ public class ViewBinderTest {
         // Then
         verify(viewHolder, never()).setView(any(Object.class));
         verify(viewFinder, never()).findViewById(anyInt());
-    }
-
-    @Test
-    public void bind_Twice_Should_AskForBinderTwice(){
-        viewBinder.setValue("123");
-
-        // When
-        viewBinder.bind(viewHolder, viewFinder, target);
-        viewBinder.bind(viewHolder, viewFinder, target);
-
-        // Then
-        assertEquals(2, viewBinder.getBinderCall.get());
     }
 
     private class TestViewHolder {
@@ -156,18 +163,18 @@ public class ViewBinderTest {
 
         private Object value;
 
-        AtomicInteger getBinderCall = new AtomicInteger();
-
-        private Binder binder;
-
-        TestViewBinder(int viewId, Binder binder) {
+        TestViewBinder(int viewId) {
             super(viewId);
-            this.binder = binder;
         }
 
         @Override
         public boolean isDirty(Object target) {
             return true;
+        }
+
+        @Override
+        public void bind(Object o, Object o2, Object o3, Object historyValue) {
+
         }
 
         @Override
@@ -187,11 +194,6 @@ public class ViewBinderTest {
         @Override
         public Object getView(Object viewHolder) {
             return ((TestViewHolder)viewHolder).getView();
-        }
-        @Override
-        public Binder getBinder(Object value) {
-            getBinderCall.incrementAndGet();
-            return binder;
         }
 
         public Object getHistoryValue() {

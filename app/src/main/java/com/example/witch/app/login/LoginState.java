@@ -7,15 +7,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Login {
+class LoginState {
 
-    private static final Pattern VALID_EMAIL_ADDRESS_REGEX
-            = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     private LoginChanged loginChanged;
 
     public interface LoginChanged {
-        void onChanged(Login login);
+        void onChanged(LoginState loginState);
     }
 
     private String emailAddress = null;
@@ -28,7 +27,7 @@ class Login {
 
     private boolean loggedIn = false;
 
-    Login(LoginChanged loginChanged) {
+    LoginState(LoginChanged loginChanged) {
         this.loginChanged = loginChanged;
         validate();
     }

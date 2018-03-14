@@ -30,9 +30,9 @@ class SupportedAnnotations {
         Class<? extends Annotation> getClazz();
     }
 
-    // BindData
+    // BindTargetMethod
     public final static class BindData implements HasViewId {
-        final static String name = "se.snylt.witch.annotations.BindData";
+        final static String name = "se.snylt.witch.annotations.BindTargetMethod";
 
         @Override
         public Integer getViewId(Element element) {

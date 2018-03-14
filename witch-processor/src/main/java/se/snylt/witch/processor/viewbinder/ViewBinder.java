@@ -4,13 +4,12 @@ package se.snylt.witch.processor.viewbinder;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.lang.model.element.Element;
 
 import se.snylt.witch.processor.WitchException;
 import se.snylt.witch.processor.utils.TypeUtils;
-import se.snylt.witch.processor.viewbinder.getbinder.GetBinder;
-import se.snylt.witch.processor.viewbinder.getbinder.GetTargetMethodBinder;
+import se.snylt.witch.processor.viewbinder.bind.Bind;
+import se.snylt.witch.processor.viewbinder.bind.BindTargetMethod;
 import se.snylt.witch.processor.viewbinder.getdata.GetData;
 import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
@@ -27,23 +26,23 @@ public class ViewBinder {
 
     private final GetData getData;
 
-    private final MethodSpecModule getBinder;
-
     private final MethodSpecModule isDirty;
+
+    private final MethodSpecModule bind;
 
     ViewBinder(
             TypeSpecModule newInstance,
             MethodSpecModule getView,
             MethodSpecModule setView,
             GetData getData,
-            MethodSpecModule getBinder,
-            MethodSpecModule isDirty) {
+            MethodSpecModule isDirty,
+            MethodSpecModule bind) {
         this.newInstance = newInstance;
         this.getView = getView;
         this.setView = setView;
         this.getData = getData;
-        this.getBinder = getBinder;
         this.isDirty = isDirty;
+        this.bind = bind;
     }
 
     public TypeSpec newInstance() {
@@ -51,8 +50,8 @@ public class ViewBinder {
                 .addMethod(getView.create())
                 .addMethod(setView.create())
                 .addMethod(getData.create())
-                .addMethod(getBinder.create())
                 .addMethod(isDirty.create())
+                .addMethod(bind.create())
                 .build();
     }
 
@@ -76,7 +75,7 @@ public class ViewBinder {
 
         private GetData getData;
 
-        private GetBinder getBinder;
+        private Bind bind;
 
         private IsDirty isDirty;
 
@@ -84,7 +83,10 @@ public class ViewBinder {
 
         private TypeName targetTypeName;
 
-        public Builder(TypeName targetTypeName) {
+        private Element target;
+
+        public Builder(Element target, TypeName targetTypeName) {
+            this.target = target;
             this.targetTypeName = targetTypeName;
             isDirty = new IsDirtyIfNotEquals(targetTypeName);
             defaultDirty = isDirty;
@@ -110,13 +112,13 @@ public class ViewBinder {
             return this;
         }
 
-        public Builder setGetBinder(GetBinder getBinder) {
-            this.getBinder = getBinder;
+        public Builder setIsDirty(IsDirty isDirty) {
+            this.isDirty = isDirty;
             return this;
         }
 
-        public Builder setIsDirty(IsDirty isDirty) {
-            this.isDirty = isDirty;
+        public Builder setBind(Bind bind) {
+            this.bind = bind;
             return this;
         }
 
@@ -134,17 +136,17 @@ public class ViewBinder {
                     getView,
                     setView,
                     getData,
-                    getBinder,
-                    isDirty);
+                    isDirty,
+                    bind);
         }
 
         private TypeSpecModule newInstance() {
             return new NewViewBinderInstance(
-                viewId,
+                    viewId,
                     getView.getViewTypeName(),
                     getView.getViewHolderTypeName(),
                     targetTypeName,
-                    getData.getDataTypeName()
+                    bind.getDataTypeName()
             );
         }
 
@@ -179,11 +181,19 @@ public class ViewBinder {
 
         public void validate(TypeUtils typeUtils) throws WitchException {
             // Incompatible data types
-            if (getData != null && getBinder != null && getBinder instanceof GetTargetMethodBinder) {
-                if (!typeUtils.types().isAssignable(getData.getDataTypeMirror(), getBinder.getDataTypeMirror())) {
-                    throw WitchException.incompatibleDataTypes(getData.getElement(), getBinder.getElement());
+            if (getData != null && bind != null && bind instanceof BindTargetMethod) {
+                if (!typeUtils.types().isAssignable(getData.getDataTypeMirror(), bind.getDataTypeMirror())) {
+                    throw WitchException.incompatibleDataTypes(getData.getElement(), bind.getElement());
                 }
             }
+        }
+
+        public Element getTarget() {
+            return target;
+        }
+
+        public GetViewHolderView getGetView() {
+            return getView;
         }
     }
 

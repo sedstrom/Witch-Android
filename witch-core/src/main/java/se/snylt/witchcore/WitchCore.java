@@ -12,8 +12,6 @@ public class WitchCore {
 
     private final BinderFactory binderFactory;
 
-
-
     public WitchCore(ViewHolderFactory viewHolderFactory, BinderFactory binderFactory, Logger logger) {
         this.viewHolderFactory = viewHolderFactory;
         this.binderFactory = binderFactory;

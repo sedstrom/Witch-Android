@@ -32,8 +32,8 @@ import se.snylt.witch.processor.utils.TypeUtils;
 import se.snylt.witch.processor.valueaccessor.DataAccessor;
 import se.snylt.witch.processor.viewbinder.TargetViewBinder;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
-import se.snylt.witch.processor.viewbinder.getbinder.GetBindDataBinder;
-import se.snylt.witch.processor.viewbinder.getbinder.GetTargetMethodBinder;
+import se.snylt.witch.processor.viewbinder.bind.BindBindData;
+import se.snylt.witch.processor.viewbinder.bind.BindTargetMethod;
 import se.snylt.witch.processor.viewbinder.getdata.GetTargetData;
 import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
@@ -134,14 +134,10 @@ public class WitchProcessor extends AbstractProcessor {
                             // TODO some values this is already in TargetViewBinder
                             int viewId = viewIdAnnotation.getViewId(targetMember);
                             String propertyName = ProcessorUtils.getPropertyName(targetMember);
-                            TypeName viewHolderTypeName = FileUtils.getBindingViewHolderName(target.getElement());
                             TypeName targetTypeName = FileUtils.getElementClassName(target.getElement());
-
-                            ViewBinder.Builder builder = new ViewBinder.Builder(targetTypeName)
+                            ViewBinder.Builder builder = new ViewBinder.Builder(target.getElement(), targetTypeName)
                                     .setViewId(viewId)
-                                    .setPropertyName(propertyName)
-                                    .setGetView(new GetViewHolderView(viewHolderTypeName, propertyName))
-                                    .setSetView(new SetViewHolderView(viewHolderTypeName, propertyName));
+                                    .setPropertyName(propertyName);
 
                             target.addViewBinder(builder);
                         }
@@ -156,12 +152,21 @@ public class WitchProcessor extends AbstractProcessor {
             ViewBinder.Builder binder = getViewBinder(bindData);
 
             // Bind
+            TypeName targetTypeName = binder.getTargetTypeName();
             String property = bindData.getAnnotation(BindData.class).set();
             TypeMirror dataTypeMirror = typeUtils.getBoxedReturnTypeMirror(bindData);
             TypeName viewTypeName = processorUtils.getBindDataViewTypeName(bindData);
             TypeName dataTypeName = typeUtils.getReturnTypeName(bindData);
-            GetBindDataBinder getBinder = new GetBindDataBinder(bindData, binder.getTargetTypeName(), property, viewTypeName, dataTypeName, dataTypeMirror);
-            binder.setGetBinder(getBinder);
+            BindBindData bind = new BindBindData(property, targetTypeName, viewTypeName, dataTypeName, dataTypeMirror);
+            binder.setBind(bind);
+
+            // Get view
+            String propertyName = ProcessorUtils.getPropertyName(bindData);
+            TypeName viewHolderTypeName = FileUtils.getBindingViewHolderName(binder.getTarget());
+            binder.setGetView(new GetViewHolderView(viewTypeName, viewHolderTypeName, propertyName));
+
+            // Set view
+            binder.setSetView(new SetViewHolderView(viewTypeName, viewHolderTypeName, propertyName));
 
             // Data
             addGetData(bindData);
@@ -176,6 +181,8 @@ public class WitchProcessor extends AbstractProcessor {
 
     private void processBind() throws WitchException {
         for (Element bind: roundEnv.getElementsAnnotatedWith(Bind.class)) {
+
+            // Bind
             String propertyName = ProcessorUtils.getPropertyName(bind);
             ViewBinder.Builder viewBinder = getViewBinder(bind);
             TypeName targetTypeName = viewBinder.getTargetTypeName();
@@ -184,7 +191,14 @@ public class WitchProcessor extends AbstractProcessor {
             TypeName viewTypeName = bindMethodTypes[0];
             TypeName dataTypeName = bindMethodTypes[1];
             TypeMirror dataTypeMirror = bindMethodTypeMirrors[1];
-            viewBinder.setGetBinder(new GetTargetMethodBinder(bind, targetTypeName, viewTypeName, dataTypeName, dataTypeMirror, propertyName));
+            viewBinder.setBind(new BindTargetMethod(bind, targetTypeName, viewTypeName, dataTypeName, dataTypeMirror, propertyName));
+
+            // Get view
+            TypeName viewHolderTypeName = FileUtils.getBindingViewHolderName(viewBinder.getTarget());
+            viewBinder.setGetView(new GetViewHolderView(viewTypeName, viewHolderTypeName, propertyName));
+
+            // Set view
+            viewBinder.setSetView(new SetViewHolderView(viewTypeName, viewHolderTypeName, propertyName));
         }
     }
 
@@ -276,7 +290,6 @@ public class WitchProcessor extends AbstractProcessor {
             try {
                 target.createBinderFactoryJavaFile(typeUtils).writeTo(filer);
                 target.createViewHolderJavaFile().writeTo(filer);
-                target.createMagicTargetViewBinderJavaFile().writeTo(filer);
             } catch (IOException e) {
                 logger.logError(e.getMessage());
             }

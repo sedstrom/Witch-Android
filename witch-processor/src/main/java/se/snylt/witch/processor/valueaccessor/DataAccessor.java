@@ -10,6 +10,7 @@ public abstract class DataAccessor {
 
     public abstract String accessPropertyString();
 
+    // TODO remove
     public abstract String viewHolderFieldName();
 
     @Override

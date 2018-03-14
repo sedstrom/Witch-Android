@@ -1,7 +1,6 @@
 package se.snylt.witch.processor.viewbinder.setview;
 
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
@@ -11,13 +10,14 @@ import se.snylt.witch.processor.viewbinder.MethodSpecModule;
 
 public class SetViewHolderView implements MethodSpecModule {
 
-    private final TypeName viewTypeName = ClassName.get("android.view", "View");
+    private final TypeName viewTypeName;
 
     private final TypeName viewHolderTypeName;
 
     private final String propertyName;
 
-    public SetViewHolderView(TypeName viewHolderTypeName, String propertyName) {
+    public SetViewHolderView(TypeName viewTypeName, TypeName viewHolderTypeName, String propertyName) {
+        this.viewTypeName = viewTypeName;
         this.viewHolderTypeName = viewHolderTypeName;
         this.propertyName = propertyName;
     }

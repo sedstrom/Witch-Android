@@ -45,8 +45,6 @@ public class TypeUtils {
 
     public final static TypeName TARGET_VIEW_BINDER_FACTORY = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinderFactory");
 
-    public final static TypeName BINDER = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "Binder");
-
     public static final TypeName ANDROID_VIEW = ClassName.get("android.view", "View");
 
     public static final TypeName ANDROID_ACTIVITY = ClassName.get("android.app", "Activity");

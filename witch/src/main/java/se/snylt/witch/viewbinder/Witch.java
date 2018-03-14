@@ -1,6 +1,7 @@
 package se.snylt.witch.viewbinder;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.view.View;
 
 import se.snylt.witchcore.BinderFactory;
@@ -78,15 +79,15 @@ public class Witch {
         bind(target, viewFinder(view));
     }
 
-    static ViewFinder viewFinder(Activity activity) {
+    public static ViewFinder viewFinder(Activity activity) {
         return ViewViewFinder.from(activity.findViewById(android.R.id.content), VIEW_HOLDER_TAG_DEFAULT);
     }
 
-    static ViewFinder viewFinder(View view) {
+    public static ViewFinder viewFinder(View view) {
         return ViewViewFinder.from(view, VIEW_HOLDER_TAG_DEFAULT);
     }
 
-    static void bind(Object target, ViewFinder viewFinder) {
+    public static void bind(Object target, ViewFinder viewFinder) {
         assertMainThread();
         witch().doBind(target, viewFinder);
     }

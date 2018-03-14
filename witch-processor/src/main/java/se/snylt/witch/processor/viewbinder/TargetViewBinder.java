@@ -3,7 +3,6 @@ package se.snylt.witch.processor.viewbinder;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -13,21 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.type.ExecutableType;
-import javax.lang.model.type.TypeMirror;
-
 import se.snylt.witch.processor.WitchException;
-import se.snylt.witch.processor.utils.FileUtils;
 import se.snylt.witch.processor.utils.ProcessorUtils;
 import se.snylt.witch.processor.utils.TypeUtils;
 
-import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_ACTIVITY;
-import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_VIEW;
 import static se.snylt.witch.processor.utils.TypeUtils.ARRAY_LIST;
 import static se.snylt.witch.processor.utils.TypeUtils.LIST;
-import static se.snylt.witch.processor.utils.TypeUtils.MAGIC_TARGET_VIEW_BINDER;
 import static se.snylt.witch.processor.utils.TypeUtils.STRING;
 import static se.snylt.witch.processor.utils.TypeUtils.TARGET_VIEW_BINDER;
 import static se.snylt.witch.processor.utils.TypeUtils.TARGET_VIEW_BINDER_FACTORY;
@@ -126,7 +117,7 @@ public class TargetViewBinder {
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         for (ViewBinder.Builder viewBinder : viewBinders) {
-            viewHolder.addField(ANDROID_VIEW, viewBinder.getPropertyName(), Modifier.PUBLIC);
+            viewHolder.addField(viewBinder.getGetView().getViewTypeName(), viewBinder.getPropertyName(), Modifier.PUBLIC);
         }
 
         return viewHolder.build();
@@ -135,54 +126,6 @@ public class TargetViewBinder {
     public JavaFile createViewHolderJavaFile() throws WitchException {
         return JavaFile.builder(viewHolderClassName.packageName(),
                 createViewHolder()).build();
-    }
-
-    private TypeSpec createMagicTargetViewBinder() {
-        TypeSpec.Builder magicViewBinder =
-                TypeSpec.classBuilder(FileUtils.getMagicTargetViewBinderClassName(target))
-                        .superclass(ParameterizedTypeName.get(MAGIC_TARGET_VIEW_BINDER, targetTypeName))
-                        .addModifiers(Modifier.PUBLIC);
-
-
-        magicViewBinder.addMethod(
-                MethodSpec.constructorBuilder()
-                        .addParameter(ParameterSpec.builder(targetTypeName, "binder").build())
-                        .addParameter(ParameterSpec.builder(ANDROID_VIEW, "view").build())
-                        .addStatement("super(binder, view)")
-                        .build());
-
-        magicViewBinder.addMethod(
-                MethodSpec.constructorBuilder()
-                        .addParameter(ParameterSpec.builder(targetTypeName, "binder").build())
-                        .addParameter(ParameterSpec.builder(ANDROID_ACTIVITY, "activity").build())
-                        .addStatement("super(binder, activity)")
-                        .build());
-
-        for (Element member: target.getEnclosedElements()) {
-            if(member.getKind() == ElementKind.METHOD && (!member.getModifiers().contains(Modifier.PRIVATE) && !member.getModifiers().contains(Modifier.PROTECTED))) {
-                ExecutableType type = (ExecutableType)member.asType();
-                if (type.getParameterTypes().size() == 1) {
-                    String methodName = member.getSimpleName().toString();
-                    TypeMirror parameterType = type.getParameterTypes().get(0);
-                    TypeName parameterTypeName = TypeName.get(parameterType);
-                    String parameterName = "data";
-                    MethodSpec methodSpec = MethodSpec
-                            .methodBuilder(member.getSimpleName().toString())
-                            .addParameter(ParameterSpec.builder(parameterTypeName, parameterName).build())
-                            .addStatement("binder.$N($N)", methodName, parameterName)
-                            .addStatement("bind()")
-                            .build();
-
-                    magicViewBinder.addMethod(methodSpec);
-                }
-            }
-        }
-        return magicViewBinder.build();
-    }
-
-    public JavaFile createMagicTargetViewBinderJavaFile() throws WitchException {
-        return JavaFile.builder(FileUtils.getMagicTargetViewBinderClassName(target).packageName(),
-                createMagicTargetViewBinder()).build();
     }
 
     public Element getElement() {

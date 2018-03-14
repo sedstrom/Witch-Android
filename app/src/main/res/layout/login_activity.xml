@@ -22,11 +22,13 @@
         <EditText
             android:id="@+id/emailAddress"
             android:inputType="textEmailAddress"
+            android:hint="person@company.ab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/passwordTitle"
+            android:text="Password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
