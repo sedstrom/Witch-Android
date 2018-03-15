@@ -1,5 +1,6 @@
 package com.example.witch.app.login;
 
+import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;

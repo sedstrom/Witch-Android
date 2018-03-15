@@ -20,7 +20,8 @@ public class BindBindData extends Bind {
 
     private TypeMirror dataTypeMirror;
 
-    public BindBindData(String property, TypeName targetTypeName, TypeName viewTypeName, TypeName dataTypeName, TypeMirror dataTypeMirror) {
+    public BindBindData(String property, TypeName targetTypeName, TypeName viewTypeName,
+                        TypeName dataTypeName, TypeMirror dataTypeMirror) {
         this.property = property;
         this.targetTypeName = targetTypeName;
         this.viewTypeName = viewTypeName;
@@ -35,7 +36,7 @@ public class BindBindData extends Bind {
                 .addParameter(targetTypeName, "target")
                 .addParameter(viewTypeName, "view")
                 .addParameter(dataTypeName, "value")
-                .addParameter(dataTypeName, "history") // TODO support
+                .addParameter(dataTypeName, "history")
                 .returns(void.class)
                 .addStatement("$N.$N(value)", "view", getPropertySetter(property))
                 .build();

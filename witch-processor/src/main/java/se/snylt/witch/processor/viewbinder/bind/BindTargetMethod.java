@@ -1,5 +1,4 @@
 package se.snylt.witch.processor.viewbinder.bind;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import javax.lang.model.element.Element;
@@ -20,13 +19,16 @@ public class BindTargetMethod extends Bind {
 
     private final String propertyName;
 
-    public BindTargetMethod(Element element, TypeName targetTypeName, TypeName viewTypeName, TypeName dataTypeName, TypeMirror dataTypeMirror, String propertyName) {
+    private final boolean bindWithHistory;
+
+    public BindTargetMethod(Element element, TypeName targetTypeName, TypeName viewTypeName, TypeName dataTypeName, TypeMirror dataTypeMirror, String propertyName, boolean bindWithHistory) {
         this.element = element;
         this.targetTypeName = targetTypeName;
         this.viewTypeName = viewTypeName;
         this.dataTypeName = dataTypeName;
         this.dataTypeMirror = dataTypeMirror;
         this.propertyName = propertyName;
+        this.bindWithHistory = bindWithHistory;
     }
 
     @Override
@@ -36,10 +38,19 @@ public class BindTargetMethod extends Bind {
                 .addParameter(targetTypeName, "target")
                 .addParameter(viewTypeName, "view")
                 .addParameter(dataTypeName, "value")
-                .addParameter(dataTypeName, "history") // TODO
+                .addParameter(dataTypeName, "history")
                 .returns(void.class)
-                .addStatement("$N.$N(($T)view, value)", "target", propertyName, viewTypeName)
+                .addStatement(getBindStatement(), "target", propertyName)
                 .build();
+    }
+
+    private String getBindStatement() {
+        if (bindWithHistory) {
+            return "$N.$N(view, value, history)";
+        } else {
+            return "$N.$N(view, value)";
+        }
+
     }
 
     @Override

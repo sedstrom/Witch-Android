@@ -2,6 +2,7 @@ package se.snylt.witch.processor.utils;
 
 import com.squareup.javapoet.TypeName;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Element;
@@ -69,11 +70,11 @@ public class ProcessorUtils {
     }
 
     public TypeName[] getBindMethodTypeNames(Element bindMethod) throws WitchException {
-        TypeMirror[] typeMirrors = getBindMethodTypeMirrors(bindMethod);
-        return new TypeName[]{TypeName.get(typeMirrors[0]), TypeName.get(typeMirrors[1])};
+        List<TypeMirror> typeMirrors = getBindMethodTypeMirrors(bindMethod);
+        return new TypeName[]{TypeName.get(typeMirrors.get(0)), TypeName.get(typeMirrors.get(1))};
     }
 
-    public TypeMirror[] getBindMethodTypeMirrors(Element bindMethod) throws WitchException {
+    public List<TypeMirror> getBindMethodTypeMirrors(Element bindMethod) throws WitchException {
 
         if(!isAccessibleMethod(bindMethod)) {
             throw WitchException.bindMethodNotAccessible(bindMethod);
@@ -81,20 +82,30 @@ public class ProcessorUtils {
 
         ExecutableType type = (ExecutableType) bindMethod.asType();
         List<? extends TypeMirror> parameters = type.getParameterTypes();
-        if(parameters.size() != 2) {
+        if(parameters.size() > 3 || parameters.size() < 2) {
             throw WitchException.bindMethodWrongArgumentCount(bindMethod);
         }
+
+        List<TypeMirror> typeMirrors = new ArrayList<>();
 
         // View
         TypeMirror view = parameters.get(0);
         if(!typeUtils.isSubtype(view, typeUtils.typeMirror(ANDROID_VIEW))) {
             throw WitchException.bindMethodWrongViewType(bindMethod);
         }
+        typeMirrors.add(view);
 
         // Data
         TypeMirror data = typeUtils.boxed(parameters.get(1));
+        typeMirrors.add(data);
 
-        return new TypeMirror[]{view, data};
+        // Data history
+        if (parameters.size() == 3) {
+            TypeMirror dataHistory = typeUtils.boxed(parameters.get(2));
+            typeMirrors.add(dataHistory);
+        }
+
+        return typeMirrors;
 
     }
 

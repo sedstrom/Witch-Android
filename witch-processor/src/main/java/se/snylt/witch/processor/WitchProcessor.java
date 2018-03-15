@@ -182,15 +182,17 @@ public class WitchProcessor extends AbstractProcessor {
         for (Element bind: roundEnv.getElementsAnnotatedWith(Bind.class)) {
 
             // Bind
+            // TODO look into this mess
             String propertyName = ProcessorUtils.getPropertyName(bind);
             ViewBinder.Builder viewBinder = getViewBinder(bind);
             TypeName targetTypeName = viewBinder.getTargetTypeName();
-            TypeMirror[] bindMethodTypeMirrors = processorUtils.getBindMethodTypeMirrors(bind);
+            List<TypeMirror> bindMethodTypeMirrors = processorUtils.getBindMethodTypeMirrors(bind);
             TypeName[] bindMethodTypes = processorUtils.getBindMethodTypeNames(bind);
             TypeName viewTypeName = bindMethodTypes[0];
             TypeName dataTypeName = bindMethodTypes[1];
-            TypeMirror dataTypeMirror = bindMethodTypeMirrors[1];
-            viewBinder.setBind(new BindTargetMethod(bind, targetTypeName, viewTypeName, dataTypeName, dataTypeMirror, propertyName));
+            TypeMirror dataTypeMirror = bindMethodTypeMirrors.get(1);
+            viewBinder.setBind(new BindTargetMethod(bind, targetTypeName, viewTypeName,
+                    dataTypeName, dataTypeMirror, propertyName, bindMethodTypeMirrors.size() == 3));
 
             // Get view
             TypeName viewHolderTypeName = FileUtils.getBindingViewHolderName(viewBinder.getTarget());
