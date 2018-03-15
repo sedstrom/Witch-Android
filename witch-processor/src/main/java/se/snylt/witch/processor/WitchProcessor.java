@@ -130,12 +130,11 @@ public class WitchProcessor extends AbstractProcessor {
                 for(SupportedAnnotations.HasViewId viewIdAnnotation: annotations) {
                     if(targetMember.getAnnotation(viewIdAnnotation.getClazz()) != null) {
                         if (!target.hasViewBinderFor(targetMember)) {
-
-                            // TODO some values this is already in TargetViewBinder
                             int viewId = viewIdAnnotation.getViewId(targetMember);
                             String propertyName = ProcessorUtils.getPropertyName(targetMember);
                             TypeName targetTypeName = FileUtils.getElementClassName(target.getElement());
-                            ViewBinder.Builder builder = new ViewBinder.Builder(target.getElement(), targetTypeName)
+                            ViewBinder.Builder builder =
+                                    new ViewBinder.Builder(target.getElement(), targetTypeName)
                                     .setViewId(viewId)
                                     .setPropertyName(propertyName);
 

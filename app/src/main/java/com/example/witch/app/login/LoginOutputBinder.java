@@ -1,12 +1,7 @@
 package com.example.witch.app.login;
 
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +10,6 @@ import com.example.witch.app.witch.WitchBinder;
 
 import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;
-import se.snylt.witch.annotations.BindNull;
 import se.snylt.witch.annotations.Data;
 import se.snylt.witchcore.viewfinder.ViewFinder;
 
