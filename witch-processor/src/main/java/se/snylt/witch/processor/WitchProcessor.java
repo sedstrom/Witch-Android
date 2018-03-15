@@ -29,7 +29,7 @@ import se.snylt.witch.processor.utils.FileUtils;
 import se.snylt.witch.processor.utils.Logger;
 import se.snylt.witch.processor.utils.ProcessorUtils;
 import se.snylt.witch.processor.utils.TypeUtils;
-import se.snylt.witch.processor.valueaccessor.DataAccessor;
+import se.snylt.witch.processor.dataaccessor.DataAccessor;
 import se.snylt.witch.processor.viewbinder.TargetViewBinder;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
 import se.snylt.witch.processor.viewbinder.bind.BindBindData;

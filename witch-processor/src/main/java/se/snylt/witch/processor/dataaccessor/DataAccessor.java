@@ -1,4 +1,4 @@
-package se.snylt.witch.processor.valueaccessor;
+package se.snylt.witch.processor.dataaccessor;
 
 public abstract class DataAccessor {
 
@@ -9,9 +9,6 @@ public abstract class DataAccessor {
     }
 
     public abstract String accessPropertyString();
-
-    // TODO remove
-    public abstract String viewHolderFieldName();
 
     @Override
     public boolean equals(Object obj) {

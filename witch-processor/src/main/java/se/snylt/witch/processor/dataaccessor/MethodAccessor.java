@@ -1,4 +1,4 @@
-package se.snylt.witch.processor.valueaccessor;
+package se.snylt.witch.processor.dataaccessor;
 
 public class MethodAccessor extends DataAccessor {
 
@@ -9,10 +9,5 @@ public class MethodAccessor extends DataAccessor {
     @Override
     public String accessPropertyString() {
         return propertyAccessorName + "()";
-    }
-
-    @Override
-    public String viewHolderFieldName() {
-        return propertyAccessorName + "_M";
     }
 }

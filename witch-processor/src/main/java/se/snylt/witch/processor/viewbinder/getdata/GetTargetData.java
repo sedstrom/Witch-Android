@@ -8,7 +8,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
-import se.snylt.witch.processor.valueaccessor.DataAccessor;
+import se.snylt.witch.processor.dataaccessor.DataAccessor;
 
 public class GetTargetData implements GetData {
 

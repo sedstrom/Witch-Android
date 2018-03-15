@@ -9,7 +9,7 @@ import javax.lang.model.element.Element;
  * Vision:
  * class ViewBinder {
 
-    @BindData(id = R.id.name, view = View.class, set = “description”)
+    @BindData(id = R.id.name, view = TextView.class, set = “text”)
     String name = “Simon”;
 
     // Or as composition
@@ -19,7 +19,7 @@ import javax.lang.model.element.Element;
 
     @Bind(id = R.id.name)
     void name(TextView view, String name) {
-    view.setDescription(name);
+        view.setText(name);
     }
 }
  */

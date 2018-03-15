@@ -3,7 +3,7 @@ package se.snylt.witch.processor.viewbinder.isdirty;
 
 import com.squareup.javapoet.TypeName;
 
-import se.snylt.witch.processor.valueaccessor.DataAccessor;
+import se.snylt.witch.processor.dataaccessor.DataAccessor;
 
 public class IsValueDirty extends IsDirty {
 

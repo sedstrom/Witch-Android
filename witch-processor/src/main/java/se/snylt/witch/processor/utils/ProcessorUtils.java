@@ -13,9 +13,9 @@ import javax.lang.model.type.TypeMirror;
 
 import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.processor.WitchException;
-import se.snylt.witch.processor.valueaccessor.FieldAccessor;
-import se.snylt.witch.processor.valueaccessor.MethodAccessor;
-import se.snylt.witch.processor.valueaccessor.DataAccessor;
+import se.snylt.witch.processor.dataaccessor.FieldAccessor;
+import se.snylt.witch.processor.dataaccessor.MethodAccessor;
+import se.snylt.witch.processor.dataaccessor.DataAccessor;
 
 import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_VIEW;
 
