@@ -84,7 +84,8 @@ public class WitchProcessorTest {
     public void errorBindMethodWrongParameterCount() {
         Compilation compilation = compile("ErrorBindMethodWrongParameterCount.java");
         assertThat(compilation).hadErrorContaining("ErrorBindMethodWrongParameterCount");
-        assertThat(compilation).hadErrorContaining("void text(android.view.View) has wrong number of parameters");
+        assertThat(compilation).hadErrorContaining("void text(android.view.View" +
+                ",java.lang.String,java.lang.String,java.lang.String) has wrong number of parameters");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 

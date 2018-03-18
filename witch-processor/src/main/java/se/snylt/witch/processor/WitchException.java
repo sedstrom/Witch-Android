@@ -6,6 +6,7 @@ import se.snylt.witch.annotations.BindWhen;
 
 import static se.snylt.witch.processor.utils.TypeUtils.getReturnTypeDescription;
 
+// TODO exception for not matching history data type
 public class WitchException extends Exception {
 
     private final static String readMore = "Read more at: https://sedstrom.github.io/Witch-Android/";

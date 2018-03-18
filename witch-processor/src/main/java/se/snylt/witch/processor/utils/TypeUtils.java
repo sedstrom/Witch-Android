@@ -25,11 +25,7 @@ public class TypeUtils {
 
     private final static String LIBRARY_PACKAGE = "se.snylt.witchcore";
 
-    private final static String ANDROID_LIBRARY_PACKAGE = "se.snylt.witch.viewbinder";
-
     private final static String LIBRARY_VIEW_BINDER_PACKAGE = "se.snylt.witchcore.viewbinder";
-
-    private final static String LIBRARY_BIND_ACTIONS_PACKAGE = "se.snylt.witchcore.bindaction";
 
     public static final ClassName LIST = ClassName.get(List.class);
 
@@ -39,17 +35,13 @@ public class TypeUtils {
 
     public final static TypeName DIFF_VALUE = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue");
 
-    public static final ClassName TARGET_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinder");
+    public final static TypeName DIFF_VALUE_NO_HISTORY = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue.NO_HISTORY");
 
-    public static final ClassName MAGIC_TARGET_VIEW_BINDER = ClassName.get(ANDROID_LIBRARY_PACKAGE, "MagicTargetViewBinder");
+    public static final ClassName TARGET_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinder");
 
     public final static TypeName TARGET_VIEW_BINDER_FACTORY = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinderFactory");
 
     public static final TypeName ANDROID_VIEW = ClassName.get("android.view", "View");
-
-    public static final TypeName ANDROID_ACTIVITY = ClassName.get("android.app", "Activity");
-
-    public static final ClassName SYNC_ON_BIND = ClassName.get(LIBRARY_BIND_ACTIONS_PACKAGE, "SyncOnBind");
 
     public TypeUtils(Types types, Elements elements) {
         this.types = types;
@@ -58,10 +50,6 @@ public class TypeUtils {
 
     public Types types() {
         return types;
-    }
-
-    private String asString(ClassName className) {
-        return className.packageName() + "." + className.simpleName();
     }
 
     public TypeMirror typeMirror(TypeName typeName) {

@@ -1,36 +1,38 @@
 package com.example.witch.app.login;
 
-import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.witch.R;
+import com.example.witch.app.App;
+import com.example.witch.app.Login;
 import com.example.witch.app.witch.WitchBinder;
+
+import java.util.Observable;
+import java.util.Observer;
 
 import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.Data;
 import se.snylt.witchcore.viewfinder.ViewFinder;
 
-class LoginOutputBinder extends WitchBinder {
+class LoginViewBinder extends WitchBinder implements Observer {
 
-    private LoginState loginState;
-
-    LoginOutputBinder(ViewFinder viewFinder) {
+    LoginViewBinder(ViewFinder viewFinder) {
         super(viewFinder);
     }
 
-    void setLoginState(LoginState loginState) {
-        this.loginState = loginState; bind();
+    private Login.State state() {
+        return App.getLogin().getState();
     }
 
     @Data
     String emailTitle() {
-        if (loginState.getErrors().contains(LoginState.Error.EMPTY_EMAIL)) {
+        if (state().getErrors().contains(Login.Error.EMPTY_EMAIL)) {
             return "Email address";
-        } else if (loginState.getErrors().contains(LoginState.Error.INVALID_EMAIL)) {
+        } else if (state().getErrors().contains(Login.Error.INVALID_EMAIL)) {
             return "person@company.ab";
         }
         return "Perfect!";
@@ -49,31 +51,36 @@ class LoginOutputBinder extends WitchBinder {
 
     @BindData(id = R.id.emailAddress, view = View.class, set = "enabled")
     boolean emailEnabled() {
-        return !loginState.isLoggingIn();
+        return !state().isLoggingIn();
     }
 
     @BindData(id = R.id.password, view = View.class, set = "enabled")
     boolean passwordEnabled() {
-        return !loginState.isLoggingIn();
+        return !state().isLoggingIn();
     }
 
     @BindData(id = R.id.loginbutton, view = View.class, set = "enabled")
     boolean loginButtonEnabled() {
-        return loginState.getErrors().isEmpty() && !loginState.isLoggingIn();
+        return state().getErrors().isEmpty() && !state().isLoggingIn();
     }
 
     @BindData(id = R.id.progress, view = View.class, set = "visibility")
     int progressVisibility() {
-        return loginState.isLoggingIn() ? View.VISIBLE : View.GONE;
+        return state().isLoggingIn() ? View.VISIBLE : View.GONE;
     }
 
     @Data
     String loggedInMessage() {
-        return loginState.isLoggedIn() ? "Logged in! :)" : null;
+        return state().isLoggedIn() ? "Logged in! :)" : null;
     }
 
     @Bind(id = R.id.container)
     void loggedInMessage(View view, String message) {
         Toast.makeText(view.getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        bind();
     }
 }

@@ -34,6 +34,7 @@ import se.snylt.witch.processor.viewbinder.TargetViewBinder;
 import se.snylt.witch.processor.viewbinder.ViewBinder;
 import se.snylt.witch.processor.viewbinder.bind.BindBindData;
 import se.snylt.witch.processor.viewbinder.bind.BindTargetMethod;
+import se.snylt.witch.processor.viewbinder.getdata.GetNoData;
 import se.snylt.witch.processor.viewbinder.getdata.GetTargetData;
 import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
@@ -133,10 +134,12 @@ public class WitchProcessor extends AbstractProcessor {
                             int viewId = viewIdAnnotation.getViewId(targetMember);
                             String propertyName = ProcessorUtils.getPropertyName(targetMember);
                             TypeName targetTypeName = FileUtils.getElementClassName(target.getElement());
+
                             ViewBinder.Builder builder =
                                     new ViewBinder.Builder(target.getElement(), targetTypeName)
                                     .setViewId(viewId)
-                                    .setPropertyName(propertyName);
+                                    .setPropertyName(propertyName)
+                                    .setGetData(new GetNoData(targetMember, targetTypeName)); // Default
 
                             target.addViewBinder(builder);
                         }
@@ -182,19 +185,14 @@ public class WitchProcessor extends AbstractProcessor {
         for (Element bind: roundEnv.getElementsAnnotatedWith(Bind.class)) {
 
             // Bind
-            // TODO look into this mess
             String propertyName = ProcessorUtils.getPropertyName(bind);
             ViewBinder.Builder viewBinder = getViewBinder(bind);
             TypeName targetTypeName = viewBinder.getTargetTypeName();
-            List<TypeMirror> bindMethodTypeMirrors = processorUtils.getBindMethodTypeMirrors(bind);
-            TypeName[] bindMethodTypes = processorUtils.getBindMethodTypeNames(bind);
-            TypeName viewTypeName = bindMethodTypes[0];
-            TypeName dataTypeName = bindMethodTypes[1];
-            TypeMirror dataTypeMirror = bindMethodTypeMirrors.get(1);
-            viewBinder.setBind(new BindTargetMethod(bind, targetTypeName, viewTypeName,
-                    dataTypeName, dataTypeMirror, propertyName, bindMethodTypeMirrors.size() == 3));
+            ProcessorUtils.BindSpec spec = processorUtils.getBindSpec(bind);
+            viewBinder.setBind(new BindTargetMethod(bind, targetTypeName, propertyName, spec));
 
             // Get view
+            TypeName viewTypeName = spec.getViewTypeName();
             TypeName viewHolderTypeName = FileUtils.getBindingViewHolderName(viewBinder.getTarget());
             viewBinder.setGetView(new GetViewHolderView(viewTypeName, viewHolderTypeName, propertyName));
 

@@ -79,10 +79,12 @@ public class TargetViewBinder {
             createBinder.addComment("Binder - " + value + " BEGIN");
             createBinder.addStatement("viewBinders.add($L)", binder.newInstance());
 
-            String valueName = binder.getValueName();
-            String accessValue = binder.getAccessValue();
-            describeTarget.addStatement("description += \"$N : \" + \"\" + $N", valueName, accessValue);
-            describeTarget.addStatement("description += \"\\n\"");
+            String dataName = binder.getDataName();
+            String accessData = binder.getAccessValue();
+            if (dataName != null && accessData != null) {
+                describeTarget.addStatement("description += \"$N : \" + \"\" + $N", dataName, accessData);
+                describeTarget.addStatement("description += \"\\n\"");
+            }
 
             createBinder.addComment("Binder - " + value + " END");
             createBinder.addComment("===========================================");

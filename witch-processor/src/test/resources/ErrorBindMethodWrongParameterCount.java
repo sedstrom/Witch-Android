@@ -10,7 +10,7 @@ class ErrorBindMethodWrongParameterCount {
     String text = "foo";
 
     @Bind(id = 0)
-    void text(View view) {
+    void text(View view, String one, String two, String three) {
 
     }
 }

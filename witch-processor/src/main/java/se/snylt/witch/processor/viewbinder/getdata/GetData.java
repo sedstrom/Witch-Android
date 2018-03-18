@@ -12,12 +12,7 @@ public interface GetData extends MethodSpecModule {
 
     Element getElement();
 
-    TypeMirror getDataTypeMirror();
+    String describeData();
 
-    TypeName getDataTypeName();
-
-    DataAccessor getValueAccessor();
-
-    String describeValue();
-
+    String getDataName();
 }

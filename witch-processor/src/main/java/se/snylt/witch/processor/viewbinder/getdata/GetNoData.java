@@ -1,6 +1,7 @@
 package se.snylt.witch.processor.viewbinder.getdata;
 
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
@@ -10,24 +11,19 @@ import javax.lang.model.type.TypeMirror;
 
 import se.snylt.witch.processor.dataaccessor.DataAccessor;
 
-public class GetTargetData implements GetData {
+import static se.snylt.witch.processor.utils.TypeUtils.DIFF_VALUE_NO_HISTORY;
+
+public class GetNoData implements GetData {
 
     private final Element element;
 
     private final TypeName targetTypeName;
 
-    private final DataAccessor valueAccessor;
+    private final TypeName dataTypeName = ClassName.OBJECT;
 
-    private final TypeName dataTypeName;
-
-    private final TypeMirror dataTypeMirror;
-
-    public GetTargetData(Element element, TypeName targetTypeName, DataAccessor valueAccessor, TypeName dataTypeName, TypeMirror dataTypeMirror) {
+    public GetNoData(Element element, TypeName targetTypeName) {
         this.element = element;
         this.targetTypeName = targetTypeName;
-        this.valueAccessor = valueAccessor;
-        this.dataTypeName = dataTypeName;
-        this.dataTypeMirror = dataTypeMirror;
     }
 
     @Override
@@ -36,7 +32,7 @@ public class GetTargetData implements GetData {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(targetTypeName, "target")
                 .returns(dataTypeName)
-                .addStatement("return target.$N", valueAccessor.accessPropertyString())
+                .addStatement("return $L", DIFF_VALUE_NO_HISTORY)
                 .build();
     }
 
@@ -45,17 +41,13 @@ public class GetTargetData implements GetData {
         return element;
     }
 
-    public TypeMirror getDataTypeMirror() {
-        return dataTypeMirror;
-    }
-
     @Override
     public String describeData() {
-        return "target." + getDataName();
+        return null;
     }
 
     @Override
     public String getDataName() {
-        return valueAccessor.accessPropertyString();
+        return null;
     }
 }

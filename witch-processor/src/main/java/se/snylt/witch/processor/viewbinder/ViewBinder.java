@@ -11,6 +11,7 @@ import se.snylt.witch.processor.utils.TypeUtils;
 import se.snylt.witch.processor.viewbinder.bind.Bind;
 import se.snylt.witch.processor.viewbinder.bind.BindTargetMethod;
 import se.snylt.witch.processor.viewbinder.getdata.GetData;
+import se.snylt.witch.processor.viewbinder.getdata.GetTargetData;
 import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
@@ -55,12 +56,12 @@ public class ViewBinder {
                 .build();
     }
 
-    public String getValueName() {
-        return getData.getValueAccessor().accessPropertyString();
+    public String getDataName() {
+        return getData.getDataName();
     }
 
     public String getAccessValue() {
-        return getData.describeValue();
+        return getData.describeData();
     }
 
     public static class Builder {
@@ -181,9 +182,11 @@ public class ViewBinder {
 
         public void validate(TypeUtils typeUtils) throws WitchException {
             // Incompatible data types
-            if (getData != null && bind != null && bind instanceof BindTargetMethod) {
-                if (!typeUtils.types().isAssignable(getData.getDataTypeMirror(), bind.getDataTypeMirror())) {
-                    throw WitchException.incompatibleDataTypes(getData.getElement(), bind.getElement());
+            if (getData != null && getData instanceof GetTargetData && bind != null && bind instanceof BindTargetMethod) {
+                GetTargetData getTargetData = (GetTargetData) getData;
+                BindTargetMethod bindTarget = (BindTargetMethod) bind;
+                if (!typeUtils.types().isAssignable(getTargetData.getDataTypeMirror(), bindTarget.getDataTypeMirror())) {
+                    throw WitchException.incompatibleDataTypes(getTargetData.getElement(), bindTarget.getElement());
                 }
             }
         }

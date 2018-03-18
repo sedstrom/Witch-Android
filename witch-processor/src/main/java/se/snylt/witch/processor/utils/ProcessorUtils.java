@@ -1,5 +1,6 @@
 package se.snylt.witch.processor.utils;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
 import java.util.ArrayList;
@@ -69,20 +70,14 @@ public class ProcessorUtils {
         throw WitchException.invalidDataAccessor(element);
     }
 
-    public TypeName[] getBindMethodTypeNames(Element bindMethod) throws WitchException {
-        List<TypeMirror> typeMirrors = getBindMethodTypeMirrors(bindMethod);
-        return new TypeName[]{TypeName.get(typeMirrors.get(0)), TypeName.get(typeMirrors.get(1))};
-    }
-
-    public List<TypeMirror> getBindMethodTypeMirrors(Element bindMethod) throws WitchException {
-
+    public BindSpec getBindSpec(Element bindMethod) throws WitchException {
         if(!isAccessibleMethod(bindMethod)) {
             throw WitchException.bindMethodNotAccessible(bindMethod);
         }
 
         ExecutableType type = (ExecutableType) bindMethod.asType();
         List<? extends TypeMirror> parameters = type.getParameterTypes();
-        if(parameters.size() > 3 || parameters.size() < 2) {
+        if(parameters.size() > 3 || parameters.size() == 0) {
             throw WitchException.bindMethodWrongArgumentCount(bindMethod);
         }
 
@@ -96,16 +91,64 @@ public class ProcessorUtils {
         typeMirrors.add(view);
 
         // Data
-        TypeMirror data = typeUtils.boxed(parameters.get(1));
-        typeMirrors.add(data);
+        if (parameters.size() > 1) {
+            TypeMirror data = typeUtils.boxed(parameters.get(1));
+            typeMirrors.add(data);
+        }
 
         // Data history
-        if (parameters.size() == 3) {
+        if (parameters.size() > 2) {
             TypeMirror dataHistory = typeUtils.boxed(parameters.get(2));
             typeMirrors.add(dataHistory);
         }
 
-        return typeMirrors;
+        switch (parameters.size()) {
+            case 1:
+                return new BindSpec(typeMirrors, BindSpec.Type.NO_DATA);
+            case 2:
+                return new BindSpec(typeMirrors, BindSpec.Type.DATA);
+            case 3:
+                return new BindSpec(typeMirrors, BindSpec.Type.DATA_WITH_HISTORY);
+            default:
+                throw WitchException.bindMethodWrongArgumentCount(bindMethod);
+        }
+    }
+
+    public static class BindSpec {
+
+        private final TypeMirror viewTypeMirror;
+
+        private final TypeMirror dataTypeMirror;
+
+        private final Type type;
+
+        public enum Type {
+            NO_DATA,
+            DATA,
+            DATA_WITH_HISTORY
+        }
+
+        BindSpec(List<TypeMirror> paramTypeMirrors, Type type) {
+            this.viewTypeMirror = paramTypeMirrors.get(0);
+            this.dataTypeMirror = paramTypeMirrors.size() > 1 ? paramTypeMirrors.get(1) : null;
+            this.type = type;
+        }
+
+        public Type getType() {
+            return type;
+        }
+
+        public TypeName getViewTypeName() {
+            return TypeName.get(viewTypeMirror);
+        }
+
+        public TypeName getDataTypeName() {
+            return dataTypeMirror != null ? TypeName.get(dataTypeMirror) : ClassName.OBJECT;
+        }
+
+        public TypeMirror getDataTypeMirror() {
+            return dataTypeMirror;
+        }
 
     }
 
