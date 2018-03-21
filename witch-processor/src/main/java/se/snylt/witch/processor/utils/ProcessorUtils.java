@@ -91,14 +91,18 @@ public class ProcessorUtils {
         typeMirrors.add(view);
 
         // Data
+        TypeMirror data = null;
         if (parameters.size() > 1) {
-            TypeMirror data = typeUtils.boxed(parameters.get(1));
+            data = typeUtils.boxed(parameters.get(1));
             typeMirrors.add(data);
         }
 
         // Data history
         if (parameters.size() > 2) {
             TypeMirror dataHistory = typeUtils.boxed(parameters.get(2));
+            if (data != null && !typeUtils.isSameType(data, dataHistory)) {
+                throw WitchException.incompatibleHistoryType(bindMethod);
+            }
             typeMirrors.add(dataHistory);
         }
 

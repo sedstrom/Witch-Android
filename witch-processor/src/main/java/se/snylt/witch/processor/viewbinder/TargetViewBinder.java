@@ -80,7 +80,7 @@ public class TargetViewBinder {
             createBinder.addStatement("viewBinders.add($L)", binder.newInstance());
 
             String dataName = binder.getDataName();
-            String accessData = binder.getAccessValue();
+            String accessData = binder.getAccessData();
             if (dataName != null && accessData != null) {
                 describeTarget.addStatement("description += \"$N : \" + \"\" + $N", dataName, accessData);
                 describeTarget.addStatement("description += \"\\n\"");

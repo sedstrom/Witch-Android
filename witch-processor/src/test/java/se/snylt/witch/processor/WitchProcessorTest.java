@@ -148,6 +148,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("BindWhen.NOT_SAME");
         assertThat(compilation).hadErrorContaining("BindWhen.NOT_EQUALS");
         assertThat(compilation).hadErrorContaining("BindWhen.ALWAYS");
+        assertThat(compilation).hadErrorContaining("BindWhen.ONCE");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 
@@ -156,6 +157,14 @@ public class WitchProcessorTest {
         Compilation compilation = compile("ErrorConflictingBindWhen.java");
         assertThat(compilation).hadErrorContaining("ErrorConflictingBindWhen");
         assertThat(compilation).hadErrorContaining("@BindWhen is defined multiple times for void text(android.view.View,java.lang.String)");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+    }
+
+    @Test
+    public void errorIncompatibleHistoryType() {
+        Compilation compilation = compile("ErrorIncompatibleHistoryType.java");
+        assertThat(compilation).hadErrorContaining("ErrorIncompatibleHistoryType");
+        assertThat(compilation).hadErrorContaining("Incompatible history type for void text(android.view.View,java.lang.String,java.lang.Integer)");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 

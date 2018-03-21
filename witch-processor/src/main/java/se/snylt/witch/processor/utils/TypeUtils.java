@@ -35,7 +35,7 @@ public class TypeUtils {
 
     public final static TypeName DIFF_VALUE = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue");
 
-    public final static TypeName DIFF_VALUE_NO_HISTORY = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue.NO_HISTORY");
+    public final static TypeName DIFF_VALUE_NO_DATA = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue.NO_DATA");
 
     public static final ClassName TARGET_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinder");
 
@@ -101,4 +101,7 @@ public class TypeUtils {
         return types.isSubtype(one, two);
     }
 
+    public boolean isSameType(TypeMirror one, TypeMirror two) {
+        return types.isSameType(one, two);
+    }
 }

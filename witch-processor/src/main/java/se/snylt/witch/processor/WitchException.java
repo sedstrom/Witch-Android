@@ -1,12 +1,12 @@
 package se.snylt.witch.processor;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 
 import se.snylt.witch.annotations.BindWhen;
 
 import static se.snylt.witch.processor.utils.TypeUtils.getReturnTypeDescription;
 
-// TODO exception for not matching history data type
 public class WitchException extends Exception {
 
     private final static String readMore = "Read more at: https://sedstrom.github.io/Witch-Android/";
@@ -91,13 +91,14 @@ public class WitchException extends Exception {
     static WitchException invalidBindWhenValue(Element bindWhen, String bindWhenValue) {
         return new WitchException(
                 String.format(
-                        "%s %s has invalid value \"%s\" for @BindWhen.\nValid values are:\n%s\n%s\n%s\nFarsa" + readMore
+                        "%s %s has invalid value \"%s\" for @BindWhen.\nValid values are:\n%s\n%s\n%s\n%s\n" + readMore
                         , errorForElementParent(bindWhen)
                         , bindWhen
                         , bindWhenValue
                         , "BindWhen.NOT_SAME"
                         , "BindWhen.NOT_EQUALS"
-                        , "BindWhen.ALWAYS")
+                        , "BindWhen.ALWAYS"
+                        , "BindWhen.ONCE")
         );
     }
 
@@ -112,5 +113,14 @@ public class WitchException extends Exception {
 
     WitchRuntimeException toRuntimeException() {
         return new WitchRuntimeException(getMessage());
+    }
+
+    public static WitchException incompatibleHistoryType(Element bindMethod) {
+        return new WitchException(
+                String.format(
+                        "%s Incompatible history type for %s. " + readMore
+                        , errorForElementParent(bindMethod)
+                        , withReturnType(bindMethod))
+        );
     }
 }

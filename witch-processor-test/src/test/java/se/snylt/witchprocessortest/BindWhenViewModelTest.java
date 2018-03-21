@@ -4,12 +4,15 @@ package se.snylt.witchprocessortest;
 
 import org.junit.Test;
 
+import android.view.View;
 import android.widget.TextView;
 
 import se.snylt.witchprocessortest.utils.TestBinderHelper;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -22,6 +25,7 @@ public class BindWhenViewModelTest {
         helper.mockViewForId(R.id.testIdOne, TextView.class);
         helper.mockViewForId(R.id.testIdTwo, TextView.class);
         helper.mockViewForId(R.id.testIdThree, TextView.class);
+        helper.mockViewForId(R.id.testIdFour, TextView.class);
         return helper;
     }
 
@@ -71,6 +75,17 @@ public class BindWhenViewModelTest {
         model.notSame = equalsFoo;
         helper.bind(model);
         verify((TextView)helper.getView(R.id.testIdThree), times(1)).setTag(same(equalsFoo));
+    }
+
+    @Test
+    public void bindOnce() {
+        BindWhenViewModel model = spy(new BindWhenViewModel());
+        TestBinderHelper<BindWhenViewModel, BindWhenViewModel_ViewHolder> helper = helper();
+
+        helper.bind(model);
+        helper.bind(model);
+
+        verify(model, times(1)).bind(any(TextView.class));
     }
 
     private class AlwaysEquals extends Object {

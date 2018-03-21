@@ -1,6 +1,8 @@
 package se.snylt.witchprocessortest;
 
 import android.widget.TextView;
+
+import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.BindWhen;
 
@@ -17,6 +19,12 @@ class BindWhenViewModel {
     @BindData(id = R.id.testIdThree, view = TextView.class, set = "tag")
     @BindWhen(BindWhen.NOT_SAME)
     Object notSame = null;
+
+    @Bind(id = R.id.testIdFour)
+    @BindWhen(BindWhen.ONCE)
+    void bind(TextView tv) {
+
+    }
 
 
 }

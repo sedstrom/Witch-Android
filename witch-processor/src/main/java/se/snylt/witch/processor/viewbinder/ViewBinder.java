@@ -11,9 +11,11 @@ import se.snylt.witch.processor.utils.TypeUtils;
 import se.snylt.witch.processor.viewbinder.bind.Bind;
 import se.snylt.witch.processor.viewbinder.bind.BindTargetMethod;
 import se.snylt.witch.processor.viewbinder.getdata.GetData;
+import se.snylt.witch.processor.viewbinder.getdata.GetNoData;
 import se.snylt.witch.processor.viewbinder.getdata.GetTargetData;
 import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
+import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyAlways;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
 import se.snylt.witch.processor.viewbinder.newinstance.NewViewBinderInstance;
 
@@ -60,7 +62,7 @@ public class ViewBinder {
         return getData.getDataName();
     }
 
-    public String getAccessValue() {
+    public String getAccessData() {
         return getData.describeData();
     }
 

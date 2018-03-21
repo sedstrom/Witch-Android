@@ -41,6 +41,7 @@ import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyAlways;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotSame;
+import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyOnce;
 import se.snylt.witch.processor.viewbinder.setview.SetViewHolderView;
 
 @AutoService(Processor.class)
@@ -94,8 +95,8 @@ public class WitchProcessor extends AbstractProcessor {
             processBindData();
             processData();
             processBind();
-            processBindWhens();
             processBindNull();
+            processBindWhens();
             writeFiles();
         } catch (WitchException e) {
             logger.log(e);
@@ -217,6 +218,10 @@ public class WitchProcessor extends AbstractProcessor {
                 }
                 case BindWhen.NOT_SAME: {
                     isDirty = new IsDirtyIfNotSame(binder.getTargetTypeName());
+                    break;
+                }
+                case BindWhen.ONCE: {
+                    isDirty = new IsDirtyOnce(binder.getTargetTypeName());
                     break;
                 }
             }

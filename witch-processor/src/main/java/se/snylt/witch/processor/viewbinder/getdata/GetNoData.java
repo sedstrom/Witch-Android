@@ -7,11 +7,8 @@ import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.type.TypeMirror;
 
-import se.snylt.witch.processor.dataaccessor.DataAccessor;
-
-import static se.snylt.witch.processor.utils.TypeUtils.DIFF_VALUE_NO_HISTORY;
+import static se.snylt.witch.processor.utils.TypeUtils.DIFF_VALUE_NO_DATA;
 
 public class GetNoData implements GetData {
 
@@ -32,7 +29,7 @@ public class GetNoData implements GetData {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(targetTypeName, "target")
                 .returns(dataTypeName)
-                .addStatement("return $L", DIFF_VALUE_NO_HISTORY)
+                .addStatement("return $L", DIFF_VALUE_NO_DATA)
                 .build();
     }
 
