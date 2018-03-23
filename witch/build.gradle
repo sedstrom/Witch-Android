@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-// apply plugin: 'java'
+// apply from: 'https://raw.githubusercontent.com/tommy8421/fat-aar-fixed/master/fat-aar.gradle'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -17,13 +17,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main.java.srcDirs += '../witch-core/src/main/java'
+    }
 }
 
 dependencies {
-    compile project(':witch-annotations')
-    compile project(':witch-core')
-    compile rootProject.ext.deps.commonsLang
-    compile rootProject.ext.deps.supportRecyclerView
+
+    api project(':witch-annotations')
+
+
+    implementation rootProject.ext.deps.commonsLang
+    api rootProject.ext.deps.supportRecyclerView
 
     testCompile rootProject.ext.deps.mockitoCore
     testCompile rootProject.ext.deps.junit

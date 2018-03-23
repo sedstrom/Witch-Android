@@ -26,9 +26,7 @@ if (localProperties.exists()) {
 allprojects {
     repositories {
         mavenCentral()
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "${sdkDir}/extras/android/m2repository/" }
     }
 }

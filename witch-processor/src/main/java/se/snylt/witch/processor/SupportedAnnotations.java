@@ -4,25 +4,6 @@ import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.Element;
 
-/**
- *
- * Vision:
- * class ViewBinder {
-
-    @BindData(id = R.id.name, view = TextView.class, set = “text”)
-    String name = “Simon”;
-
-    // Or as composition
-
-    @Data
-    String name = “Simon”;
-
-    @Bind(id = R.id.name)
-    void name(TextView view, String name) {
-        view.setText(name);
-    }
-}
- */
 class SupportedAnnotations {
 
     interface HasViewId {

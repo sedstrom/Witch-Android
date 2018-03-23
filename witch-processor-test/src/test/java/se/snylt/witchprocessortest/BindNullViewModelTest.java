@@ -28,7 +28,7 @@ public class BindNullViewModelTest {
         verify((TextView) helper.getView(R.id.testIdOne), times(1)).setText((CharSequence) isNull());
         verify((TextView) helper.getView(R.id.testIdTwo), times(1)).setText((CharSequence) isNull());
         verify((TextView) helper.getView(R.id.testIdThree), times(1)).setText((CharSequence) isNull());
-        verify((TextView) helper.getView(R.id.testIdFour), never()).setText(isNull(String.class));
-        verify((TextView) helper.getView(R.id.testIdFive), never()).setText(isNull(String.class));
+        verify((TextView) helper.getView(R.id.testIdFour), never()).setText((CharSequence) isNull());
+        verify((TextView) helper.getView(R.id.testIdFive), never()).setText((CharSequence) isNull());
     }
 }

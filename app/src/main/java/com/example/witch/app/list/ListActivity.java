@@ -116,7 +116,7 @@ public class ListActivity extends AppCompatActivity implements Observer {
         ((RecyclerViewBinderAdapter<String>)recyclerView.getAdapter()).setItems(data);
     }
 
-    private class DataBinder extends RecyclerViewBinderAdapter.Binder<String> {
+    class DataBinder extends RecyclerViewBinderAdapter.Binder<String> {
 
         private DataBinder() { super(R.layout.data_list_item); }
 

@@ -1,7 +1,8 @@
 
 include ':app',
+        ':witch-core',
         ':witch',
         ':witch-annotations',
         ':witch-processor',
-        ':witch-processor-test',
-        ':witch-core'
+        ':witch-processor-test'
+

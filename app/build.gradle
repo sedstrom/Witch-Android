@@ -25,19 +25,17 @@ android {
 }
 
 dependencies {
+
     // Witch
-    compile project(path: ':witch')
-    annotationProcessor project(path: ':witch-processor')
+    annotationProcessor "se.snylt:witch-processor:1.0-SNAPSHOT"
+    implementation "se.snylt:witch:1.0-SNAPSHOT"
 
     // Support
-    compile rootProject.ext.deps.supportAppCompat
-    compile rootProject.ext.deps.supportDesign
+    implementation rootProject.ext.deps.supportAppCompat
+    implementation rootProject.ext.deps.supportDesign
 
     // Square
-    compile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    implementation 'com.squareup.leakcanary:leakcanary-android:1.5'
 
     testCompile rootProject.ext.deps.junit
 

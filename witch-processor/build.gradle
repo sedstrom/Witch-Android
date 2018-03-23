@@ -1,14 +1,13 @@
 apply plugin: 'java'
 
 dependencies {
-    compile project(':witch-annotations')
-    compile rootProject.ext.deps.googleAutoService
-    compile rootProject.ext.deps.javapoet
-    compile rootProject.ext.deps.junit
+    implementation project(':witch-annotations')
+    implementation rootProject.ext.deps.googleAutoService
+    implementation rootProject.ext.deps.javapoet
 
     testImplementation 'com.google.testing.compile:compile-testing:0.15'
-    testCompile 'com.google.android:android:4.1.1.4'
-    testCompile project(':witch-core')
+    testImplementation 'com.google.android:android:4.1.1.4'
+    testImplementation project(':witch-core')
 }
 
 apply from: rootProject.file('gradle-mvn-push.gradle')
