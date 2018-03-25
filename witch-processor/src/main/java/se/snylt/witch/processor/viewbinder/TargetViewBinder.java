@@ -49,15 +49,18 @@ public class TargetViewBinder {
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addSuperinterface(TARGET_VIEW_BINDER_FACTORY);
 
-        TypeName targetViewBinderType = ParameterizedTypeName.get(TARGET_VIEW_BINDER, targetTypeName, viewHolderClassName);
+        TypeName targetViewBinderType = ParameterizedTypeName.get(TARGET_VIEW_BINDER, targetTypeName
+                , viewHolderClassName);
         MethodSpec.Builder createBinder = MethodSpec.methodBuilder("createBinder")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(targetViewBinderType);
 
-        TypeName valueTypeName = WildcardTypeName.subtypeOf(Object.class);
+        TypeName dataTypeName = WildcardTypeName.subtypeOf(Object.class);
         TypeName viewTypeName = WildcardTypeName.subtypeOf(Object.class);
-        TypeName viewBinderType = ParameterizedTypeName.get(VIEW_BINDER, targetTypeName, viewTypeName, valueTypeName, viewHolderClassName);
-        createBinder.addStatement("$T viewBinders = new $T<>()", ParameterizedTypeName.get(LIST, viewBinderType), ARRAY_LIST);
+        TypeName viewBinderType = ParameterizedTypeName.get(VIEW_BINDER, targetTypeName, viewTypeName,
+                dataTypeName, viewHolderClassName);
+        createBinder.addStatement("$T viewBinders = new $T<>()",
+                ParameterizedTypeName.get(LIST, viewBinderType), ARRAY_LIST);
         createBinder.addCode("\n");
 
         TypeSpec.Builder targetViewBinder =
@@ -74,9 +77,9 @@ public class TargetViewBinder {
         // All view binders
         for (ViewBinder.Builder builder: viewBinders) {
             ViewBinder binder = builder.build();
-            String value = builder.getPropertyName();
+            String data = builder.getPropertyName();
             createBinder.addComment("===========================================");
-            createBinder.addComment("Binder - " + value + " BEGIN");
+            createBinder.addComment("Binder - " + data + " BEGIN");
             createBinder.addStatement("viewBinders.add($L)", binder.newInstance());
 
             String dataName = binder.getDataName();
@@ -86,7 +89,7 @@ public class TargetViewBinder {
                 describeTarget.addStatement("description += \"\\n\"");
             }
 
-            createBinder.addComment("Binder - " + value + " END");
+            createBinder.addComment("Binder - " + data + " END");
             createBinder.addComment("===========================================");
             createBinder.addCode("\n");
         }

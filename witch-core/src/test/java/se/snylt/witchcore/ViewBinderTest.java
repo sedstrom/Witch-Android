@@ -8,7 +8,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import se.snylt.witchcore.viewbinder.ViewBinder;
 import se.snylt.witchcore.viewfinder.ViewFinder;
@@ -58,11 +57,11 @@ public class ViewBinderTest {
     }
 
     @Test
-    public void bind_Should_InOrder_FindViewInViewFinder_SetViewInViewHolder_GetValueFromTarget_RunBindWithTargetValueHistoryValueAndView(){
+    public void bind_Should_InOrder_FindViewInViewFinder_SetViewInViewHolder_GetDataFromTarget_RunBindWithTargetDataHistoryDataAndView(){
         InOrder inOrder = Mockito.inOrder(viewBinder, viewFinder);
 
-        Object value = new Object();
-        viewBinder.setValue(value);
+        Object data = new Object();
+        viewBinder.setData(data);
 
         // When
         viewBinder.bind(viewHolder, viewFinder, target);
@@ -70,59 +69,59 @@ public class ViewBinderTest {
         // Then
         inOrder.verify(viewFinder).findViewById(eq(VIEW_ID));
         inOrder.verify(viewBinder).setView(same(viewHolder), same(bindView));
-        inOrder.verify(viewBinder).getValue(same(target));
-        inOrder.verify(viewBinder).bind(same(target), same(bindView), same(value), isNull());
+        inOrder.verify(viewBinder).getData(same(target));
+        inOrder.verify(viewBinder).bind(same(target), same(bindView), same(data), isNull());
     }
 
     @Test
-    public void bind_When_FirstValue_Should_RunBindWithValueAndView() {
-        Object value = new Object();
-        viewBinder.setValue(value);
+    public void bind_When_FirstData_Should_RunBindWithDataAndView() {
+        Object data = new Object();
+        viewBinder.setData(data);
 
         // When
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
-        verify(viewBinder).bind(same(target), same(bindView), same(value), isNull());
+        verify(viewBinder).bind(same(target), same(bindView), same(data), isNull());
     }
 
 
     @Test
-    public void bind_When_ValueNotDirty_Should_Never_Bind_SaveHistoryValue() {
+    public void bind_When_DataNotDirty_Should_Never_Bind_SaveHistoryData() {
         // When
         when(viewBinder.isDirty(any(Object.class))).thenReturn(false);
-        viewBinder.setValue("123");
+        viewBinder.setData("123");
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
         verify(viewBinder, never()).bind(any(Object.class), any(Object.class), anyString(), anyString());
-        assertFalse(viewBinder.getHistoryValue().equals("123"));
+        assertFalse(viewBinder.getHistoryData().equals("123"));
     }
 
     @Test
-    public void bind_When_ValueDirty_Should_Bind_SaveHistoryValue() {
+    public void bind_When_DataDirty_Should_Bind_SaveHistoryData() {
         // When
         when(viewBinder.isDirty(any(Object.class))).thenReturn(true);
-        Object value = new Object();
-        viewBinder.setValue(value);
+        Object data = new Object();
+        viewBinder.setData(data);
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
-        verify(viewBinder).bind(same(target), same(bindView), same(value), isNull());
-        assertSame(viewBinder.getHistoryValue(), value);
+        verify(viewBinder).bind(same(target), same(bindView), same(data), isNull());
+        assertSame(viewBinder.getHistoryData(), data);
     }
 
     @Test
-    public void bindTwice_Should_BindWithHistoryNull_Then_HistoryValue() {
+    public void bindTwice_Should_BindWithHistoryNull_Then_HistoryData() {
         InOrder inOrder = Mockito.inOrder(viewBinder);
         Object first = new Object();
         Object second = new Object();
 
         // When
         when(viewBinder.isDirty(any(Object.class))).thenReturn(true);
-        viewBinder.setValue(first);
+        viewBinder.setData(first);
         viewBinder.bind(viewHolder, viewFinder, target);
-        viewBinder.setValue(second);
+        viewBinder.setData(second);
         viewBinder.bind(viewHolder, viewFinder, target);
 
         // Then
@@ -132,7 +131,7 @@ public class ViewBinderTest {
 
     @Test
     public void bind_With_ViewSetInViewHolder_Should_Not_FindView_Or_SetViewInViewHolder(){
-        viewBinder.setValue("123");
+        viewBinder.setData("123");
 
         // When
         Object view = mock(Object.class);
@@ -161,7 +160,7 @@ public class ViewBinderTest {
 
     private class TestViewBinder extends ViewBinder {
 
-        private Object value;
+        private Object data;
 
         TestViewBinder(int viewId) {
             super(viewId);
@@ -173,17 +172,17 @@ public class ViewBinderTest {
         }
 
         @Override
-        public void bind(Object o, Object o2, Object o3, Object historyValue) {
+        public void bind(Object o, Object o2, Object data, Object historyData) {
 
         }
 
         @Override
-        public Object getValue(Object target) {
-            return this.value;
+        public Object getData(Object target) {
+            return this.data;
         }
 
-        void setValue(Object value) {
-            this.value = value;
+        void setData(Object data) {
+            this.data = data;
         }
 
         @Override
@@ -196,8 +195,8 @@ public class ViewBinderTest {
             return ((TestViewHolder)viewHolder).getView();
         }
 
-        public Object getHistoryValue() {
-            return historyValue;
+        public Object getHistoryData() {
+            return historyData;
         }
     }
 

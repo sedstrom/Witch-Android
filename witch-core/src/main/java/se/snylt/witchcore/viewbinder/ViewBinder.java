@@ -2,11 +2,11 @@ package se.snylt.witchcore.viewbinder;
 
 import se.snylt.witchcore.viewfinder.ViewFinder;
 
-public abstract class ViewBinder<Target, View, Value, ViewHolder> {
+public abstract class ViewBinder<Target, View, Data, ViewHolder> {
 
     private final int viewId;
 
-    protected Object historyValue = DiffValue.NO_HISTORY;
+    protected Object historyData = DiffUtils.NO_HISTORY;
 
     public ViewBinder(int viewId) {
         this.viewId = viewId;
@@ -15,18 +15,18 @@ public abstract class ViewBinder<Target, View, Value, ViewHolder> {
     public boolean bind(ViewHolder viewHolder, ViewFinder viewFinder, Target target) {
         if (isDirty(target)) {
             View view = findView(viewHolder, viewFinder);
-            Value value = getValue(target);
-            Value hv = historyValue == DiffValue.NO_HISTORY ? null : (Value) historyValue;
-            historyValue = value;
-            bind(target, view, value, hv);
+            Data data = getData(target);
+            Data hv = historyData == DiffUtils.NO_HISTORY ? null : (Data) historyData;
+            historyData = data;
+            bind(target, view, data, hv);
             return true;
         }
         return false;
     }
 
     /**
-     * Find view for binding. First looks in view holder. If not found in view holder, view is looked up with viewfinder and
-     * stored in view holder.
+     * Find view for binding. First looks in view holder.
+     * If not found in view holder, view is looked up with viewfinder and stored in view holder.
      * @param viewHolder view holder for storing view
      * @param viewFinder view finder for view lookup
      * @return view for binding
@@ -41,11 +41,11 @@ public abstract class ViewBinder<Target, View, Value, ViewHolder> {
     }
 
     /**
-     * Get value from target.
-     * @param target target containing value to be bound.
-     * @return the value
+     * Get data from target.
+     * @param target target containing data to be bound.
+     * @return the data
      */
-    public abstract Value getValue(Target target);
+    public abstract Data getData(Target target);
 
     /**
      * Store view in view holder.
@@ -62,18 +62,18 @@ public abstract class ViewBinder<Target, View, Value, ViewHolder> {
     public abstract View getView(ViewHolder viewHolder);
 
     /**
-     * Check if value has been updated
-     * @param target containing value
-     * @return true if value is dirty and should be bound, otherwise false.
+     * Check if data has is dirty and should be bound
+     * @param target containing data
+     * @return true if data is dirty and should be bound, otherwise false.
      */
     public abstract boolean isDirty(Target target);
 
     /**
-     * Binds value to view and provides previously bound value
+     * Binds data to view and provides previously bound data
      * @param target target
      * @param view view to bind to
-     * @param value value to bind
-     * @param historyValue previously bound value
+     * @param data data to bind
+     * @param historyData previously bound data
      */
-    public abstract void bind(Target target, View view, Value value, Value historyValue);
+    public abstract void bind(Target target, View view, Data data, Data historyData);
 }

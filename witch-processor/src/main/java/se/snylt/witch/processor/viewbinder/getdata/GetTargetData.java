@@ -16,27 +16,28 @@ public class GetTargetData implements GetData {
 
     private final TypeName targetTypeName;
 
-    private final DataAccessor valueAccessor;
+    private final DataAccessor dataAccessor;
 
     private final TypeName dataTypeName;
 
     private final TypeMirror dataTypeMirror;
 
-    public GetTargetData(Element element, TypeName targetTypeName, DataAccessor valueAccessor, TypeName dataTypeName, TypeMirror dataTypeMirror) {
+    public GetTargetData(Element element, TypeName targetTypeName, DataAccessor dataAccessor,
+                         TypeName dataTypeName, TypeMirror dataTypeMirror) {
         this.element = element;
         this.targetTypeName = targetTypeName;
-        this.valueAccessor = valueAccessor;
+        this.dataAccessor = dataAccessor;
         this.dataTypeName = dataTypeName;
         this.dataTypeMirror = dataTypeMirror;
     }
 
     @Override
     public MethodSpec create() {
-        return  MethodSpec.methodBuilder("getValue")
+        return  MethodSpec.methodBuilder("getData")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(targetTypeName, "target")
                 .returns(dataTypeName)
-                .addStatement("return target.$N", valueAccessor.accessPropertyString())
+                .addStatement("return target.$N", dataAccessor.accessPropertyString())
                 .build();
     }
 
@@ -56,6 +57,6 @@ public class GetTargetData implements GetData {
 
     @Override
     public String getDataName() {
-        return valueAccessor.accessPropertyString();
+        return dataAccessor.accessPropertyString();
     }
 }

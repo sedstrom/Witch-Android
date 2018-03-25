@@ -12,6 +12,6 @@ public class IsDirtyIfNotEquals extends IsDirty {
 
     @Override
     String getIsDirty() {
-        return TypeUtils.DIFF_VALUE.toString() + ".notEquals(getValue(target), historyValue)";
+        return TypeUtils.DIFF_UTILS.toString() + ".notEquals(getData(target), historyData)";
     }
 }

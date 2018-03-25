@@ -1,4 +1,4 @@
-package se.snylt.witch.viewbinder;
+package se.snylt.witch.android;
 
 import se.snylt.witchcore.WitchCore;
 

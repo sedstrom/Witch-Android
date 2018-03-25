@@ -12,7 +12,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.Light">
         <activity android:name=".app.login.LoginActivity"
-                android:noHistory="true">
+                android:noHistory="true"
+                android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

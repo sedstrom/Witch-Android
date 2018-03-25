@@ -246,7 +246,7 @@ public class WitchProcessor extends AbstractProcessor {
     }
 
     private void addGetData(Element data) throws WitchException {
-        DataAccessor valueAccessor = ProcessorUtils.getDataAccessor(data);
+        DataAccessor dataAccessor = ProcessorUtils.getDataAccessor(data);
         TypeMirror dataTypeMirror = typeUtils.getBoxedReturnTypeMirror(data);
         TypeName dataTypeName = typeUtils.getReturnTypeName(data);
 
@@ -256,7 +256,7 @@ public class WitchProcessor extends AbstractProcessor {
 
         ViewBinder.Builder binder = getViewBinder(data);
         TypeName targetTypeName = binder.getTargetTypeName();
-        binder.setGetData(new GetTargetData(data, targetTypeName, valueAccessor, dataTypeName, dataTypeMirror));
+        binder.setGetData(new GetTargetData(data, targetTypeName, dataAccessor, dataTypeName, dataTypeMirror));
     }
 
     private TargetViewBinder getTargetViewBinder(Element member) throws WitchException {

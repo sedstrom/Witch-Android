@@ -1,4 +1,4 @@
-package se.snylt.witch.viewbinder.recyclerview;
+package se.snylt.witch.android.recyclerview;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.snylt.witch.viewbinder.WitchTestUtils;
+import se.snylt.witch.android.WitchTestUtils;
 import se.snylt.witchcore.WitchCore;
 import se.snylt.witchcore.viewfinder.TagContainer;
 import se.snylt.witchcore.viewfinder.ViewFinder;
@@ -34,9 +34,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class RecyclerViewBinderAdapterTest {
+public class WitchRecyclerViewAdapterTest {
 
-    private RecyclerViewBinderAdapter<Object> adapter;
+    private WitchRecyclerViewAdapter<Object> adapter;
 
     private final static int EXISTING_BINDER_ITEM_POSITION = 0;
 
@@ -81,9 +81,9 @@ public class RecyclerViewBinderAdapterTest {
         when(context.getSystemService(eq(Service.LAYOUT_INFLATER_SERVICE))).thenReturn(inflater);
         when(parent.getContext()).thenReturn(context);
 
-        List<RecyclerViewBinderAdapter.Binder<?>> binders = new ArrayList<>();
+        List<WitchRecyclerViewAdapter.Binder<?>> binders = new ArrayList<>();
         binders.add(itemBinder);
-        adapter = new TestRecyclerViewBinderAdapter<>(items, binders);
+        adapter = new TestWitchRecyclerViewAdapter<>(items, binders);
     }
 
     @Test
@@ -139,7 +139,7 @@ public class RecyclerViewBinderAdapterTest {
         assertSame(items.size(), adapter.getItemCount());
     }
 
-    private class ItemBinder extends RecyclerViewBinderAdapter.Binder<Object> {
+    private class ItemBinder extends WitchRecyclerViewAdapter.Binder<Object> {
 
         private ItemBinder(int layoutId) {
             super(layoutId);
@@ -151,9 +151,9 @@ public class RecyclerViewBinderAdapterTest {
         }
     }
 
-    private class TestRecyclerViewBinderAdapter<T> extends RecyclerViewBinderAdapter<T> {
+    private class TestWitchRecyclerViewAdapter<T> extends WitchRecyclerViewAdapter<T> {
 
-        public TestRecyclerViewBinderAdapter(List<T> items, List<Binder<? extends T>> binders) {
+        public TestWitchRecyclerViewAdapter(List<T> items, List<Binder<? extends T>> binders) {
             super(items, binders);
         }
 

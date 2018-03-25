@@ -3,9 +3,9 @@ package se.snylt.witchcore;
 public class BinderFactory {
 
     /**
-     * Creates a binding from annotated target
+     * Creates a binder from annotated target
      * @param target annotated class
-     * @return binder
+     * @return binder that binds target
      */
     public TargetViewBinder createBinder(Object target) {
         try {

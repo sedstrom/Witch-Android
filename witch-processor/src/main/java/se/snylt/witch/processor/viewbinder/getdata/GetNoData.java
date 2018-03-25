@@ -8,7 +8,7 @@ import com.squareup.javapoet.TypeName;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 
-import static se.snylt.witch.processor.utils.TypeUtils.DIFF_VALUE_NO_DATA;
+import static se.snylt.witch.processor.utils.TypeUtils.DIFF_UTILS_NO_DATA;
 
 public class GetNoData implements GetData {
 
@@ -25,11 +25,11 @@ public class GetNoData implements GetData {
 
     @Override
     public MethodSpec create() {
-        return  MethodSpec.methodBuilder("getValue")
+        return  MethodSpec.methodBuilder("getData")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(targetTypeName, "target")
                 .returns(dataTypeName)
-                .addStatement("return $L", DIFF_VALUE_NO_DATA)
+                .addStatement("return $L", DIFF_UTILS_NO_DATA)
                 .build();
     }
 

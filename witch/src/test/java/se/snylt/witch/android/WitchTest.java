@@ -1,4 +1,4 @@
-package se.snylt.witch.viewbinder;
+package se.snylt.witch.android;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -75,24 +75,6 @@ public class WitchTest {
     public void bind_When_LooperNotMain_Should_ThrowIllegalStateException(){
         ((TestLooperHelper)Witch.looperHelper).isCurrentLooperMainLooper = false;
         Witch.bind(target, view);
-    }
-
-    @Test
-    public void spellBind_WithActivity_Should_DoWhateverBindDoes(){
-        // When
-        Witch.spellBind(target, activity);
-
-        // Then
-        verify(core).doBind(same(target), viewFinderWithTag(Witch.VIEW_HOLDER_TAG_DEFAULT));
-    }
-
-    @Test
-    public void spellBind_WithView_Should_DoWhateverBindDoes(){
-        // When
-        Witch.spellBind(target, view);
-
-        // Then
-        verify(core).doBind(same(target), viewFinderWithTag(Witch.VIEW_HOLDER_TAG_DEFAULT));
     }
 
     @Test

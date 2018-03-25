@@ -1,4 +1,4 @@
-package se.snylt.witch.viewbinder.recyclerview;
+package se.snylt.witch.android.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

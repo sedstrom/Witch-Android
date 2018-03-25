@@ -33,9 +33,9 @@ public class TypeUtils {
 
     public final static ClassName VIEW_BINDER = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "ViewBinder");
 
-    public final static TypeName DIFF_VALUE = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue");
+    public final static TypeName DIFF_UTILS = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffUtils");
 
-    public final static TypeName DIFF_VALUE_NO_DATA = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffValue.NO_DATA");
+    public final static TypeName DIFF_UTILS_NO_DATA = ClassName.get(LIBRARY_VIEW_BINDER_PACKAGE, "DiffUtils.NO_DATA");
 
     public static final ClassName TARGET_VIEW_BINDER = ClassName.get(LIBRARY_PACKAGE, "TargetViewBinder");
 

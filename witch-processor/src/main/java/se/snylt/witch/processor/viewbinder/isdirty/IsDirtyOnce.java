@@ -12,6 +12,6 @@ public class IsDirtyOnce extends IsDirty {
 
     @Override
     String getIsDirty() {
-        return "!" + TypeUtils.DIFF_VALUE.toString() + ".hasHistory(null, historyValue)";
+        return "!" + TypeUtils.DIFF_UTILS.toString() + ".hasHistory(null, historyData)";
     }
 }

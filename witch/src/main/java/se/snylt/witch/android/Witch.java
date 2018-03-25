@@ -1,7 +1,6 @@
-package se.snylt.witch.viewbinder;
+package se.snylt.witch.android;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.view.View;
 
 import se.snylt.witchcore.BinderFactory;
@@ -44,18 +43,10 @@ public class Witch {
         return witch().isLoggingEnabled();
     }
 
-
     /**
-     * Like {@link #bind(Object, Activity)} but more majestic.
-     */
-    public static void spellBind(Object target, Activity activity) {
-        bind(target, activity);
-    }
-
-    /**
-     * Bind annotated values in {@code binder} to views in {@code activity}
+     * Binds annotated data in {@code target} to views in {@code activity}
      *
-     * @param target view model
+     * @param target annotated target
      * @param activity activity containing views specified in {@code binder}
      */
     public static void bind(Object target, Activity activity) {
@@ -63,17 +54,10 @@ public class Witch {
     }
 
     /**
-     * Like {@link #bind(Object, View)} but more majestic.
-     */
-    public static void spellBind(Object target, View view) {
-        bind(target, view);
-    }
-
-    /**
-     * Bind annotated values in {@code binder} to views in {@code view}
+     * Binds annotated data in {@code target} to views in {@code view}
      *
-     * @param target view model
-     * @param view view containing child-views specified in {@code binder}
+     * @param target annotated target
+     * @param view view containing child-views specified in {@code target}
      */
     public static void bind(Object target, View view) {
         bind(target, viewFinder(view));

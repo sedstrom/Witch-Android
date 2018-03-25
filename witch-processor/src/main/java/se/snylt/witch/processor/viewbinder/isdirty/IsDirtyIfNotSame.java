@@ -1,7 +1,6 @@
 package se.snylt.witch.processor.viewbinder.isdirty;
 
 
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
 import se.snylt.witch.processor.utils.TypeUtils;
@@ -14,6 +13,6 @@ public class IsDirtyIfNotSame extends IsDirty {
 
     @Override
     String getIsDirty() {
-        return TypeUtils.DIFF_VALUE.toString() + ".notSame(getValue(target), historyValue)";
+        return TypeUtils.DIFF_UTILS.toString() + ".notSame(getData(target), historyData)";
     }
 }

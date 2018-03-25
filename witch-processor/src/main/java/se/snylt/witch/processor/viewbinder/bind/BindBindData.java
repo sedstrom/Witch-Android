@@ -35,15 +35,16 @@ public class BindBindData extends Bind {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(targetTypeName, "target")
                 .addParameter(viewTypeName, "view")
-                .addParameter(dataTypeName, "value")
+                .addParameter(dataTypeName, "data")
                 .addParameter(dataTypeName, "history")
                 .returns(void.class)
-                .addStatement("$N.$N(value)", "view", getPropertySetter(property))
+                .addStatement("$N.$N(data)", "view", getPropertySetter(property))
                 .build();
     }
 
     private static String getPropertySetter(String property) {
-        String firstUpperCase = property.toUpperCase().charAt(0) + ((property.length() > 0) ? property.substring(1) : "");
+        String firstUpperCase = property.toUpperCase().charAt(0) + ((property.length() > 0)
+                ? property.substring(1) : "");
         return "set" + firstUpperCase;
     }
 

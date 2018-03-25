@@ -1,4 +1,4 @@
-package se.snylt.witch.viewbinder.recyclerview;
+package se.snylt.witch.android.recyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.snylt.witch.viewbinder.Witch;
+import se.snylt.witch.android.Witch;
 
 /**
  * RecyclerView adapter that uses {@link Binder} for data binding.
@@ -17,18 +17,18 @@ import se.snylt.witch.viewbinder.Witch;
  *
  * @param <Item> data model for views.
  */
-public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyViewHolder> {
+public class WitchRecyclerViewAdapter<Item> extends RecyclerView.Adapter<EmptyViewHolder> {
 
     private List<Item> items;
 
     private final List<Binder<? extends Item>> binders;
 
-    public RecyclerViewBinderAdapter(List<Item> items, List<Binder<? extends Item>> binders) {
+    public WitchRecyclerViewAdapter(List<Item> items, List<Binder<? extends Item>> binders) {
         this.items = items;
         this.binders = binders;
     }
 
-    public RecyclerViewBinderAdapter(List<Binder<? extends Item>> binders) {
+    public WitchRecyclerViewAdapter(List<Binder<? extends Item>> binders) {
         this(null, binders);
     }
 
@@ -80,14 +80,14 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
     }
 
     /**
-     * Builder for {@link RecyclerViewBinderAdapter}
+     * Builder for {@link WitchRecyclerViewAdapter}
      * @param <Item> item type for adapter.
      */
     public static final class Builder<Item> {
 
         private final List<Item> items;
 
-        private List<RecyclerViewBinderAdapter.Binder<? extends Item>> binders = new ArrayList<>();
+        private List<WitchRecyclerViewAdapter.Binder<? extends Item>> binders = new ArrayList<>();
 
         public Builder(List<Item> items) {
             this.items = items;
@@ -97,13 +97,13 @@ public class RecyclerViewBinderAdapter<Item> extends RecyclerView.Adapter<EmptyV
             this(null);
         }
 
-        public Builder<Item> binder(RecyclerViewBinderAdapter.Binder<? extends Item> binder) {
+        public Builder<Item> binder(WitchRecyclerViewAdapter.Binder<? extends Item> binder) {
             this.binders.add(binder);
             return this;
         }
 
-        public final RecyclerViewBinderAdapter<Item> build() {
-            return new RecyclerViewBinderAdapter<>(items, binders);
+        public final WitchRecyclerViewAdapter<Item> build() {
+            return new WitchRecyclerViewAdapter<>(items, binders);
         }
 
     }

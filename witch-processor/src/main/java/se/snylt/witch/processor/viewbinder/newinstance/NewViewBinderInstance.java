@@ -19,21 +19,22 @@ public class NewViewBinderInstance implements TypeSpecModule {
 
     private final TypeName targetTypeName;
 
-    private final TypeName valueTypeName;
+    private final TypeName dataTypeName;
 
     public NewViewBinderInstance(int viewId, TypeName viewTypeName, TypeName viewHolderTypeName,
-            TypeName targetTypeName, TypeName valueTypeName) {
+            TypeName targetTypeName, TypeName dataTypeName) {
         this.viewId = viewId;
         this.viewTypeName = viewTypeName;
         this.viewHolderTypeName = viewHolderTypeName;
         this.targetTypeName = targetTypeName;
-        this.valueTypeName = valueTypeName;
+        this.dataTypeName = dataTypeName;
     }
 
     @Override
     public TypeSpec.Builder builder() {
         return TypeSpec.anonymousClassBuilder("$L", viewId)
-                .addSuperinterface(ParameterizedTypeName.get(VIEW_BINDER, targetTypeName, viewTypeName, valueTypeName, viewHolderTypeName));
+                .addSuperinterface(ParameterizedTypeName.get(VIEW_BINDER, targetTypeName,
+                        viewTypeName, dataTypeName, viewHolderTypeName));
 
     }
 }
