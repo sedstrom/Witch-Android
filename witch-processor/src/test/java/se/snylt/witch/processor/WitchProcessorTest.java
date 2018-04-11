@@ -3,6 +3,7 @@ package se.snylt.witch.processor;
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import javax.tools.JavaFileObject;
 import static com.google.testing.compile.CompilationSubject.assertThat;
@@ -19,6 +20,7 @@ public class WitchProcessorTest {
         return javac().withProcessors(new WitchProcessor(false)).compile(test);
     }
 
+
     @Test
     public void simpleDataBind() {
         Compilation compilation = compile("SimpleDataBind.java");
@@ -31,11 +33,43 @@ public class WitchProcessorTest {
         assertThat(compilation).succeeded();
     }
 
+
     @Test
-    public void simpleBindDataMethod() {
-        Compilation compilation = compile("SimpleBindDataMethod.java");
+    public void simpleBindMethod() {
+        Compilation compilation = compile("SimpleBindMethod.java");
         assertThat(compilation).succeeded();
     }
+
+    @Test
+    public void simpleBindMethodData() {
+        Compilation compilation = compile("SimpleBindMethodData.java");
+        assertThat(compilation).succeeded();
+    }
+
+    @Test
+    public void simpleBindMethodView() {
+        Compilation compilation = compile("SimpleBindMethodView.java");
+        assertThat(compilation).succeeded();
+    }
+
+    @Test
+    public void simpleBindMethodViewData() {
+        Compilation compilation = compile("SimpleBindMethodViewData.java");
+        assertThat(compilation).succeeded();
+    }
+
+    @Test
+    public void simpleBindMethodViewDataData() {
+        Compilation compilation = compile("SimpleBindMethodViewDataData.java");
+        assertThat(compilation).succeeded();
+    }
+
+    @Test
+    public void simpleBindMethodDataData() {
+        Compilation compilation = compile("SimpleBindMethodDataData.java");
+        assertThat(compilation).succeeded();
+    }
+
 
     @Test
     public void errorDataMissingBind() {
@@ -84,12 +118,32 @@ public class WitchProcessorTest {
     public void errorBindMethodWrongParameterCount() {
         Compilation compilation = compile("ErrorBindMethodWrongParameterCount.java");
         assertThat(compilation).hadErrorContaining("ErrorBindMethodWrongParameterCount");
-        assertThat(compilation).hadErrorContaining("void text(android.view.View" +
-                ",java.lang.String,java.lang.String,java.lang.String) has wrong number of parameters");
+        assertThat(compilation).hadErrorContaining("void text(android.view.View,java.lang.String,java.lang.String,java.lang.String) is not a valid bind method");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
+        assertValidBindMethodSignatures(compilation, "text");
     }
 
     @Test
+    public void errorBindMethodIncompatibleHistoryType() {
+        Compilation compilation = compile("ErrorIncompatibleHistoryType.java");
+        assertThat(compilation).hadErrorContaining("ErrorIncompatibleHistoryType");
+        assertThat(compilation).hadErrorContaining("void text(android.view.View,java.lang.String,java.lang.Integer) is not a valid bind method");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+        assertValidBindMethodSignatures(compilation, "text");
+    }
+
+    private void assertValidBindMethodSignatures(Compilation compilation, String methodName) {
+        assertThat(compilation).hadErrorContaining("Valid bind method signatures are:");
+        assertThat(compilation).hadErrorContaining(String.format("%s()", methodName));
+        assertThat(compilation).hadErrorContaining(String.format("%s(View)", methodName));
+        assertThat(compilation).hadErrorContaining(String.format("%s(View, Data)", methodName));
+        assertThat(compilation).hadErrorContaining(String.format("%s(View, Data, Data)", methodName));
+        assertThat(compilation).hadErrorContaining(String.format("%s(Data)", methodName));
+        assertThat(compilation).hadErrorContaining(String.format("%s(Data, Data)", methodName));
+    }
+
+    @Test
+    @Ignore
     public void errorBindMethodFirstParameterNotView() {
         Compilation compilation = compile("ErrorBindMethodFirstParameterNotView.java");
         assertThat(compilation).hadErrorContaining("ErrorBindMethodFirstParameterNotView");
@@ -157,14 +211,6 @@ public class WitchProcessorTest {
         Compilation compilation = compile("ErrorConflictingBindWhen.java");
         assertThat(compilation).hadErrorContaining("ErrorConflictingBindWhen");
         assertThat(compilation).hadErrorContaining("@BindWhen is defined multiple times for void text(android.view.View,java.lang.String)");
-        assertThat(compilation).hadErrorContaining(String.format(readMore));
-    }
-
-    @Test
-    public void errorIncompatibleHistoryType() {
-        Compilation compilation = compile("ErrorIncompatibleHistoryType.java");
-        assertThat(compilation).hadErrorContaining("ErrorIncompatibleHistoryType");
-        assertThat(compilation).hadErrorContaining("Incompatible history type for void text(android.view.View,java.lang.String,java.lang.Integer)");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 

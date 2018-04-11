@@ -44,6 +44,9 @@ import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotSame;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyOnce;
 import se.snylt.witch.processor.viewbinder.setview.SetViewHolderView;
 
+import static se.snylt.witch.processor.utils.ProcessorUtils.getBindDataViewTypeName;
+import static se.snylt.witch.processor.utils.ProcessorUtils.getBindMethod;
+
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({
         SupportedAnnotations.Data.name,
@@ -58,8 +61,6 @@ public class WitchProcessor extends AbstractProcessor {
     private final boolean throwOnError;
 
     private TypeUtils typeUtils;
-
-    private ProcessorUtils processorUtils;
 
     private Logger logger;
 
@@ -81,8 +82,8 @@ public class WitchProcessor extends AbstractProcessor {
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         typeUtils = new TypeUtils(processingEnv.getTypeUtils(), processingEnv.getElementUtils());
-        processorUtils = new ProcessorUtils(typeUtils);
         logger = new Logger(processingEnv.getMessager());
+        ProcessorUtils.typeUtils = typeUtils;
         filer = processingEnv.getFiler();
     }
 
@@ -158,7 +159,7 @@ public class WitchProcessor extends AbstractProcessor {
             TypeName targetTypeName = binder.getTargetTypeName();
             String property = bindData.getAnnotation(BindData.class).set();
             TypeMirror dataTypeMirror = typeUtils.getBoxedReturnTypeMirror(bindData);
-            TypeName viewTypeName = processorUtils.getBindDataViewTypeName(bindData);
+            TypeName viewTypeName = getBindDataViewTypeName(bindData);
             TypeName dataTypeName = typeUtils.getReturnTypeName(bindData);
             BindBindData bind = new BindBindData(property, targetTypeName, viewTypeName, dataTypeName, dataTypeMirror);
             binder.setBind(bind);
@@ -189,7 +190,7 @@ public class WitchProcessor extends AbstractProcessor {
             String propertyName = ProcessorUtils.getPropertyName(bind);
             ViewBinder.Builder viewBinder = getViewBinder(bind);
             TypeName targetTypeName = viewBinder.getTargetTypeName();
-            ProcessorUtils.BindSpec spec = processorUtils.getBindSpec(bind);
+            ProcessorUtils.BindMethod spec = getBindMethod(bind);
             viewBinder.setBind(new BindTargetMethod(bind, targetTypeName, propertyName, spec));
 
             // Get view

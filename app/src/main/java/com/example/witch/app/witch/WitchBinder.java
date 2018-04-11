@@ -1,6 +1,6 @@
 package com.example.witch.app.witch;
 
-import se.snylt.witch.viewbinder.Witch;
+import se.snylt.witch.android.Witch;
 import se.snylt.witchcore.viewfinder.ViewFinder;
 
 // Simple class for binding this with view finder.

@@ -27,8 +27,11 @@ android {
 dependencies {
 
     // Witch
-    annotationProcessor "se.snylt:witch-processor:1.0-SNAPSHOT"
-    implementation "se.snylt:witch:1.0-SNAPSHOT"
+    // annotationProcessor "se.snylt:witch-processor:1.0-SNAPSHOT"
+    // implementation "se.snylt:witch:1.0-SNAPSHOT"
+
+    annotationProcessor project(":witch-processor")
+    implementation project(":witch")
 
     // Support
     implementation rootProject.ext.deps.supportAppCompat

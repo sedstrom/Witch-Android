@@ -5,7 +5,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.drawable.DrawerArrowDrawable;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
@@ -20,11 +23,11 @@ import com.example.witch.app.list.ListActivity;
 import java.util.Observable;
 import java.util.Observer;
 
+import se.snylt.witch.android.Witch;
 import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.BindWhen;
 import se.snylt.witch.annotations.Data;
-import se.snylt.witch.viewbinder.Witch;
 
 public class LoginActivity extends AppCompatActivity implements Observer {
 

@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import se.snylt.witch.android.Witch;
+import se.snylt.witch.android.recyclerview.WitchRecyclerViewAdapter;
 import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.BindWhen;
 import se.snylt.witch.annotations.Data;
-import se.snylt.witch.viewbinder.Witch;
-import se.snylt.witch.viewbinder.recyclerview.RecyclerViewBinderAdapter;
 
 import static android.support.v7.widget.RecyclerView.VERTICAL;
 
@@ -99,7 +99,7 @@ public class ListActivity extends AppCompatActivity implements Observer {
 
     @Bind(id = R.id.recycler_view) @BindWhen(BindWhen.ONCE)
     void setupList(RecyclerView recyclerView) {
-        recyclerView.setAdapter(new RecyclerViewBinderAdapter.Builder<String>()
+        recyclerView.setAdapter(new WitchRecyclerViewAdapter.Builder<String>()
                 .binder(new DataBinder())
                 .build());
 
@@ -113,10 +113,10 @@ public class ListActivity extends AppCompatActivity implements Observer {
 
     @Bind(id = R.id.recycler_view)
     void listData(RecyclerView recyclerView, List<String> data, List<String> historyData) {
-        ((RecyclerViewBinderAdapter<String>)recyclerView.getAdapter()).setItems(data);
+        ((WitchRecyclerViewAdapter<String>)recyclerView.getAdapter()).setItems(data);
     }
 
-    class DataBinder extends RecyclerViewBinderAdapter.Binder<String> {
+    class DataBinder extends WitchRecyclerViewAdapter.Binder<String> {
 
         private DataBinder() { super(R.layout.data_list_item); }
 

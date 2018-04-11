@@ -1,9 +1,11 @@
 package se.snylt.witch.processor;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
 
 import se.snylt.witch.annotations.BindWhen;
+import se.snylt.witch.processor.utils.ProcessorUtils;
 
 import static se.snylt.witch.processor.utils.TypeUtils.getReturnTypeDescription;
 
@@ -60,24 +62,6 @@ public class WitchException extends Exception {
         );
     }
 
-    public static WitchException bindMethodWrongArgumentCount(Element bindMethod) {
-        return new WitchException(
-                String.format(
-                        "%s %s has wrong number of parameters. " + readMore
-                        , errorForElementParent(bindMethod)
-                        , withReturnType(bindMethod))
-        );
-    }
-
-    public static WitchException bindMethodWrongViewType(Element bindMethod) {
-        return new WitchException(
-                String.format(
-                        "%s %s has invalid view type. " + readMore
-                        , errorForElementParent(bindMethod)
-                        , withReturnType(bindMethod))
-        );
-    }
-
     public static WitchException incompatibleDataTypes(Element data, Element bindMethod) {
         return new WitchException(
                 String.format(
@@ -115,12 +99,30 @@ public class WitchException extends Exception {
         return new WitchRuntimeException(getMessage());
     }
 
-    public static WitchException incompatibleHistoryType(Element bindMethod) {
+    public static WitchException invalidBindMethod(Element bindMethod) {
         return new WitchException(
                 String.format(
-                        "%s Incompatible history type for %s. " + readMore
+                        "%s%s is not a valid bind method.\n%s" + readMore
                         , errorForElementParent(bindMethod)
-                        , withReturnType(bindMethod))
+                        , withReturnType(bindMethod)
+                        , validBindMethodSignatures(bindMethod))
         );
     }
+
+    private static String validBindMethodSignatures(Element bindMethod) {
+        return String.format("Valid bind method signatures are:\n%s"
+                        , describeBindMethodSignatures(bindMethod));
+    }
+
+    private static String describeBindMethodSignatures(Element bindMethod) {
+        String simpleName = bindMethod.getSimpleName().toString();
+        StringBuilder builder = new StringBuilder();
+        for (ProcessorUtils.BindMethod.Type type: ProcessorUtils.BindMethod.Type.values()) {
+            builder.append(simpleName);
+            builder.append(type.getSignatureDescription());
+            builder.append("\n");
+        }
+        return builder.toString();
+    }
+
 }

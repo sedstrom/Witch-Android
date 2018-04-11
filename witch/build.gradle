@@ -21,7 +21,10 @@ android {
     sourceSets {
         main.java.srcDirs += '../witch-core/src/main/java'
     }
+
+
 }
+
 
 dependencies {
 

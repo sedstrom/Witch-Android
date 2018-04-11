@@ -15,13 +15,13 @@ public class BindTargetMethod extends Bind {
 
     private final String propertyName;
 
-    private final ProcessorUtils.BindSpec bindSpec;
+    private final ProcessorUtils.BindMethod bindMethod;
 
-    public BindTargetMethod(Element element, TypeName targetTypeName, String propertyName, ProcessorUtils.BindSpec bindSpec) {
+    public BindTargetMethod(Element element, TypeName targetTypeName, String propertyName, ProcessorUtils.BindMethod bindMethod) {
         this.element = element;
         this.targetTypeName = targetTypeName;
         this.propertyName = propertyName;
-        this.bindSpec = bindSpec;
+        this.bindMethod = bindMethod;
     }
 
     @Override
@@ -29,23 +29,29 @@ public class BindTargetMethod extends Bind {
         return MethodSpec.methodBuilder("bind")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(targetTypeName, "target")
-                .addParameter(bindSpec.getViewTypeName(), "view")
-                .addParameter(bindSpec.getDataTypeName(), "value")
-                .addParameter(bindSpec.getDataTypeName(), "history")
+                .addParameter(bindMethod.getViewTypeName(), "view")
+                .addParameter(bindMethod.getDataTypeName(), "data")
+                .addParameter(bindMethod.getDataTypeName(), "history")
                 .returns(void.class)
                 .addStatement(getBindStatement(), "target", propertyName)
                 .build();
     }
 
     private String getBindStatement() {
-        switch (bindSpec.getType()) {
-            case NO_DATA:
+        switch (bindMethod.getType()) {
+            case EMPTY:
+                return "$N.$N()";
+            case VIEW:
                 return "$N.$N(view)";
+            case VIEW_DATA:
+                return "$N.$N(view, data)";
+            case VIEW_DATA_HISTORY:
+                return "$N.$N(view, data, history)";
             case DATA:
-                return "$N.$N(view, value)";
-            case DATA_WITH_HISTORY:
+                return "$N.$N(data)";
+            case DATA_HISTORY:
             default:
-                return "$N.$N(view, value, history)";
+                return "$N.$N(data, history)";
         }
     }
 
@@ -56,11 +62,11 @@ public class BindTargetMethod extends Bind {
 
     @Override
     public TypeName getDataTypeName() {
-        return bindSpec.getDataTypeName();
+        return bindMethod.getDataTypeName();
     }
 
     @Override
     public TypeMirror getDataTypeMirror() {
-        return bindSpec.getDataTypeMirror();
+        return bindMethod.getDataTypeMirror();
     }
 }

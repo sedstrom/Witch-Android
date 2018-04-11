@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface Bind {
 
-    @IdRes int id();
+    public final static int NO_ID = -1;
+
+    @IdRes int id() default NO_ID;
 
 }

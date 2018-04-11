@@ -3,7 +3,7 @@ package com.example.witch.app;
 import com.squareup.leakcanary.LeakCanary;
 import android.app.Application;
 
-import se.snylt.witch.viewbinder.Witch;
+import se.snylt.witch.android.Witch;
 
 public class App extends Application {
 

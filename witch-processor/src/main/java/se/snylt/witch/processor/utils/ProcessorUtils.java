@@ -3,7 +3,6 @@ package se.snylt.witch.processor.utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Element;
@@ -23,11 +22,7 @@ import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_VIEW;
 
 public class ProcessorUtils {
 
-    private final TypeUtils typeUtils;
-
-    public ProcessorUtils(TypeUtils typeUtils) {
-        this.typeUtils = typeUtils;
-    }
+    public static TypeUtils typeUtils;
 
     public static String getPropertySetter(String property) {
         return "set" + capitalize(property);
@@ -70,93 +65,67 @@ public class ProcessorUtils {
         throw WitchException.invalidDataAccessor(element);
     }
 
-    public BindSpec getBindSpec(Element bindMethod) throws WitchException {
+    public static BindMethod getBindMethod(Element bindMethod) throws WitchException {
+
         if(!isAccessibleMethod(bindMethod)) {
             throw WitchException.bindMethodNotAccessible(bindMethod);
         }
 
-        ExecutableType type = (ExecutableType) bindMethod.asType();
-        List<? extends TypeMirror> parameters = type.getParameterTypes();
-        if(parameters.size() > 3 || parameters.size() == 0) {
-            throw WitchException.bindMethodWrongArgumentCount(bindMethod);
+        List<? extends TypeMirror> parameters = ((ExecutableType) bindMethod.asType()).getParameterTypes();
+        if (isEmpty(parameters)) {
+            return new BindMethod(parameters, BindMethod.Type.EMPTY);
+        } else if (isView(parameters)) {
+            return new BindMethod(parameters, BindMethod.Type.VIEW);
+        } else if (isViewData(parameters)) {
+            return new BindMethod(parameters, BindMethod.Type.VIEW_DATA);
+        } else if (isViewDataHistory(parameters)) {
+            return new BindMethod(parameters, BindMethod.Type.VIEW_DATA_HISTORY);
+        } else if (isData(parameters)) {
+            return new BindMethod(parameters, BindMethod.Type.DATA);
+        } else if (isDataHistory(parameters)) {
+            return new BindMethod(parameters, BindMethod.Type.DATA_HISTORY);
         }
 
-        List<TypeMirror> typeMirrors = new ArrayList<>();
-
-        // View
-        TypeMirror view = parameters.get(0);
-        if(!typeUtils.isSubtype(view, typeUtils.typeMirror(ANDROID_VIEW))) {
-            throw WitchException.bindMethodWrongViewType(bindMethod);
-        }
-        typeMirrors.add(view);
-
-        // Data
-        TypeMirror data = null;
-        if (parameters.size() > 1) {
-            data = typeUtils.boxed(parameters.get(1));
-            typeMirrors.add(data);
-        }
-
-        // Data history
-        if (parameters.size() > 2) {
-            TypeMirror dataHistory = typeUtils.boxed(parameters.get(2));
-            if (data != null && !typeUtils.isSameType(data, dataHistory)) {
-                throw WitchException.incompatibleHistoryType(bindMethod);
-            }
-            typeMirrors.add(dataHistory);
-        }
-
-        switch (parameters.size()) {
-            case 1:
-                return new BindSpec(typeMirrors, BindSpec.Type.NO_DATA);
-            case 2:
-                return new BindSpec(typeMirrors, BindSpec.Type.DATA);
-            case 3:
-                return new BindSpec(typeMirrors, BindSpec.Type.DATA_WITH_HISTORY);
-            default:
-                throw WitchException.bindMethodWrongArgumentCount(bindMethod);
-        }
+        throw WitchException.invalidBindMethod(bindMethod);
     }
 
-    public static class BindSpec {
-
-        private final TypeMirror viewTypeMirror;
-
-        private final TypeMirror dataTypeMirror;
-
-        private final Type type;
-
-        public enum Type {
-            NO_DATA,
-            DATA,
-            DATA_WITH_HISTORY
-        }
-
-        BindSpec(List<TypeMirror> paramTypeMirrors, Type type) {
-            this.viewTypeMirror = paramTypeMirrors.get(0);
-            this.dataTypeMirror = paramTypeMirrors.size() > 1 ? paramTypeMirrors.get(1) : null;
-            this.type = type;
-        }
-
-        public Type getType() {
-            return type;
-        }
-
-        public TypeName getViewTypeName() {
-            return TypeName.get(viewTypeMirror);
-        }
-
-        public TypeName getDataTypeName() {
-            return dataTypeMirror != null ? TypeName.get(dataTypeMirror) : ClassName.OBJECT;
-        }
-
-        public TypeMirror getDataTypeMirror() {
-            return dataTypeMirror;
-        }
-
+    private static boolean  isEmpty(List<? extends TypeMirror> parameters) {
+        return parameters.isEmpty();
     }
 
-    public TypeName getBindDataViewTypeName(Element action) {
+    private static boolean isView(List<? extends TypeMirror> parameters) {
+        return parameters.size() == 1 && isAndroidView(parameters.get(0));
+    }
+
+    private static boolean isViewData(List<? extends TypeMirror> parameters) {
+        return parameters.size() == 2 && isAndroidView(parameters.get(0));
+    }
+
+    private static boolean isViewDataHistory(List<? extends TypeMirror> parameters) {
+        return parameters.size() == 3
+                && isAndroidView(parameters.get(0))
+                && isSameType(parameters.get(1), parameters.get(2));
+    }
+
+    private static boolean isData(List<? extends TypeMirror> parameters) {
+        return parameters.size() == 1 && !isAndroidView(parameters.get(0));
+    }
+
+    private static boolean isDataHistory(List<? extends TypeMirror> parameters) {
+        return parameters.size() == 2
+                && !isAndroidView(parameters.get(0))
+                && isSameType(parameters.get(0), parameters.get(1));
+    }
+
+    private static boolean isAndroidView(TypeMirror typeMirror) {
+        return typeUtils.isSubtype(typeMirror, typeUtils.typeMirror(ANDROID_VIEW));
+    }
+
+    private static boolean isSameType(TypeMirror one, TypeMirror two) {
+        return typeUtils.isSameType(one, two);
+    }
+
+    public static TypeName getBindDataViewTypeName(Element action) {
         TypeMirror bindClass;
         try {
             action.getAnnotation(BindData.class).view();
@@ -165,5 +134,81 @@ public class ProcessorUtils {
             bindClass = mte.getTypeMirror();
         }
         return TypeName.get(bindClass);
+    }
+
+    public static class BindMethod {
+
+        private final List<? extends TypeMirror> parameters;
+
+        private final Type type;
+
+        public enum Type {
+            EMPTY,
+            VIEW,
+            VIEW_DATA,
+            VIEW_DATA_HISTORY,
+            DATA,
+            DATA_HISTORY;
+
+            public String getSignatureDescription() {
+                switch (this) {
+                    case EMPTY:
+                        return "()";
+                    case VIEW:
+                        return "(View)";
+                    case VIEW_DATA:
+                        return "(View, Data)";
+                    case VIEW_DATA_HISTORY:
+                        return "(View, Data, Data)";
+                    case DATA:
+                        return "(Data)";
+                    case DATA_HISTORY:
+                        return "(Data, Data)";
+                }
+                return "";
+            }
+        }
+
+        BindMethod(List<? extends TypeMirror> parameters, Type type) {
+            this.type = type;
+            this.parameters = parameters;
+        }
+
+        public Type getType() {
+            return type;
+        }
+
+        public TypeName getViewTypeName() {
+            switch (getType()) {
+                case VIEW:
+                case VIEW_DATA:
+                case VIEW_DATA_HISTORY:
+                    return TypeName.get(parameters.get(0));
+                case EMPTY:
+                case DATA:
+                case DATA_HISTORY:
+                default:
+                    return ANDROID_VIEW;
+            }
+        }
+
+        public TypeName getDataTypeName() {
+            return TypeName.get(getDataTypeMirror());
+        }
+
+        public TypeMirror getDataTypeMirror() {
+            switch (getType()) {
+                case VIEW_DATA:
+                case VIEW_DATA_HISTORY:
+                    return typeUtils.boxed(parameters.get(1));
+                case DATA:
+                case DATA_HISTORY:
+                    return typeUtils.boxed(parameters.get(0));
+                case VIEW:
+                case EMPTY:
+                default:
+                    return typeUtils.typeMirror(ClassName.OBJECT);
+            }
+        }
     }
 }

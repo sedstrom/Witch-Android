@@ -4,7 +4,7 @@ import android.view.View;
 import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.Data;
 
-class SimpleBindDataMethod {
+class SimpleBindMethodViewData {
 
     @Data
     String text() {
