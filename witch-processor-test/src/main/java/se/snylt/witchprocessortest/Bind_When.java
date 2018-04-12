@@ -6,7 +6,7 @@ import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.BindWhen;
 
-class BindWhenViewModel {
+class Bind_When {
 
     @BindData(id = R.id.testIdOne, view = TextView.class, set = "text")
     @BindWhen(BindWhen.ALWAYS)
