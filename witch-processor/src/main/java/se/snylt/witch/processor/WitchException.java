@@ -1,10 +1,7 @@
 package se.snylt.witch.processor;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.type.ExecutableType;
-import javax.lang.model.type.TypeMirror;
 
-import se.snylt.witch.annotations.BindWhen;
 import se.snylt.witch.processor.utils.ProcessorUtils;
 
 import static se.snylt.witch.processor.utils.TypeUtils.getReturnTypeDescription;
@@ -21,9 +18,9 @@ public class WitchException extends Exception {
         return String.format("Witch error in %s:\n", child.getEnclosingElement());
     }
 
-    private static String withReturnType(Element child) {
-        String returnType = getReturnTypeDescription(child);
-        String childName = child.toString();
+    private static String methodWithReturnType(Element method) {
+        String returnType = getReturnTypeDescription(method);
+        String childName = method.toString();
         return String.format("%s %s", returnType, childName);
     }
 
@@ -39,7 +36,7 @@ public class WitchException extends Exception {
                     + "- Has a non-void return type\n"
                     + readMore
                     , errorForElementParent(value)
-                    , withReturnType(value))
+                    , methodWithReturnType(value))
         );
     }
 
@@ -49,7 +46,7 @@ public class WitchException extends Exception {
                         "%s %s is not accessible. " +
                                 "Make sure bind method is not private nor protected. " + readMore
                         , errorForElementParent(method)
-                        , withReturnType(method))
+                        , methodWithReturnType(method))
         );
     }
 
@@ -58,7 +55,7 @@ public class WitchException extends Exception {
                 String.format(
                         "%s %s is missing a bind method. " + readMore
                         , errorForElementParent(data)
-                        , withReturnType(data))
+                        , methodWithReturnType(data))
         );
     }
 
@@ -67,8 +64,8 @@ public class WitchException extends Exception {
                 String.format(
                         "%s%s\nis invalid bind method for:\n%s.\nData types are incompatible. " + readMore
                         , errorForElementParent(bindMethod)
-                        , withReturnType(bindMethod)
-                        , withReturnType(data))
+                        , methodWithReturnType(bindMethod)
+                        , methodWithReturnType(data))
         );
     }
 
@@ -91,7 +88,7 @@ public class WitchException extends Exception {
                 String.format(
                         "%s @BindWhen is defined multiple times for %s. " + readMore
                         , errorForElementParent(element)
-                        , withReturnType(element))
+                        , methodWithReturnType(element))
         );
     }
 
@@ -104,8 +101,18 @@ public class WitchException extends Exception {
                 String.format(
                         "%s%s is not a valid bind method.\n%s" + readMore
                         , errorForElementParent(bindMethod)
-                        , withReturnType(bindMethod)
+                        , methodWithReturnType(bindMethod)
                         , validBindMethodSignatures(bindMethod))
+        );
+    }
+
+    public static WitchException bindMethodMissingData(Element bindMethod, String missingDataName) {
+        return new WitchException(
+                String.format(
+                        "%sMissing @Data-annotated field named \"%s\" for bind method %s\n" + readMore
+                        , errorForElementParent(bindMethod)
+                        , missingDataName
+                        , methodWithReturnType(bindMethod))
         );
     }
 
@@ -125,4 +132,21 @@ public class WitchException extends Exception {
         return builder.toString();
     }
 
+    public static WitchException bindNullNotCombinedWithBind(Element bindNull) {
+        return new WitchException(
+                String.format(
+                        "%sInvalid use of @BindNull at %s.\n@BindNull must be combined with a @Bind or @BindData annotation.\n" + readMore
+                        , errorForElementParent(bindNull)
+                        , methodWithReturnType(bindNull))
+        );
+    }
+
+    public static WitchException bindWhenNotCombinedWithBind(Element bindWhen) {
+        return new WitchException(
+                String.format(
+                        "%sInvalid use of @BindWhen at %s.\n@BindWhen must be combined with a @Bind or @BindData annotation.\n" + readMore
+                        , errorForElementParent(bindWhen)
+                        , methodWithReturnType(bindWhen))
+        );
+    }
 }

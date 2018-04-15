@@ -1,7 +1,5 @@
 package com.example.witch.app.login;
 
-import com.example.witch.app.LoginManager;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;

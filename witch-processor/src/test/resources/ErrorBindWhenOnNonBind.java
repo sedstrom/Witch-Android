@@ -2,15 +2,12 @@ package com.example.witch.app;
 
 import se.snylt.witch.annotations.Data;
 import se.snylt.witch.annotations.Bind;
+import se.snylt.witch.annotations.BindWhen;
 import android.view.View;
 
-class ErrorBindMethodFirstParameterNotView {
+class ErrorBindWhenOnNonBind {
 
     @Data
-    String text = "foo";
-
-    @Bind(id = 0)
-    void text(String text, View view) {
-
-    }
+    @BindWhen(BindWhen.ALWAYS)
+    String data = "foo";
 }

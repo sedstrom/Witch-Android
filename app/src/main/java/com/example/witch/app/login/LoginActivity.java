@@ -5,10 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.drawable.DrawerArrowDrawable;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
@@ -16,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.witch.R;
-import com.example.witch.app.LoginManager;
 import com.example.witch.app.TextWatcherAdapter;
 import com.example.witch.app.list.ListActivity;
 
@@ -68,6 +64,7 @@ public class LoginActivity extends AppCompatActivity implements Observer {
         return viewManager.getState();
     }
 
+    // Setup
     @BindData(id= R.id.loginbutton, view = View.class, set = "onClickListener")
     @BindWhen(BindWhen.ONCE)
     final View.OnClickListener loginButton = new View.OnClickListener() {
@@ -97,7 +94,8 @@ public class LoginActivity extends AppCompatActivity implements Observer {
         });
     }
 
-    @Data @BindWhen(BindWhen.NOT_EQUALS)
+    // Bind
+    @Data
     String emailTitle() {
         if (state().getErrors().contains(LoginManager.LoginError.EMPTY_EMAIL)) {
             return "Email address";
@@ -107,15 +105,15 @@ public class LoginActivity extends AppCompatActivity implements Observer {
         return "Perfect!";
     }
 
-    @Bind(id = R.id.emailTitle)
-    void emailTitle(TextView textView, String title) {
+    @Bind(id = R.id.emailTitle) @BindWhen(BindWhen.NOT_EQUALS)
+    void bindEmailTitle(TextView textView, String emailTitle) {
         textView.setTranslationY(textView.getHeight()*1.5f);
         textView.setAlpha(0);
         textView.animate()
                 .translationY(0)
                 .alpha(1)
                 .setInterpolator(new OvershootInterpolator()).setDuration(400).start();
-        textView.setText(title);
+        textView.setText(emailTitle);
     }
 
     @BindData(id = R.id.emailTitle, view = TextView.class, set="textColor")
@@ -162,8 +160,7 @@ public class LoginActivity extends AppCompatActivity implements Observer {
     }
 
     @Bind(id = R.id.content)
-    void loggedInMessage(View view, String message) {
-        Toast.makeText(view.getContext(), message, Toast.LENGTH_LONG).show();
+    void bindLoggedInMessage(View view, String loggedInMessage) {
+        Toast.makeText(view.getContext(), loggedInMessage, Toast.LENGTH_LONG).show();
     }
-
 }

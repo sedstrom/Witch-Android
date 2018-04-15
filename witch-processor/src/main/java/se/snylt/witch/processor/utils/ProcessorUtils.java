@@ -3,11 +3,14 @@ package se.snylt.witch.processor.utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
+import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
@@ -73,17 +76,17 @@ public class ProcessorUtils {
 
         List<? extends TypeMirror> parameters = ((ExecutableType) bindMethod.asType()).getParameterTypes();
         if (isEmpty(parameters)) {
-            return new BindMethod(parameters, BindMethod.Type.EMPTY);
+            return new BindMethod(bindMethod, BindMethod.Type.EMPTY);
         } else if (isView(parameters)) {
-            return new BindMethod(parameters, BindMethod.Type.VIEW);
+            return new BindMethod(bindMethod, BindMethod.Type.VIEW);
         } else if (isViewData(parameters)) {
-            return new BindMethod(parameters, BindMethod.Type.VIEW_DATA);
+            return new BindMethod(bindMethod, BindMethod.Type.VIEW_DATA);
         } else if (isViewDataHistory(parameters)) {
-            return new BindMethod(parameters, BindMethod.Type.VIEW_DATA_HISTORY);
+            return new BindMethod(bindMethod, BindMethod.Type.VIEW_DATA_HISTORY);
         } else if (isData(parameters)) {
-            return new BindMethod(parameters, BindMethod.Type.DATA);
+            return new BindMethod(bindMethod, BindMethod.Type.DATA);
         } else if (isDataHistory(parameters)) {
-            return new BindMethod(parameters, BindMethod.Type.DATA_HISTORY);
+            return new BindMethod(bindMethod, BindMethod.Type.DATA_HISTORY);
         }
 
         throw WitchException.invalidBindMethod(bindMethod);
@@ -138,9 +141,11 @@ public class ProcessorUtils {
 
     public static class BindMethod {
 
-        private final List<? extends TypeMirror> parameters;
+        private final List<? extends VariableElement> parameters;
 
         private final Type type;
+
+        private final ExecutableElement bindMethodElement;
 
         public enum Type {
             EMPTY,
@@ -169,46 +174,85 @@ public class ProcessorUtils {
             }
         }
 
-        BindMethod(List<? extends TypeMirror> parameters, Type type) {
+        BindMethod(Element bindMethodElement, Type type) {
+            this.bindMethodElement = (ExecutableElement) bindMethodElement;
             this.type = type;
-            this.parameters = parameters;
+            this.parameters = this.bindMethodElement.getParameters();
+        }
+
+        public String getMethodName() {
+            return bindMethodElement.getSimpleName().toString();
         }
 
         public Type getType() {
             return type;
         }
 
-        public TypeName getViewTypeName() {
+        public boolean hasViewParameter() {
+            return getViewParameter() != null;
+        }
+
+        public TypeMirror getViewParameter() {
             switch (getType()) {
                 case VIEW:
                 case VIEW_DATA:
                 case VIEW_DATA_HISTORY:
-                    return TypeName.get(parameters.get(0));
+                    return parameters.get(0).asType();
                 case EMPTY:
                 case DATA:
                 case DATA_HISTORY:
                 default:
-                    return ANDROID_VIEW;
+                    return null;
             }
+        }
+
+        public TypeName getViewTypeName() {
+            return getViewParameter() != null
+                    ? TypeName.get(getViewParameter())
+                    : ANDROID_VIEW;
         }
 
         public TypeName getDataTypeName() {
             return TypeName.get(getDataTypeMirror());
         }
 
+        public String getDataParameterName() {
+            VariableElement element = getDataParameter();
+            if (element != null) {
+                return element.getSimpleName().toString();
+            } else {
+                return "";
+            }
+        }
+
         public TypeMirror getDataTypeMirror() {
+            VariableElement element = getDataParameter();
+            if (element != null) {
+                return typeUtils.boxed(element.asType());
+            } else {
+                return typeUtils.typeMirror(ClassName.OBJECT);
+            }
+        }
+
+        private VariableElement getDataParameter() {
             switch (getType()) {
                 case VIEW_DATA:
                 case VIEW_DATA_HISTORY:
-                    return typeUtils.boxed(parameters.get(1));
+                    return parameters.get(1);
                 case DATA:
                 case DATA_HISTORY:
-                    return typeUtils.boxed(parameters.get(0));
+                    return parameters.get(0);
                 case VIEW:
                 case EMPTY:
                 default:
-                    return typeUtils.typeMirror(ClassName.OBJECT);
+                    return null;
             }
         }
+
+        public boolean hasDataParameter() {
+            return getDataParameter() != null;
+        }
     }
+
+
 }

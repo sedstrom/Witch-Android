@@ -8,6 +8,7 @@ import org.junit.Test;
 import javax.tools.JavaFileObject;
 import static com.google.testing.compile.CompilationSubject.assertThat;
 import static com.google.testing.compile.Compiler.javac;
+import static org.junit.Assert.fail;
 
 public class WitchProcessorTest {
 
@@ -68,15 +69,6 @@ public class WitchProcessorTest {
     public void simpleBindMethodDataData() {
         Compilation compilation = compile("SimpleBindMethodDataData.java");
         assertThat(compilation).succeeded();
-    }
-
-
-    @Test
-    public void errorDataMissingBind() {
-        Compilation compilation = compile("ErrorDataMissingBind.java");
-        assertThat(compilation).hadErrorContaining("ErrorDataMissingBind");
-        assertThat(compilation).hadErrorContaining("java.lang.String text is missing a bind method");
-        assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 
     @Test
@@ -143,19 +135,10 @@ public class WitchProcessorTest {
     }
 
     @Test
-    @Ignore
-    public void errorBindMethodFirstParameterNotView() {
-        Compilation compilation = compile("ErrorBindMethodFirstParameterNotView.java");
-        assertThat(compilation).hadErrorContaining("ErrorBindMethodFirstParameterNotView");
-        assertThat(compilation).hadErrorContaining("void text(java.lang.String,android.view.View) has invalid view type");
-        assertThat(compilation).hadErrorContaining(String.format(readMore));
-    }
-
-    @Test
     public void errorIncompatibleDataTypes() {
         Compilation compilation = compile("ErrorIncompatibleDataTypes.java");
         assertThat(compilation).hadErrorContaining("ErrorIncompatibleDataTypes");
-        assertThat(compilation).hadErrorContaining("void text(android.view.View,java.lang.Integer)");
+        assertThat(compilation).hadErrorContaining("void bind(android.view.View,java.lang.Integer)");
         assertThat(compilation).hadErrorContaining("is invalid bind method for:");
         assertThat(compilation).hadErrorContaining("java.lang.String text");
         assertThat(compilation).hadErrorContaining("Data types are incompatible");
@@ -197,7 +180,7 @@ public class WitchProcessorTest {
     public void errorInvalidBindWhen() {
         Compilation compilation = compile("ErrorInvalidBindWhen.java");
         assertThat(compilation).hadErrorContaining("ErrorInvalidBindWhen");
-        assertThat(compilation).hadErrorContaining("text has invalid value \"sometimes\" for @BindWhen");
+        assertThat(compilation).hadErrorContaining("text(android.view.View) has invalid value \"sometimes\" for @BindWhen");
         assertThat(compilation).hadErrorContaining("Valid values are");
         assertThat(compilation).hadErrorContaining("BindWhen.NOT_SAME");
         assertThat(compilation).hadErrorContaining("BindWhen.NOT_EQUALS");
@@ -207,11 +190,28 @@ public class WitchProcessorTest {
     }
 
     @Test
-    public void errorConflictingBindWhen() {
-        Compilation compilation = compile("ErrorConflictingBindWhen.java");
-        assertThat(compilation).hadErrorContaining("ErrorConflictingBindWhen");
-        assertThat(compilation).hadErrorContaining("@BindWhen is defined multiple times for void text(android.view.View,java.lang.String)");
+    public void errorBindDataMissingData() {
+        Compilation compilation = compile("ErrorBindDataMissingData.java");
+        assertThat(compilation).hadErrorContaining("ErrorBindDataMissingData");
+        assertThat(compilation).hadErrorContaining("Missing @Data-annotated field named \"missingData\" for bind method void bind(java.lang.String)");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
     }
 
+    @Test
+    public void errorBindWhenOnNonBind() {
+        Compilation compilation = compile("ErrorBindWhenOnNonBind.java");
+        assertThat(compilation).hadErrorContaining("ErrorBindWhenOnNonBind");
+        assertThat(compilation).hadErrorContaining("Invalid use of @BindWhen at java.lang.String data.");
+        assertThat(compilation).hadErrorContaining("@BindWhen must be combined with a @Bind or @BindData annotation.");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+    }
+
+    @Test
+    public void errorBindNullOnNonBind() {
+        Compilation compilation = compile("ErrorBindNullOnNonBind.java");
+        assertThat(compilation).hadErrorContaining("ErrorBindNullOnNonBind");
+        assertThat(compilation).hadErrorContaining("Invalid use of @BindNull at java.lang.String data.");
+        assertThat(compilation).hadErrorContaining("@BindNull must be combined with a @Bind or @BindData annotation.");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+    }
 }

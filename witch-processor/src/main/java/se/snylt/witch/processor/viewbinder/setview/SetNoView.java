@@ -6,18 +6,14 @@ import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 
-public class SetViewHolderView implements SetView {
+import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_VIEW;
 
-    private final TypeName viewTypeName;
+public class SetNoView implements SetView {
 
     private final TypeName viewHolderTypeName;
 
-    private final String viewName;
-
-    public SetViewHolderView(TypeName viewTypeName, TypeName viewHolderTypeName, String viewName) {
-        this.viewTypeName = viewTypeName;
+    public SetNoView(TypeName viewHolderTypeName) {
         this.viewHolderTypeName = viewHolderTypeName;
-        this.viewName = viewName;
     }
 
     @Override
@@ -25,9 +21,8 @@ public class SetViewHolderView implements SetView {
         return MethodSpec.methodBuilder("setView")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(viewHolderTypeName, "viewHolder")
-                .addParameter(viewTypeName, "view")
+                .addParameter(ANDROID_VIEW, "view")
                 .returns(void.class)
-                .addStatement("viewHolder.$N = $N", viewName, "view")
                 .build();
     }
 }

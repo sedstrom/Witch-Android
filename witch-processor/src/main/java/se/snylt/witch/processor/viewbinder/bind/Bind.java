@@ -14,4 +14,8 @@ public abstract class Bind implements MethodSpecModule {
     public abstract TypeName getDataTypeName();
 
     public abstract TypeMirror getDataTypeMirror();
+
+    public String getDataParameterName() {
+        return "";
+    }
 }

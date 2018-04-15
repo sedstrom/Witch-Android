@@ -10,5 +10,5 @@ class SimpleBindMethodData {
     String text = "foo";
 
     @Bind
-    void text(String data) {}
+    void text(String text) {}
 }

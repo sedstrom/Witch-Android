@@ -2,20 +2,19 @@ package se.snylt.witch.processor.viewbinder.getview;
 
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
+
 import javax.lang.model.element.Modifier;
 
-public class GetViewHolderView implements GetView {
+import se.snylt.witch.processor.viewbinder.MethodSpecModule;
 
-    private final TypeName viewTypeName;
+import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_VIEW;
+
+public class GetNoView implements GetView {
 
     private final TypeName viewHolderTypeName;
 
-    private final String viewName;
-
-    public GetViewHolderView(TypeName viewTypeName, TypeName viewHolderTypeName, String viewName) {
-        this.viewTypeName = viewTypeName;
+    public GetNoView(TypeName viewHolderTypeName) {
         this.viewHolderTypeName = viewHolderTypeName;
-        this.viewName = viewName;
     }
 
     @Override
@@ -23,15 +22,17 @@ public class GetViewHolderView implements GetView {
         return MethodSpec.methodBuilder("getView")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(viewHolderTypeName, "viewHolder")
-                .returns(viewTypeName)
-                .addStatement("return ($T) viewHolder.$N", viewTypeName, viewName)
+                .returns(ANDROID_VIEW)
+                .addStatement("return null")
                 .build();
     }
 
+    @Override
     public TypeName getViewTypeName() {
-        return viewTypeName;
+        return ANDROID_VIEW;
     }
 
+    @Override
     public TypeName getViewHolderTypeName() {
         return viewHolderTypeName;
     }

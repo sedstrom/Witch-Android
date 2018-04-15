@@ -5,14 +5,11 @@ import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindWhen;
 import android.view.View;
 
-class ErrorInvalidBindWhen {
-
-    @Data
-    @BindWhen("sometimes")
-    String text = "foo";
+class ErrorInvalidBindWhen { ;
 
     @Bind(id = 0)
-    void text(View view, String text) {
+    @BindWhen("sometimes")
+    void text(View view) {
 
     }
 }

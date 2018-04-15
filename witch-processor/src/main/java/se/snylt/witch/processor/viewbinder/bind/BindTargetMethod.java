@@ -13,14 +13,11 @@ public class BindTargetMethod extends Bind {
 
     private final TypeName targetTypeName;
 
-    private final String propertyName;
-
     private final ProcessorUtils.BindMethod bindMethod;
 
-    public BindTargetMethod(Element element, TypeName targetTypeName, String propertyName, ProcessorUtils.BindMethod bindMethod) {
+    public BindTargetMethod(Element element, TypeName targetTypeName, ProcessorUtils.BindMethod bindMethod) {
         this.element = element;
         this.targetTypeName = targetTypeName;
-        this.propertyName = propertyName;
         this.bindMethod = bindMethod;
     }
 
@@ -33,7 +30,7 @@ public class BindTargetMethod extends Bind {
                 .addParameter(bindMethod.getDataTypeName(), "data")
                 .addParameter(bindMethod.getDataTypeName(), "history")
                 .returns(void.class)
-                .addStatement(getBindStatement(), "target", propertyName)
+                .addStatement(getBindStatement(), "target", bindMethod.getMethodName())
                 .build();
     }
 
@@ -55,6 +52,10 @@ public class BindTargetMethod extends Bind {
         }
     }
 
+    public ProcessorUtils.BindMethod getBindMethod() {
+        return bindMethod;
+    }
+
     @Override
     public Element getElement() {
         return element;
@@ -68,5 +69,10 @@ public class BindTargetMethod extends Bind {
     @Override
     public TypeMirror getDataTypeMirror() {
         return bindMethod.getDataTypeMirror();
+    }
+
+    @Override
+    public String getDataParameterName() {
+        return bindMethod.getDataParameterName();
     }
 }

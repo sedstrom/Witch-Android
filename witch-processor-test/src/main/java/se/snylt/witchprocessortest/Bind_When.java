@@ -26,5 +26,4 @@ class Bind_When {
 
     }
 
-
 }

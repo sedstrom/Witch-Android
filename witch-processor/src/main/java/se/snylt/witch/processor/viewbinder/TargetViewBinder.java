@@ -1,6 +1,7 @@
 package se.snylt.witch.processor.viewbinder;
 
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -13,10 +14,13 @@ import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+
 import se.snylt.witch.processor.WitchException;
 import se.snylt.witch.processor.utils.ProcessorUtils;
 import se.snylt.witch.processor.utils.TypeUtils;
+import se.snylt.witch.processor.viewbinder.getview.GetNoView;
 
+import static se.snylt.witch.processor.utils.TypeUtils.ANDROID_VIEW;
 import static se.snylt.witch.processor.utils.TypeUtils.ARRAY_LIST;
 import static se.snylt.witch.processor.utils.TypeUtils.LIST;
 import static se.snylt.witch.processor.utils.TypeUtils.STRING;
@@ -121,9 +125,19 @@ public class TargetViewBinder {
                 TypeSpec.classBuilder(viewHolderClassName)
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
+        List<FieldSpec> views = new ArrayList<>();
         for (ViewBinder.Builder viewBinder : viewBinders) {
-            viewHolder.addField(viewBinder.getGetView().getViewTypeName(), viewBinder.getPropertyName(), Modifier.PUBLIC);
+            if(!(viewBinder.getGetView() instanceof GetNoView)) {
+                FieldSpec view = FieldSpec.builder(
+                        ANDROID_VIEW,
+                        viewBinder.getViewHolderViewName(),
+                        Modifier.PUBLIC).build();
+                if (!views.contains(view)) {
+                    views.add(view);
+                }
+            }
         }
+        viewHolder.addFields(views);
 
         return viewHolder.build();
     }
@@ -137,25 +151,46 @@ public class TargetViewBinder {
         return target;
     }
 
-    public boolean hasViewBinderFor(Element member) {
+    public boolean hasViewBindersForData(Element data) {
         try {
-            return getViewBinderFor(member) != null;
+            return !getViewBindersForData(data).isEmpty();
         } catch (WitchException e) {
             return false;
         }
     }
 
-    public ViewBinder.Builder getViewBinderFor(Element member) throws WitchException {
+    public List<ViewBinder.Builder> getViewBindersForData(Element data) throws WitchException {
         if(viewBinders == null) {
             throw new WitchException("Target binder for target " + target.getSimpleName() + " not found");
         }
-        String propertyName = ProcessorUtils.getPropertyName(member);
+        String propertyName = ProcessorUtils.getPropertyName(data);
+        List<ViewBinder.Builder> binders = new ArrayList<>();
         for (ViewBinder.Builder binder: viewBinders) {
-            if (binder.getPropertyName().equals(propertyName)) {
+            if (binder.getBind() != null && binder.getBind().getDataParameterName().equals(propertyName)) {
+                binders.add(binder);
+            }
+        }
+        return binders;
+    }
+
+    public boolean hasViewBinderForBind(Element bind) {
+        try {
+            return getViewBinderForBind(bind) != null;
+        } catch (WitchException e) {
+            return false;
+        }
+    }
+
+    public ViewBinder.Builder getViewBinderForBind(Element bind) throws WitchException {
+        if(viewBinders == null) {
+            throw new WitchException("Target binder for target " + target.getSimpleName() + " not found");
+        }
+        for (ViewBinder.Builder binder: viewBinders) {
+            if (binder.getBindElement().getSimpleName().equals(bind.getSimpleName())) {
                 return binder;
             }
         }
-        throw new WitchException("Target binder for target " + target.getSimpleName() + " not found");
+        throw new WitchException("Target binder for target " + target.getSimpleName() + ", " + bind.getSimpleName() + " not found");
     }
 
     public void addViewBinder(ViewBinder.Builder builder) {

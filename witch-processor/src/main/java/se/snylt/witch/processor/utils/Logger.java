@@ -20,4 +20,8 @@ public class Logger {
     public void log(WitchException e) {
         logError(e.getMessage());
     }
+
+    public void logWarn(String message) {
+        messager.printMessage(Diagnostic.Kind.WARNING, message);
+    }
 }

@@ -1,6 +1,5 @@
 package se.snylt.witch.processor.viewbinder.bind;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
@@ -9,6 +8,8 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
 public class BindBindData extends Bind {
+
+    private final Element element;
 
     private final String property;
 
@@ -20,8 +21,9 @@ public class BindBindData extends Bind {
 
     private TypeMirror dataTypeMirror;
 
-    public BindBindData(String property, TypeName targetTypeName, TypeName viewTypeName,
+    public BindBindData(Element element, String property, TypeName targetTypeName, TypeName viewTypeName,
                         TypeName dataTypeName, TypeMirror dataTypeMirror) {
+        this.element = element;
         this.property = property;
         this.targetTypeName = targetTypeName;
         this.viewTypeName = viewTypeName;
@@ -50,7 +52,7 @@ public class BindBindData extends Bind {
 
     @Override
     public Element getElement() {
-        return null;
+        return element;
     }
 
     @Override

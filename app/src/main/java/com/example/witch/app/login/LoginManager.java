@@ -1,4 +1,4 @@
-package com.example.witch.app;
+package com.example.witch.app.login;
 
 import android.os.Handler;
 

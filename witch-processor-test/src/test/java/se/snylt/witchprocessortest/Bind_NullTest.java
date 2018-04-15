@@ -28,7 +28,6 @@ public class Bind_NullTest {
 
         verify((TextView) helper.getView(R.id.testIdOne), times(1)).setText((CharSequence) isNull());
         verify((target)).two((String) isNull());
-        verify((target)).three((String) isNull());
         verify((target), never()).four((String) isNull());
         verify((TextView) helper.getView(R.id.testIdFive), never()).setText((CharSequence) isNull());
     }

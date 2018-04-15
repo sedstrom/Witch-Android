@@ -12,5 +12,5 @@ class SimpleBindMethodViewDataData {
     }
 
     @Bind(id = 0)
-    void text(View view, String data, String history) {}
+    void bind(View view, String text, String history) {}
 }

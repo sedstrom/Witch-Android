@@ -106,13 +106,13 @@ public class ListActivity extends AppCompatActivity implements Observer {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, VERTICAL, false));
     }
 
-    @Data @BindWhen(BindWhen.NOT_SAME)
-    List<String> listData() {
+    @Data
+    List<String> data() {
         return state().data;
     }
 
-    @Bind(id = R.id.recycler_view)
-    void listData(RecyclerView recyclerView, List<String> data, List<String> historyData) {
+    @Bind(id = R.id.recycler_view) @BindWhen(BindWhen.NOT_SAME)
+    void bindListData(RecyclerView recyclerView, List<String> data, List<String> historyData) {
         ((WitchRecyclerViewAdapter<String>)recyclerView.getAdapter()).setItems(data);
     }
 

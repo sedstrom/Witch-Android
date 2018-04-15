@@ -14,24 +14,17 @@ class Bind_Null {
     String one = null;
 
     @Data
-    @BindNull
     String two = null;
 
     @Bind
-    void two(String nullString) { }
-
-    @Data
-    String three = null;
-
     @BindNull
-    @Bind
-    void three(String nullString) { }
+    void two(String two) { }
 
     @Data
     String four = null;
 
     @Bind
-    void four(String notNullString) {}
+    void four(String four) {}
 
     @BindData(id = R.id.testIdFive, view = TextView.class, set = "text")
     String five = null;

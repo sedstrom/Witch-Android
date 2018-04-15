@@ -7,12 +7,14 @@ import com.squareup.javapoet.TypeSpec;
 import javax.lang.model.element.Element;
 
 import se.snylt.witch.processor.WitchException;
+import se.snylt.witch.processor.utils.ProcessorUtils;
 import se.snylt.witch.processor.utils.TypeUtils;
 import se.snylt.witch.processor.viewbinder.bind.Bind;
 import se.snylt.witch.processor.viewbinder.bind.BindTargetMethod;
 import se.snylt.witch.processor.viewbinder.getdata.GetData;
 import se.snylt.witch.processor.viewbinder.getdata.GetNoData;
 import se.snylt.witch.processor.viewbinder.getdata.GetTargetData;
+import se.snylt.witch.processor.viewbinder.getview.GetView;
 import se.snylt.witch.processor.viewbinder.getview.GetViewHolderView;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirty;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyAlways;
@@ -72,7 +74,7 @@ public class ViewBinder {
 
         private String propertyName;
 
-        private GetViewHolderView getView;
+        private GetView getView;
 
         private MethodSpecModule setView;
 
@@ -86,10 +88,13 @@ public class ViewBinder {
 
         private TypeName targetTypeName;
 
-        private Element target;
+        private Element targetElement;
 
-        public Builder(Element target, TypeName targetTypeName) {
-            this.target = target;
+        private Element bindElement;
+
+        public Builder(Element targetElement, Element bindElement, TypeName targetTypeName) {
+            this.targetElement = targetElement;
+            this.bindElement = bindElement;
             this.targetTypeName = targetTypeName;
             isDirty = new IsDirtyIfNotEquals(targetTypeName);
             defaultDirty = isDirty;
@@ -100,7 +105,7 @@ public class ViewBinder {
             return this;
         }
 
-        public Builder setGetView(GetViewHolderView getView) {
+        public Builder setGetView(GetView getView) {
             this.getView = getView;
             return this;
         }
@@ -133,7 +138,11 @@ public class ViewBinder {
             return isDirty;
         }
 
-        public ViewBinder build() throws WitchException {
+        public Bind getBind() {
+            return bind;
+        }
+
+        public ViewBinder build() {
             return new ViewBinder(
                     newInstance(),
                     getView,
@@ -182,22 +191,42 @@ public class ViewBinder {
             return this;
         }
 
+        public String getViewHolderViewName() {
+            return String.format("_%d", viewId);
+        }
+
         public void validate(TypeUtils typeUtils) throws WitchException {
-            // Incompatible data types
-            if (getData != null && getData instanceof GetTargetData && bind != null && bind instanceof BindTargetMethod) {
-                GetTargetData getTargetData = (GetTargetData) getData;
+            if (bind != null
+                    && bind instanceof BindTargetMethod
+                    && ((BindTargetMethod) bind).getBindMethod().hasDataParameter()) {
+
                 BindTargetMethod bindTarget = (BindTargetMethod) bind;
-                if (!typeUtils.types().isAssignable(getTargetData.getDataTypeMirror(), bindTarget.getDataTypeMirror())) {
-                    throw WitchException.incompatibleDataTypes(getTargetData.getElement(), bindTarget.getElement());
+                ProcessorUtils.BindMethod method = bindTarget.getBindMethod();
+
+                // Missing data
+                if(getData == null || getData instanceof GetNoData) {
+                    throw WitchException.bindMethodMissingData(bindTarget.getElement(), method.getDataParameterName());
+                }
+
+                // Incompatible data types
+                if(getData instanceof GetTargetData) {
+                    GetTargetData getTargetData = (GetTargetData) getData;
+                    if (!typeUtils.types().isAssignable(getTargetData.getDataTypeMirror(), method.getDataTypeMirror())) {
+                        throw WitchException.incompatibleDataTypes(getTargetData.getElement(), bindTarget.getElement());
+                    }
                 }
             }
         }
 
-        public Element getTarget() {
-            return target;
+        public Element getTargetElement() {
+            return targetElement;
         }
 
-        public GetViewHolderView getGetView() {
+        public Element getBindElement() {
+            return bindElement;
+        }
+
+        public GetView getGetView() {
             return getView;
         }
     }

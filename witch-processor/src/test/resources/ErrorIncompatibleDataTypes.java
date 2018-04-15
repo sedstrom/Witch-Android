@@ -10,7 +10,7 @@ class ErrorIncompatibleDataTypes {
     String text = "foo";
 
     @Bind(id = 0)
-    void text(View view, Integer number) {
+    void bind(View view, Integer text) {
 
     }
 }
