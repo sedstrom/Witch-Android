@@ -3,8 +3,11 @@ package se.snylt.witch.processor;
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
 
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.Locale;
+
+import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import static com.google.testing.compile.CompilationSubject.assertThat;
 import static com.google.testing.compile.Compiler.javac;
@@ -21,7 +24,6 @@ public class WitchProcessorTest {
         return javac().withProcessors(new WitchProcessor(false)).compile(test);
     }
 
-
     @Test
     public void simpleDataBind() {
         Compilation compilation = compile("SimpleDataBind.java");
@@ -33,7 +35,6 @@ public class WitchProcessorTest {
         Compilation compilation = compile("SimpleBindData.java");
         assertThat(compilation).succeeded();
     }
-
 
     @Test
     public void simpleBindMethod() {
@@ -72,6 +73,12 @@ public class WitchProcessorTest {
     }
 
     @Test
+    public void simpleSetupMethod() {
+        Compilation compilation = compile("SimpleSetupMethod.java");
+        assertThat(compilation).succeeded();
+    }
+
+    @Test
     public void errorDataMethodPrivate() {
         Compilation compilation = compile("ErrorDataMethodPrivate.java");
         assertThat(compilation).hadErrorContaining("ErrorDataMethodPrivate");
@@ -82,6 +89,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("- Has no parameters");
         assertThat(compilation).hadErrorContaining("- Has a non-void return type");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
     }
 
     @Test
@@ -95,6 +103,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("- Has no parameters");
         assertThat(compilation).hadErrorContaining("- Has a non-void return type");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
     }
 
     @Test
@@ -104,6 +113,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("void text(android.view.View,java.lang.String) is not accessible");
         assertThat(compilation).hadErrorContaining("Make sure bind method is not private nor protected");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
     }
 
     @Test
@@ -113,6 +123,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("void text(android.view.View,java.lang.String,java.lang.String,java.lang.String) is not a valid bind method");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
         assertValidBindMethodSignatures(compilation, "text");
+        printErrors(compilation);
     }
 
     @Test
@@ -122,6 +133,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("void text(android.view.View,java.lang.String,java.lang.Integer) is not a valid bind method");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
         assertValidBindMethodSignatures(compilation, "text");
+        printErrors(compilation);
     }
 
     private void assertValidBindMethodSignatures(Compilation compilation, String methodName) {
@@ -132,6 +144,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining(String.format("%s(View, Data, Data)", methodName));
         assertThat(compilation).hadErrorContaining(String.format("%s(Data)", methodName));
         assertThat(compilation).hadErrorContaining(String.format("%s(Data, Data)", methodName));
+        printErrors(compilation);
     }
 
     @Test
@@ -143,6 +156,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("java.lang.String text");
         assertThat(compilation).hadErrorContaining("Data types are incompatible");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
     }
 
     @Test
@@ -156,6 +170,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("- Has no parameters");
         assertThat(compilation).hadErrorContaining("- Has a non-void return type");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
     }
 
     @Test
@@ -187,6 +202,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("BindWhen.ALWAYS");
         assertThat(compilation).hadErrorContaining("BindWhen.ONCE");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
     }
 
     @Test
@@ -195,6 +211,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("ErrorBindDataMissingData");
         assertThat(compilation).hadErrorContaining("Missing @Data-annotated field named \"missingData\" for bind method void bind(java.lang.String)");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
     }
 
     @Test
@@ -204,6 +221,7 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("Invalid use of @BindWhen at java.lang.String data.");
         assertThat(compilation).hadErrorContaining("@BindWhen must be combined with a @Bind or @BindData annotation.");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
     }
 
     @Test
@@ -213,5 +231,76 @@ public class WitchProcessorTest {
         assertThat(compilation).hadErrorContaining("Invalid use of @BindNull at java.lang.String data.");
         assertThat(compilation).hadErrorContaining("@BindNull must be combined with a @Bind or @BindData annotation.");
         assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
+    }
+
+    @Test
+    public void errorMultipleBindsSetupBind() {
+        Compilation compilation = compile("ErrorMultipleBindsSetupBind.java");
+        assertThat(compilation).hadErrorContaining("ErrorMultipleBindsSetupBind");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+        assertMultipleBindAnnotationsError(compilation, "bind");
+        printErrors(compilation);
+    }
+
+    @Test
+    public void errorMultipleBindsBindDataBind() {
+        Compilation compilation = compile("ErrorMultipleBindsBindDataBind.java");
+        assertThat(compilation).hadErrorContaining("ErrorMultipleBindsBindDataBind");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+        assertMultipleBindAnnotationsError(compilation, "bind");
+        printErrors(compilation);
+    }
+
+    @Test
+    public void errorMultipleBindsBindDataSetup() {
+        Compilation compilation = compile("ErrorMultipleBindsBindDataSetup.java");
+        assertThat(compilation).hadErrorContaining("ErrorMultipleBindsBindDataSetup");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+        assertMultipleBindAnnotationsError(compilation, "bind");
+        printErrors(compilation);
+    }
+
+    private void assertMultipleBindAnnotationsError(Compilation compilation, String forMethodName) {
+        assertThat(compilation).hadErrorContaining(String.format("More than one bind annotation used for void %s()", forMethodName));
+        assertThat(compilation).hadErrorContaining("Make sure only one of the following annotations are used:");
+        assertThat(compilation).hadErrorContaining("@Bind");
+        assertThat(compilation).hadErrorContaining("@BindData");
+        assertThat(compilation).hadErrorContaining("@Setup");
+        printErrors(compilation);
+    }
+
+    @Test
+    public void errorBindViewWithoutId() {
+        Compilation compilation = compile("ErrorBindViewWithoutId.java");
+        assertThat(compilation).hadErrorContaining("ErrorBindViewWithoutId");
+        assertThat(compilation).hadErrorContaining("void bind(android.view.View) takes a view but has no id declared in annotation.");
+        assertThat(compilation).hadErrorContaining("Example usage:");
+        assertThat(compilation).hadErrorContaining("@Bind(id = R.id.title)");
+        assertThat(compilation).hadErrorContaining("@Setup(id = R.id.title)");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
+    }
+
+    @Test
+    public void errorBindWithIdWithoutView() {
+        Compilation compilation = compile("ErrorBindWithIdWithoutView.java");
+        assertThat(compilation).hadErrorContaining("ErrorBindWithIdWithoutView");
+        assertThat(compilation).hadErrorContaining("void bind() has id declared in annotation but takes no view.");
+        assertThat(compilation).hadErrorContaining("Example usage:");
+        assertThat(compilation).hadErrorContaining("@Bind(id = R.id.title)");
+        assertThat(compilation).hadErrorContaining("void bind(TextView title)");
+        assertThat(compilation).hadErrorContaining(String.format(readMore));
+        printErrors(compilation);
+    }
+
+    private void printErrors(Compilation compilation) {
+        String file = compilation.sourceFiles().get(0).getName();
+        String name = file.substring(file.lastIndexOf("/") + 1);
+        System.out.println("=====================================");
+        System.out.println("Error for " + name +":");
+        for (Diagnostic e: compilation.errors()) {
+            System.out.println(e.getMessage(Locale.getDefault()));
+        }
     }
 }

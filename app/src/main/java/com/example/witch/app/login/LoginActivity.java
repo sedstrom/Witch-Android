@@ -24,6 +24,7 @@ import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.BindWhen;
 import se.snylt.witch.annotations.Data;
+import se.snylt.witch.annotations.Setup;
 
 public class LoginActivity extends AppCompatActivity implements Observer {
 
@@ -65,17 +66,18 @@ public class LoginActivity extends AppCompatActivity implements Observer {
     }
 
     // Setup
-    @BindData(id= R.id.loginbutton, view = View.class, set = "onClickListener")
-    @BindWhen(BindWhen.ONCE)
-    final View.OnClickListener loginButton = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            viewManager.login();
-        }
-    };
+    @Setup(id = R.id.loginbutton)
+    void setupLoginButtonClicks(View view) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewManager.login();
+            }
+        });
+    }
 
-    @Bind(id = R.id.password) @BindWhen(BindWhen.ONCE)
-    void passwordChanged(EditText et) {
+    @Setup(id = R.id.password)
+    void setupPasswordChanged(EditText et) {
         et.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -84,8 +86,8 @@ public class LoginActivity extends AppCompatActivity implements Observer {
         });
     }
 
-    @Bind(id = R.id.emailAddress) @BindWhen(BindWhen.ONCE)
-    void emailChanged(EditText et) {
+    @Setup(id = R.id.emailAddress)
+    void setupEmailAddressChanged(EditText et) {
         et.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -105,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements Observer {
         return "Perfect!";
     }
 
-    @Bind(id = R.id.emailTitle) @BindWhen(BindWhen.NOT_EQUALS)
+    @Bind(id = R.id.emailTitle)
     void bindEmailTitle(TextView textView, String emailTitle) {
         textView.setTranslationY(textView.getHeight()*1.5f);
         textView.setAlpha(0);

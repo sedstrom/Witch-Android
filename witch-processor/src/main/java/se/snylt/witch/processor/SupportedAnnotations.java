@@ -46,6 +46,21 @@ class SupportedAnnotations {
         }
     }
 
+    // Setup
+    final static class Setup implements HasViewId {
+        final static String name = "se.snylt.witch.annotations.Setup";
+
+        @Override
+        public Integer getViewId(Element element) {
+            return element.getAnnotation(se.snylt.witch.annotations.Setup.class).id();
+        }
+
+        @Override
+        public Class<? extends Annotation> getClazz() {
+            return se.snylt.witch.annotations.Setup.class;
+        }
+    }
+
     // Data
     final static class Data {
         final static String name = "se.snylt.witch.annotations.Data";
@@ -64,7 +79,8 @@ class SupportedAnnotations {
     // All annotations that bind to a view id
     final static HasViewId[] ALL_BIND_VIEW = new HasViewId[] {
             new BindData(),
-            new Bind()
+            new Bind(),
+            new Setup()
     };
     
 }

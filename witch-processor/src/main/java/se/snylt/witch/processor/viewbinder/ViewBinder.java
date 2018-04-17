@@ -21,6 +21,8 @@ import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyAlways;
 import se.snylt.witch.processor.viewbinder.isdirty.IsDirtyIfNotEquals;
 import se.snylt.witch.processor.viewbinder.newinstance.NewViewBinderInstance;
 
+import static se.snylt.witch.annotations.Bind.NO_ID;
+
 public class ViewBinder {
 
     private TypeSpecModule newInstance;
@@ -196,24 +198,35 @@ public class ViewBinder {
         }
 
         public void validate(TypeUtils typeUtils) throws WitchException {
-            if (bind != null
-                    && bind instanceof BindTargetMethod
-                    && ((BindTargetMethod) bind).getBindMethod().hasDataParameter()) {
+            if (bind != null && bind instanceof BindTargetMethod) {
 
                 BindTargetMethod bindTarget = (BindTargetMethod) bind;
-                ProcessorUtils.BindMethod method = bindTarget.getBindMethod();
 
-                // Missing data
-                if(getData == null || getData instanceof GetNoData) {
-                    throw WitchException.bindMethodMissingData(bindTarget.getElement(), method.getDataParameterName());
+                if (bindTarget.getBindMethod().hasDataParameter()) {
+                    ProcessorUtils.BindMethod method = bindTarget.getBindMethod();
+
+                    // Missing data
+                    if(getData == null || getData instanceof GetNoData) {
+                        throw WitchException.bindMethodMissingData(bindTarget.getElement(), method.getDataParameterName());
+                    }
+
+                    // Incompatible data types
+                    if(getData instanceof GetTargetData) {
+                        GetTargetData getTargetData = (GetTargetData) getData;
+                        if (!typeUtils.types().isAssignable(getTargetData.getDataTypeMirror(), method.getDataTypeMirror())) {
+                            throw WitchException.incompatibleDataTypes(getTargetData.getElement(), bindTarget.getElement());
+                        }
+                    }
                 }
 
-                // Incompatible data types
-                if(getData instanceof GetTargetData) {
-                    GetTargetData getTargetData = (GetTargetData) getData;
-                    if (!typeUtils.types().isAssignable(getTargetData.getDataTypeMirror(), method.getDataTypeMirror())) {
-                        throw WitchException.incompatibleDataTypes(getTargetData.getElement(), bindTarget.getElement());
-                    }
+                // View but no id
+                if (bindTarget.getBindMethod().hasViewParameter() && viewId == NO_ID) {
+                    throw WitchException.bindMethodWithViewMissingId(bindElement);
+                }
+
+                // Id but no view
+                if (!bindTarget.getBindMethod().hasViewParameter() && viewId != NO_ID) {
+                    throw WitchException.bindMethodWithIdMissingView(bindElement);
                 }
             }
         }

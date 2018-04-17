@@ -26,6 +26,7 @@ import javax.lang.model.type.TypeMirror;
 import se.snylt.witch.annotations.Bind;
 import se.snylt.witch.annotations.BindData;
 import se.snylt.witch.annotations.BindWhen;
+import se.snylt.witch.annotations.Setup;
 import se.snylt.witch.processor.utils.FileUtils;
 import se.snylt.witch.processor.utils.Logger;
 import se.snylt.witch.processor.utils.ProcessorUtils;
@@ -55,6 +56,7 @@ import static se.snylt.witch.processor.utils.ProcessorUtils.getBindMethod;
         SupportedAnnotations.Data.name,
         SupportedAnnotations.BindData.name,
         SupportedAnnotations.Bind.name,
+        SupportedAnnotations.Setup.name,
         SupportedAnnotations.BindWhen.name,
         SupportedAnnotations.BindNull.name
 })
@@ -98,6 +100,7 @@ public class WitchProcessor extends AbstractProcessor {
             collectAllTargets(SupportedAnnotations.ALL_BIND_VIEW);
             processBindData();
             processBind();
+            processSetup();
             processBindNull();
             processBindWhens();
             processData();
@@ -156,7 +159,12 @@ public class WitchProcessor extends AbstractProcessor {
 
     private void processBindData() throws WitchException {
         for (Element bindData: roundEnv.getElementsAnnotatedWith(BindData.class)) {
+
             ViewBinder.Builder binder = getViewBinderForBind(bindData);
+
+            if (binder.getBind() != null) {
+                throw WitchException.multipleBindAnnotations(bindData);
+            }
 
             // Bind
             TypeName targetTypeName = binder.getTargetTypeName();
@@ -195,72 +203,92 @@ public class WitchProcessor extends AbstractProcessor {
 
     private void processBind() throws WitchException {
         for (Element bind: roundEnv.getElementsAnnotatedWith(Bind.class)) {
+            processBind(bind);
+        }
+    }
 
-            // Bind
-            ProcessorUtils.BindMethod bindMethod = getBindMethod(bind);
-            ViewBinder.Builder viewBinder = getViewBinderForBind(bind);
-            TypeName targetTypeName = viewBinder.getTargetTypeName();
-            viewBinder.setBind(new BindTargetMethod(bind, targetTypeName, bindMethod));
+    private void processBind(Element bind) throws WitchException {
 
-            // Set & Get view
-            TypeName viewHolderTypeName = FileUtils.getBindingViewHolderName(viewBinder.getTargetElement());
-            if (bindMethod.hasViewParameter()) {
-                String viewName = viewBinder.getViewHolderViewName();
-                TypeName viewTypeName = bindMethod.getViewTypeName();
-                viewBinder.setGetView(new GetViewHolderView(viewTypeName, viewHolderTypeName, viewName));
-                viewBinder.setSetView(new SetViewHolderView(viewTypeName, viewHolderTypeName, viewName));
-            } else {
-                viewBinder.setGetView(new GetNoView(viewHolderTypeName));
-                viewBinder.setSetView(new SetNoView(viewHolderTypeName));
-            }
+        ViewBinder.Builder viewBinder = getViewBinderForBind(bind);
+
+        if(viewBinder.getBind() != null) {
+            throw WitchException.multipleBindAnnotations(bind);
+        }
+
+        // Bind
+        ProcessorUtils.BindMethod bindMethod = getBindMethod(bind);
+        TypeName targetTypeName = viewBinder.getTargetTypeName();
+        viewBinder.setBind(new BindTargetMethod(bind, targetTypeName, bindMethod));
+
+        // Set & Get view
+        TypeName viewHolderTypeName = FileUtils.getBindingViewHolderName(viewBinder.getTargetElement());
+        if (bindMethod.hasViewParameter()) {
+            String viewName = viewBinder.getViewHolderViewName();
+            TypeName viewTypeName = bindMethod.getViewTypeName();
+            viewBinder.setGetView(new GetViewHolderView(viewTypeName, viewHolderTypeName, viewName));
+            viewBinder.setSetView(new SetViewHolderView(viewTypeName, viewHolderTypeName, viewName));
+        } else {
+            viewBinder.setGetView(new GetNoView(viewHolderTypeName));
+            viewBinder.setSetView(new SetNoView(viewHolderTypeName));
+        }
+    }
+
+    private void processSetup() throws WitchException {
+        for (Element setup: roundEnv.getElementsAnnotatedWith(Setup.class)) {
+            processBind(setup);
+            processBindWhen(setup, BindWhen.ONCE);
         }
     }
 
     private void processBindWhens() throws WitchException {
         for (Element bindWhen: roundEnv.getElementsAnnotatedWith(se.snylt.witch.annotations.BindWhen.class)) {
             String bindWhenValue = bindWhen.getAnnotation(se.snylt.witch.annotations.BindWhen.class).value();
-
-            // Must be used with @Bind or @BindData
-            if (!hasViewBinderForBind(bindWhen)) {
-                throw WitchException.bindWhenNotCombinedWithBind(bindWhen);
-            }
-
-            ViewBinder.Builder binder = getViewBinderForBind(bindWhen);
-            if (!binder.getBind().getElement().equals(bindWhen)) {
-                throw WitchException.bindWhenNotCombinedWithBind(bindWhen);
-            }
-
-            IsDirty isDirty = null;
-            switch (bindWhenValue) {
-                case BindWhen.ALWAYS: {
-                    isDirty = new IsDirtyAlways(binder.getTargetTypeName());
-                    break;
-                }
-                case BindWhen.NOT_EQUALS: {
-                    isDirty = new IsDirtyIfNotEquals(binder.getTargetTypeName());
-                    break;
-                }
-                case BindWhen.NOT_SAME: {
-                    isDirty = new IsDirtyIfNotSame(binder.getTargetTypeName());
-                    break;
-                }
-                case BindWhen.ONCE: {
-                    isDirty = new IsDirtyOnce(binder.getTargetTypeName());
-                    break;
-                }
-            }
-
-            if (isDirty == null) {
-                throw WitchException.invalidBindWhenValue(bindWhen, bindWhenValue);
-            }
-
-            if (binder.isIsDirtySet()) {
-                throw WitchException.conflictingBindWhen(bindWhen);
-            }
-
-            binder.setIsDirty(isDirty);
-
+            processBindWhen(bindWhen, bindWhenValue);
         }
+    }
+
+    private void processBindWhen(Element bindWhen, String bindWhenValue) throws WitchException {
+
+        // Must be used with @Bind or @BindData
+        if (!hasViewBinderForBind(bindWhen)) {
+            throw WitchException.bindWhenNotCombinedWithBind(bindWhen);
+        }
+
+        ViewBinder.Builder binder = getViewBinderForBind(bindWhen);
+        if (!binder.getBind().getElement().equals(bindWhen)) {
+            throw WitchException.bindWhenNotCombinedWithBind(bindWhen);
+        }
+
+        IsDirty isDirty = null;
+        switch (bindWhenValue) {
+            case BindWhen.ALWAYS: {
+                isDirty = new IsDirtyAlways(binder.getTargetTypeName());
+                break;
+            }
+            case BindWhen.NOT_EQUALS: {
+                isDirty = new IsDirtyIfNotEquals(binder.getTargetTypeName());
+                break;
+            }
+            case BindWhen.NOT_SAME: {
+                isDirty = new IsDirtyIfNotSame(binder.getTargetTypeName());
+                break;
+            }
+            case BindWhen.ONCE: {
+                isDirty = new IsDirtyOnce(binder.getTargetTypeName());
+                break;
+            }
+        }
+
+        if (isDirty == null) {
+            throw WitchException.invalidBindWhenValue(bindWhen, bindWhenValue);
+        }
+
+        if (binder.isIsDirtySet()) {
+            throw WitchException.conflictingBindWhen(bindWhen);
+        }
+
+        binder.setIsDirty(isDirty);
+
     }
 
     private void processBindNull() throws WitchException {
@@ -319,14 +347,6 @@ public class WitchProcessor extends AbstractProcessor {
     private boolean hasViewBinderForBind(Element bind) {
         try {
             return getViewBinderForBind(bind) != null ;
-        } catch (WitchException e) {
-            return false;
-        }
-    }
-
-    private boolean hasViewBindersForData(Element data) {
-        try {
-            return getTargetViewBinder(data).hasViewBindersForData(data);
         } catch (WitchException e) {
             return false;
         }
