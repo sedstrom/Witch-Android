@@ -112,7 +112,8 @@ layout: main
           @Data
         </h2>
         <p>
-          The @Data-annotation is used to declare data properties. Only data properties can be used in bind methods. // Under observation of witch and only bound when changed.
+          The @Data-annotation is used to declare data properties. Only data properties can be used in bind methods. Each time a binder is passed to Witch.bind()
+          the data properties will evaluated. Only properties that has changed since last bind will be bound. 
           <br/><br/>
           In the above example, the entire user model is declared a data property despite only the user name is bound to a view. 
           This might be OK in some cases, but if the user model is frequently updated, the name will be repeatedly bound without being changed.
