@@ -1,0 +1,9 @@
+apply plugin: 'java-library'
+
+dependencies {
+    testImplementation rootProject.ext.deps.mockitoCore
+    testImplementation rootProject.ext.deps.junit
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"

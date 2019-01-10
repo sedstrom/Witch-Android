@@ -15,5 +15,7 @@ public @interface BindWhen {
 
     public final static String NOT_EQUALS = "notEquals";
 
+    public final static String ONCE = "once";
+
     String value();
 }

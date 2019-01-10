@@ -1,0 +1,4 @@
+RecyclerViewBinderAdapter.Builder()
+        .binder(PostBinder())
+        .binder(HeaderBinder())
+        .build()

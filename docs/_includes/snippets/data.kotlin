@@ -1,0 +1,4 @@
+@Data
+fun userName(): String {
+  if(user != null) { user.name } else { "Guest user" }
+}

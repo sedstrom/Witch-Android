@@ -1,5 +1,9 @@
-@BindToViewPager(id = R.id.view_pager, adapter = MyAdapter.class, set = "items")
-List items; // Binds prior to currentItem
+@Bind(id = R.id.list) 
+void bindPosts(RecyclerView view, List<Post> posts) {
+    ((MyAdapter)view.getAdapter()).setPosts(posts);
+}
 
-@BindToView(id = R.id.view_pager, view = ViewPager.class, set = "currentItem")
-int currentItem = 4;
+@Bind(id = R.id.list) 
+void bindCurrentItem(RecyclerView view, int currentItem) {
+    view.setCurrentItem(currentItem);
+}

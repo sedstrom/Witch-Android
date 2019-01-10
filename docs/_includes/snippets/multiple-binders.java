@@ -1,4 +1,4 @@
-new RecyclerViewBinderAdapter.Builder<>()
-        .binder(new Post.Binder())
-        .binder(new Header.Binder())
+new RecyclerViewBinderAdapter.Builder()
+        .binder(new PostBinder())
+        .binder(new HeaderBinder())
         .build();

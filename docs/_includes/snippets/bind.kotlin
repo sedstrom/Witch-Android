@@ -1,0 +1,4 @@
+@Bind(id = R.id.name) 
+fun bindUserName(name: TextView , userName: String) {
+  name.text = userName
+}

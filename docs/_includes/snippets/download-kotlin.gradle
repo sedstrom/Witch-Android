@@ -1,2 +1,2 @@
-compile 'se.snylt:witch:0.5.5'
-kapt 'se.snylt:witch-processor:0.5.5'
+compile 'se.snylt:witch:1.0.0-SNAPSHOT'
+kapt 'se.snylt:witch:1.0.0-SNAPSHOT'

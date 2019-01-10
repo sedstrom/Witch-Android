@@ -1,0 +1,4 @@
+@BindData(id = R.id.name, view = TextView::class.java, set = "text")
+fun userName(): String {
+    return user.name
+}

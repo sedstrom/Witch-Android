@@ -1,0 +1,9 @@
+@Bind(id = R.id.list) 
+fun bindPosts(view: RecyclerView, posts: List<Post>) {
+    (view.adapter as MyAdapter).posts = posts
+}
+
+@Bind(id = R.id.list) 
+fun bindCurrentItem(view: RecyclerView, int: currentItem) {
+    view.currentItem = currentItem
+}

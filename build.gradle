@@ -2,12 +2,14 @@
 
 buildscript {
     ext.kotlin_version = '1.1.2-5'
+
     repositories {
-        mavenCentral()
+        google()
+        jcenter()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
-        // classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
@@ -24,43 +26,34 @@ if (localProperties.exists()) {
 
 allprojects {
     repositories {
-        mavenCentral()
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
+        google()
+        jcenter()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "${sdkDir}/extras/android/m2repository/" }
     }
 }
 
 ext {
     minSdkVersion = 15
-    targetSdkVersion = 25
-    compileSdkVersion = 25
-    buildToolsVersion = '25.0.2'
+    targetSdkVersion = 28
+    compileSdkVersion = 28
     sourceCompatibilityVersion = JavaVersion.VERSION_1_7
     targetCompatibilityVersion = JavaVersion.VERSION_1_7
 }
 
-def supportLibraryVersion = '25.3.1'
+def supportLibraryVersion = '28.0.0'
 
 ext.deps = [
-        // Android
-        supportCompat      : "com.android.support:support-compat:$supportLibraryVersion",
-        supportAppCompat   : "com.android.support:appcompat-v7:$supportLibraryVersion",
-        supportDesign      : "com.android.support:recyclerview-v7:$supportLibraryVersion",
-        supportRecyclerView: "com.android.support:design:$supportLibraryVersion",
-        supportAnnotations : "com.android.support:support-annotations:$supportLibraryVersion",
-        googleAutoService  : "com.google.auto.service:auto-service:1.0-rc2",
-
-        // Square
-        javapoet           : 'com.squareup:javapoet:1.8.0',
-
-        // Apache
-        commonsLang        : 'org.apache.commons:commons-lang3:3.4',
-
-        // Test dependencies
-        junit              : 'junit:junit:4.12',
-        mockitoCore        : 'org.mockito:mockito-core:2.7.12',
+    supportCompat      : "com.android.support:support-compat:$supportLibraryVersion",
+    supportAppCompat   : "com.android.support:appcompat-v7:$supportLibraryVersion",
+    supportDesign      : "com.android.support:recyclerview-v7:$supportLibraryVersion",
+    supportRecyclerView: "com.android.support:design:$supportLibraryVersion",
+    supportAnnotations : "com.android.support:support-annotations:$supportLibraryVersion",
+    googleAutoService  : "com.google.auto.service:auto-service:1.0-rc2",
+    javapoet           : 'com.squareup:javapoet:1.8.0',
+    commonsLang        : 'org.apache.commons:commons-lang3:3.4',
+    junit              : 'junit:junit:4.12',
+    mockitoCore        : 'org.mockito:mockito-core:2.7.12',
 ]
 
 task clean(type: Delete) {

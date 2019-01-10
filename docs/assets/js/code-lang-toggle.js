@@ -1,6 +1,6 @@
 var langs = [];
-langs["java"] = "JAVA";
 langs["kotlin"] = "KOTLIN";
+langs["java"] = "JAVA";
 langs["json"] = "JSON";
 
 var toggleCode = function(event) {

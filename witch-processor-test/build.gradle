@@ -1,8 +1,7 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -13,15 +12,12 @@ android {
 }
 
 dependencies {
-
-    // Witch
-    compile project(path: ':witch')
+    implementation project(path: ':witch')
     annotationProcessor project(':witch-processor')
-
-    compile rootProject.ext.deps.supportRecyclerView
-    testCompile rootProject.ext.deps.mockitoCore
-    testCompile rootProject.ext.deps.junit
+    testImplementation rootProject.ext.deps.mockitoCore
+    testImplementation rootProject.ext.deps.junit
 }
+
 repositories {
     mavenCentral()
 }
